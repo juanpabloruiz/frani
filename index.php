@@ -11,6 +11,7 @@
     <header>
         <a href="../"><img src="img/logo.png" alt="Frani"></a>
     </header>
+    <p>Sitio web en construcción</p>
     <footer>
     Frani <?php echo date('Y'); ?> - <a href="administracion">Iniciar sesión</a>
     </footer>   
