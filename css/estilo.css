@@ -1,0 +1,35 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+a {
+    text-decoration: none;
+}
+
+body {
+    font: 16px Helvetica, Arial, Serif;
+}
+
+footer {
+    background: #333333;
+    color: #ffffff;
+    display: block;
+    padding: 2em;
+    text-align: center;
+}
+
+footer a {
+    color: #ffffff;
+}
+
+header {
+    background: #346EFD;
+    color: #ffffff;
+    padding: 2em;
+}
+
+header img {
+    display: block;
+    margin: 0px auto;
+}
