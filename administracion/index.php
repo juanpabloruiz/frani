@@ -18,7 +18,7 @@ include('conexion.php');
 
 <body>
     <header class="bg-primary p-4">
-        <a href="./"><img src="../img/logo.png" alt="Frani" class="img-fluid d-block mx-auto"></a>
+        <a href="../"><img src="../img/logo.png" alt="Frani" class="img-fluid d-block mx-auto"></a>
     </header>
     <main class="container my-4">
         <div class="row justify-content-md-center">
