@@ -1,7 +1,7 @@
 <?php
 include('conexion.php');
 ?>
-<table>
+<table class="table align-middle table-hover">
     <tr>
         <th>Producto</th>
         <th>Precio</th>
@@ -21,7 +21,7 @@ include('conexion.php');
         <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['producto']; ?></td>
         <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['precio']; ?></td>
         <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['costo']; ?></td>
-        <td><a href="baja?id=<?php echo $campo['id']; ?>" onclick="return confirm('¿Desea borrar <?php echo $producto; ?>?')">Borrar</a></td>
+        <td><a href="baja?id=<?php echo $campo['id']; ?>" onclick="return confirm('¿Desea borrar <?php echo $producto; ?>?')" class="btn btn-danger"><i class="bi bi-trash3"></i></a></td>
     </tr>
     <?php
                 }
