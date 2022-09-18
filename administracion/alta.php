@@ -6,7 +6,7 @@ if (!isset($_SESSION['correo'])) {
 $producto = $_POST['producto'];
 $precio = $_POST['precio'];
 $costo = $_POST['costo'];
-$estado = $_POST['estado'];
-mysqli_query($conexion, "INSERT INTO productos (producto, precio, costo, estado) VALUES ('$producto', '$precio', '$costo', '$estado')");
+$status = ($_POST['status'] == 1) ? 1 : 0;
+mysqli_query($conexion, "INSERT INTO productos (producto, precio, costo, status) VALUES ('$producto', '$precio', '$costo', '$status')");
 echo '<script>window.location="./"</script>';
 ?>

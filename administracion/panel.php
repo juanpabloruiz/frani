@@ -1,5 +1,5 @@
     <?php
-        include('conexion.php');
+    include('conexion.php');
     if (!isset($_SESSION['correo'])) {
         echo '<script>window.location="./"</script>';
     }
@@ -36,19 +36,11 @@
                             <div class="mb-3"><input type="text" name="producto" value="<?php echo $campo['producto']; ?>" class="form-control"></div>
                             <div class="mb-3 input-group"><span class="input-group-text">$</span><input type="number" name="precio" value="<?php echo $campo['precio']; ?>" class="form-control"></div>
                             <div class="mb-3 input-group"><span class="input-group-text">$</span><input type="number" name="costo" value="<?php echo $campo['costo']; ?>" class="form-control"></div>
-                            <h5>Estado del producto</h5>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="estado" value="publico" id="publico"<?php if ($campo['estado'] == 'publico') {echo 'checked';}?>>
-                                <label class="form-check-label" for="publico">
-                                    Público
-                                </label>
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" name="status" role="switch" id="flexSwitchCheckDefault" <?php echo ($campo['status'] == 1) ? 'checked' : ''; ?>>
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Visible en tienda</label>
                             </div>
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="radio" name="estado" value="privado" id="privado" <?php if ($campo['estado'] == 'privado') {echo 'checked';}?>>
-                                <label class="form-check-label" for="privado">
-                                    Privado
-                                </label>
-                            </div>
+
                             <div class="d-grid mb-3"><input type="submit" name="actualizar" value="Modificar" class="btn btn-primary"></div>
                         </form>
                     <?php
@@ -58,18 +50,16 @@
                             <div class="mb-3"><input type="text" name="producto" placeholder="Producto" class="form-control"></div>
                             <div class="mb-3 input-group"><span class="input-group-text">$</span><input type="number" name="precio" placeholder="Precio" class="form-control"></div>
                             <div class="mb-3 input-group"><span class="input-group-text">$</span><input type="number" name="costo" placeholder="Costo" class="form-control"></div>
-                            <h5>Estado del producto</h5>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="estado" value="publico" id="publico">
-                                <label class="form-check-label" for="publico">
-                                    Público
-                                </label>
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" name="status" value="1" role="switch" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Visible en tienda</label>
                             </div>
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="radio" name="estado" value="privado" id="privado" checked>
-                                <label class="form-check-label" for="privado">
-                                    Privado
-                                </label>
+
+
+
+                            <div class="mb-3">
+
+                                <input type="file" name="foto" class="form-control" id="foto">
                             </div>
                             <div class="d-grid mb-3"><input type="submit" name="insertar" value="Agregar" class="btn btn-primary"></div>
                         </form>
@@ -93,7 +83,7 @@
                                 while ($campo = mysqli_fetch_array($consulta)) {
                                     $producto = $campo['producto'];
                                 ?>
-                                    <tr <?php echo ($campo['estado'] == 'publico') ? 'class="bg-success text-white"' : 'class="bg-secondary text-white"'; ?>>
+                                    <tr <?php echo ($campo['status'] == 1) ? 'class="bg-success text-white"' : 'class="bg-secondary text-white"'; ?>>
                                         <td class="item" onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['producto']; ?></td>
                                         <td class="item" onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['precio']; ?></td>
                                         <td class="item" onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['costo']; ?></td>

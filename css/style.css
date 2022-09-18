@@ -3,6 +3,10 @@
     cursor: pointer;
 }
 
+.form-switch:hover {
+    cursor: pointer;
+}
+
 .table-hover:hover {
     cursor: pointer;
 }

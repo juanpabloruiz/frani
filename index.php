@@ -20,7 +20,7 @@ include('administracion/conexion.php');
     <main class="container my-4">
         <div class="row">
             <?php
-            $consulta = mysqli_query($conexion, "SELECT * FROM productos WHERE estado = 'publico' ORDER BY id DESC");
+            $consulta = mysqli_query($conexion, "SELECT * FROM productos WHERE status = 1 ORDER BY id DESC");
             while ($campo = mysqli_fetch_array($consulta)) {
             ?>
                 <div class="col-md-4">
