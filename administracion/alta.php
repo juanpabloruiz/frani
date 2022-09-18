@@ -6,7 +6,11 @@ if (!isset($_SESSION['correo'])) {
 $producto = $_POST['producto'];
 $precio = $_POST['precio'];
 $costo = $_POST['costo'];
-$status = ($_POST['status'] == 1) ? 1 : 0;
-mysqli_query($conexion, "INSERT INTO productos (producto, precio, costo, status) VALUES ('$producto', '$precio', '$costo', '$status')");
+if ($_POST['estado'] == 'on') {
+    $estado = 'publico';
+} else {
+    $estado = 'privado';
+}
+mysqli_query($conexion, "INSERT INTO productos (producto, precio, costo, estado) VALUES ('$producto', '$precio', '$costo', '$estado')");
 echo '<script>window.location="./"</script>';
 ?>

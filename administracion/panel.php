@@ -37,7 +37,7 @@
                             <div class="mb-3 input-group"><span class="input-group-text">$</span><input type="number" name="precio" value="<?php echo $campo['precio']; ?>" class="form-control"></div>
                             <div class="mb-3 input-group"><span class="input-group-text">$</span><input type="number" name="costo" value="<?php echo $campo['costo']; ?>" class="form-control"></div>
                             <div class="form-check form-switch mb-3">
-                                <input class="form-check-input" type="checkbox" name="status" role="switch" id="flexSwitchCheckDefault" <?php echo ($campo['status'] == 1) ? 'checked' : ''; ?>>
+                                <input class="form-check-input" type="checkbox" name="estado" role="switch" id="flexSwitchCheckDefault" <?php echo ($campo['estado'] == 'publico') ? 'checked' : ''; ?>>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Visible en tienda</label>
                             </div>
 
@@ -51,7 +51,7 @@
                             <div class="mb-3 input-group"><span class="input-group-text">$</span><input type="number" name="precio" placeholder="Precio" class="form-control"></div>
                             <div class="mb-3 input-group"><span class="input-group-text">$</span><input type="number" name="costo" placeholder="Costo" class="form-control"></div>
                             <div class="form-check form-switch mb-3">
-                                <input class="form-check-input" type="checkbox" name="status" value="1" role="switch" id="flexSwitchCheckDefault">
+                                <input class="form-check-input" type="checkbox" name="estado" role="switch" id="flexSwitchCheckDefault">
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Visible en tienda</label>
                             </div>
 
@@ -83,7 +83,7 @@
                                 while ($campo = mysqli_fetch_array($consulta)) {
                                     $producto = $campo['producto'];
                                 ?>
-                                    <tr <?php echo ($campo['status'] == 1) ? 'class="bg-success text-white"' : 'class="bg-secondary text-white"'; ?>>
+                                    <tr <?php echo ($campo['estado'] == 'publico') ? 'class="bg-success text-white"' : 'class="bg-secondary text-white"'; ?>>
                                         <td class="item" onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['producto']; ?></td>
                                         <td class="item" onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['precio']; ?></td>
                                         <td class="item" onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['costo']; ?></td>
