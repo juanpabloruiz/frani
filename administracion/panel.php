@@ -1,108 +1,105 @@
-    <?php
-    include('conexion.php');
-    if (!isset($_SESSION['correo'])) {
-        echo '<script>window.location="./"</script>';
-    }
+<?php
+include('conexion.php');
+if (!isset($_SESSION['correo'])) {
+    echo '<script>window.location="./"</script>';
+}
 
-    ?>
-    <!DOCTYPE html>
-    <html lang="es">
+?>
+<!DOCTYPE html>
+<html lang="es">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Panel</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-        <link rel="stylesheet" href="../css/style.css">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
 
-    <body>
-        <header class="bg-primary p-4">
-            <a href="./"><img src="../img/logo.png" alt="Frani" class="img-fluid d-block mx-auto"></a>
-        </header>
-        <main class="container my-4">
-            <div class="row">
-                <div class="col-md-4">
-                    <?php
-                    if (isset($_GET['id'])) {
-                        $id = $_GET['id'];
-                        $consulta = mysqli_query($conexion, "SELECT * FROM productos WHERE id = '$id'");
-                        $campo = mysqli_fetch_array($consulta);
-                    ?>
-                        <form method="post" action="modificacion">
-                            <input type="hidden" name="id" value="<?php echo $campo['id']; ?>">
-                            <div class="mb-3"><input type="text" name="producto" value="<?php echo $campo['producto']; ?>" class="form-control"></div>
-                            <div class="mb-3 input-group"><span class="input-group-text">$</span><input type="number" name="precio" value="<?php echo $campo['precio']; ?>" class="form-control"></div>
-                            <div class="mb-3 input-group"><span class="input-group-text">$</span><input type="number" name="costo" value="<?php echo $campo['costo']; ?>" class="form-control"></div>
-                            <div class="form-check form-switch mb-3">
-                                <input class="form-check-input" type="checkbox" name="estado" role="switch" id="flexSwitchCheckDefault" <?php echo ($campo['estado'] == 'publico') ? 'checked' : ''; ?>>
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Visible en tienda</label>
-                            </div>
-
-                            <div class="d-grid mb-3"><input type="submit" name="actualizar" value="Modificar" class="btn btn-primary"></div>
-                        </form>
-                    <?php
-                    } else {
-                    ?>
-                        <form method="post" action="alta">
-                            <div class="mb-3"><input type="text" name="producto" placeholder="Producto" class="form-control"></div>
-                            <div class="mb-3 input-group"><span class="input-group-text">$</span><input type="number" name="precio" placeholder="Precio" class="form-control"></div>
-                            <div class="mb-3 input-group"><span class="input-group-text">$</span><input type="number" name="costo" placeholder="Costo" class="form-control"></div>
-                            <div class="form-check form-switch mb-3">
-                                <input class="form-check-input" type="checkbox" name="estado" role="switch" id="flexSwitchCheckDefault">
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Visible en tienda</label>
-                            </div>
-
-
-
-                            <div class="mb-3">
-
-                                <input type="file" name="foto" class="form-control" id="foto">
-                            </div>
-                            <div class="d-grid mb-3"><input type="submit" name="insertar" value="Agregar" class="btn btn-primary"></div>
-                        </form>
-                    <?php
-                    }
-                    ?>
-                </div>
-                <div class="col-md-8">
-                    <input type="search" placeholder="Buscar aquí..." name="busqueda" id="buscar" class="form-control mb-3">
-                    <div id="datos">
-                        <div class="table-responsive">
-                            <table class="table align-middle table-hover">
-                                <tr>
-                                    <th>Producto</th>
-                                    <th>Precio</th>
-                                    <th>Costo</th>
-                                    <th>Borrar</th>
-                                </tr>
-                                <?php
-                                $consulta = mysqli_query($conexion, "SELECT * FROM productos ORDER BY producto ASC");
-                                while ($campo = mysqli_fetch_array($consulta)) {
-                                    $producto = $campo['producto'];
-                                ?>
-                                    <tr <?php echo ($campo['estado'] == 'publico') ? 'class="bg-success text-white"' : 'class="bg-secondary text-white"'; ?>>
-                                        <td class="item" onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['producto']; ?></td>
-                                        <td class="item" onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['precio']; ?></td>
-                                        <td class="item" onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['costo']; ?></td>
-                                        <td><a href="baja?id=<?php echo $campo['id']; ?>" onclick="return confirm('¿Desea borrar <?php echo $producto; ?>?')" class="btn btn-danger"><i class="bi bi-trash3"></i></a></td>
-                                    </tr>
-                                <?php
-                                }
-                                ?>
-                            </table>
+<body>
+    <header class="bg-primary p-4">
+        <a href="./"><img src="../img/logo.png" alt="Frani" class="img-fluid d-block mx-auto"></a>
+    </header>
+    <main class="container my-4">
+        <div class="row">
+            <div class="col-md-4">
+                <?php
+                if (isset($_GET['id'])) {
+                    $id = $_GET['id'];
+                    $consulta = mysqli_query($conexion, "SELECT * FROM productos WHERE id = '$id'");
+                    $campo = mysqli_fetch_array($consulta);
+                ?>
+                    <form method="post" action="modificacion" enctype="multipart/form-data">
+                        <input type="hidden" name="id" value="<?php echo $campo['id']; ?>">
+                        <div class="mb-3"><input type="text" name="producto" value="<?php echo $campo['producto']; ?>" class="form-control"></div>
+                        <div class="mb-3 input-group"><span class="input-group-text">$</span><input type="number" name="precio" value="<?php echo $campo['precio']; ?>" class="form-control"></div>
+                        <div class="mb-3 input-group"><span class="input-group-text">$</span><input type="number" name="costo" value="<?php echo $campo['costo']; ?>" class="form-control"></div>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" name="estado" role="switch" id="flexSwitchCheckDefault" <?php echo ($campo['estado'] == 'publico') ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="flexSwitchCheckDefault">Visible en tienda</label>
                         </div>
+                        <div class="mb-3"><input type="file" name="foto" class="form-control"></div>
+                        <div class="d-grid mb-3"><input type="submit" name="actualizar" value="Modificar" class="btn btn-primary"></div>
+                    </form>
+                <?php
+                } else {
+                ?>
+                    <form method="post" action="alta" enctype="multipart/form-data">
+                        <div class="mb-3"><input type="text" name="producto" placeholder="Producto" class="form-control"></div>
+                        <div class="mb-3 input-group"><span class="input-group-text">$</span><input type="number" name="precio" placeholder="Precio" class="form-control"></div>
+                        <div class="mb-3 input-group"><span class="input-group-text">$</span><input type="number" name="costo" placeholder="Costo" class="form-control"></div>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" name="estado" role="switch" id="flexSwitchCheckDefault">
+                            <label class="form-check-label" for="flexSwitchCheckDefault">Visible en tienda</label>
+                        </div>
+
+
+
+                        <div class="mb-3"><input type="file" name="foto" class="form-control"></div>
+                        <div class="d-grid mb-3"><input type="submit" name="insertar" value="Agregar" class="btn btn-primary"></div>
+                    </form>
+                <?php
+                }
+                ?>
+            </div>
+            <div class="col-md-8">
+                <input type="search" placeholder="Buscar aquí..." name="busqueda" id="buscar" class="form-control mb-3">
+                <div id="datos">
+                    <div class="table-responsive">
+                        <table class="table align-middle table-hover">
+                            <tr>
+                                <th>Producto</th>
+                                <th>Precio</th>
+                                <th>Costo</th>
+                                <th>Borrar</th>
+                            </tr>
+                            <?php
+                            $consulta = mysqli_query($conexion, "SELECT * FROM productos ORDER BY producto ASC");
+                            while ($campo = mysqli_fetch_array($consulta)) {
+                                $producto = $campo['producto'];
+                            ?>
+                                <tr <?php echo ($campo['estado'] == 'publico') ? 'class="bg-success text-white"' : 'class="bg-secondary text-white"'; ?>>
+                                    <td class="item" onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['producto']; ?></td>
+                                    <td class="item" onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['precio']; ?></td>
+                                    <td class="item" onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['costo']; ?></td>
+                                    <td><a href="baja?id=<?php echo $campo['id']; ?>" onclick="return confirm('¿Desea borrar <?php echo $producto; ?>?')" class="btn btn-danger"><i class="bi bi-trash3"></i></a></td>
+                                </tr>
+                            <?php
+                            }
+                            ?>
+                        </table>
                     </div>
                 </div>
             </div>
-        </main>
-        <footer class="bg-dark text-white text-center py-4">
-            Frani <?php echo date('Y'); ?> - <a href="salir">Cerrar sesión</a>
-        </footer>
-        <script src="../js/buscar.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
-    </body>
+        </div>
+    </main>
+    <footer class="bg-dark text-white text-center py-4">
+        Frani <?php echo date('Y'); ?> - <a href="salir">Cerrar sesión</a>
+    </footer>
+    <script src="../js/buscar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+</body>
 
-    </html>
+</html>

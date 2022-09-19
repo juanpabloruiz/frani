@@ -23,8 +23,9 @@ include('administracion/conexion.php');
             $consulta = mysqli_query($conexion, "SELECT * FROM productos WHERE estado = 'publico' ORDER BY id DESC");
             while ($campo = mysqli_fetch_array($consulta)) {
             ?>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card mb-3">
+                        <img src="imagenes/<?php echo $campo['foto']; ?>" class="card-img-top img-fluid" alt="<?php echo $campo['producto']; ?>">
                         <div class="card-body">
                             <h5 class="card-title">$ <?php echo $campo['precio']; ?></h5>
                             <p class="card-text"><?php echo $campo['producto']; ?></p>
