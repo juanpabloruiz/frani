@@ -18,7 +18,7 @@ if ($_POST['estado'] == 'on') {
 } else {
     $estado = 'privado';
 }
-if (isset($_FILES['foto']['name'])) {
+if ($_FILES['foto']['name'] !== NULL) {
     mysqli_query($conexion, "UPDATE productos SET foto = '$foto' WHERE id = '$id'");
 }
 mysqli_query($conexion, "UPDATE productos SET producto = '$producto', precio = '$precio', costo = '$costo', estado = '$estado' WHERE id = '$id'");
