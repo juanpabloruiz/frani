@@ -13,6 +13,8 @@ if (!isset($_SESSION['correo'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ventas - Frani</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
@@ -77,11 +79,13 @@ if (!isset($_SESSION['correo'])) {
                     <th>Unitario</th>
                     <th>Total</th>
                     <th>Fecha</th>
+                    <th>Borrar</th>
                 </tr>
             </thead>
             <?php
             $consulta = mysqli_query($conexion, "SELECT * FROM ventas ORDER BY id DESC");
             while ($campo = mysqli_fetch_array($consulta)) {
+                $producto = $campo['producto'];
             ?>
                 <tbody>
                     <tr>
@@ -90,6 +94,7 @@ if (!isset($_SESSION['correo'])) {
                         <td><?php echo $campo['unitario']; ?></td>
                         <td><?php echo $campo['total']; ?></td>
                         <td><?php echo $campo['registro']; ?></td>
+                        <td><a href="baja_venta?id=<?php echo $campo['id']; ?>" onclick="return confirm('¿Desea borrar <?php echo $producto; ?>?')" class="btn btn-danger"><i class="bi bi-trash3"></i></a></td>
                     </tr>
                 </tbody>
             <?php
