@@ -40,38 +40,60 @@ if (!isset($_SESSION['correo'])) {
         <a href="./"><img src="../img/logo.png" alt="Frani" class="img-fluid d-block mx-auto"></a>
     </header>
     <main class="container my-4">
-        <h4>Ingresar una nueva venta</h4>
+        <?php
+        if (isset($_GET['id'])) {
+            $id = $_GET['id'];
+            $consulta = mysqli_query($conexion, "SELECT * FROM ventas WHERE id = '$id'");
+            $campo = mysqli_fetch_array($consulta);
+        ?>
+        <h4>Modificar la venta</h4>
         <div class="card">
             <div class="card-body">
-                <form method="post" action="venta" class="form-inline">
+                <form method="post" action="modificacion_venta">
+                    <input type="hidden" name="id" value="<?php echo $campo['id']; ?>">
                     <div class="row">
-                        
-                            <div class="col">
-                                <select name="producto" class="form-control">
-                                <?php
-                        $consulta = mysqli_query($conexion, "SELECT * FROM productos ORDER BY producto ASC");
-                        while ($campo = mysqli_fetch_array($consulta)) {
-                            $precio = $campo['precio'];
-                        ?>
-                        
-                                    <option value="<?php echo $campo['producto']; ?>"><?php echo $campo['producto']; ?></option>
-                                    <?php
-                        }
-                        ?>
-                                </select>
-                            </div>
-                            <div class="col"><input type="number" name="cantidad" placeholder="Cantidad" class="form-control"></div>
-                            
-                            <input type="hidden" name="unitario" value="<?php echo $precio; ?>">
-                        
-                            <div class="col d-grid"><input type="submit" name="venta" value="Agregar venta" class="btn btn-primary"></div>
-                        
-                </div>
+                        <div class="col">
+                            <select name="producto" class="form-control">
+                                <option value="<?php echo $campo['producto']; ?>"><?php echo $campo['producto']; ?></option>
+                            </select>
+                        </div>
+                        <div class="col"><input type="number" name="cantidad" value="<?php echo $campo['cantidad']; ?>" class="form-control"></div>
+                        <div class="col d-grid"><input type="submit" name="venta" value="Modificar venta" class="btn btn-primary"></div>
+                    </div>
                 </form>
             </div>
         </div>
+        <?php
+        } else {
+        ?>
+        <h4>Agregar una nueva venta</h4>
+        <div class="card">
+            <div class="card-body">
+                <form method="post" action="alta_venta">
+                    <div class="row">
+                        <div class="col">
+                            <select name="producto" class="form-control">
+                                <?php
+                                $consulta = mysqli_query($conexion, "SELECT * FROM productos ORDER BY producto ASC");
+                                while ($campo = mysqli_fetch_array($consulta)) {
+                                ?>
+                                    <option value="<?php echo $campo['producto']; ?>"><?php echo $campo['producto']; ?></option>
+                                <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="col"><input type="number" name="cantidad" placeholder="Cantidad" class="form-control"></div>
+                        <div class="col d-grid"><input type="submit" name="venta" value="Agregar venta" class="btn btn-primary"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <?php
+        }
+        ?>
         <h1>Ventas</h1>
-        <table class="table">
+        <table class="table align-middle table-hover">
             <thead>
                 <tr>
                     <th>Producto</th>
@@ -89,11 +111,11 @@ if (!isset($_SESSION['correo'])) {
             ?>
                 <tbody>
                     <tr>
-                        <td><?php echo $campo['producto']; ?></td>
-                        <td><?php echo $campo['cantidad']; ?></td>
-                        <td><?php echo $campo['unitario']; ?></td>
-                        <td><?php echo $campo['total']; ?></td>
-                        <td><?php echo $campo['registro']; ?></td>
+                        <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['producto']; ?></td>
+                        <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['cantidad']; ?></td>
+                        <td onclick="window.location='?id=<?php echo $campo['id']; ?>'">$ <?php echo $campo['unitario']; ?></td>
+                        <td onclick="window.location='?id=<?php echo $campo['id']; ?>'">$ <?php echo $campo['total']; ?></td>
+                        <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['registro']; ?></td>
                         <td><a href="baja_venta?id=<?php echo $campo['id']; ?>" onclick="return confirm('¿Desea borrar <?php echo $producto; ?>?')" class="btn btn-danger"><i class="bi bi-trash3"></i></a></td>
                     </tr>
                 </tbody>

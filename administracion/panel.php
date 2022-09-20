@@ -49,7 +49,7 @@ if (!isset($_SESSION['correo'])) {
                     $consulta = mysqli_query($conexion, "SELECT * FROM productos WHERE id = '$id'");
                     $campo = mysqli_fetch_array($consulta);
                 ?>
-                    <form method="post" action="modificacion" enctype="multipart/form-data">
+                    <form method="post" action="modificacion_panel" enctype="multipart/form-data">
                         <input type="hidden" name="id" value="<?php echo $campo['id']; ?>">
                         <div class="mb-3"><input type="text" name="producto" value="<?php echo $campo['producto']; ?>" class="form-control"></div>
                         <div class="mb-3 input-group"><span class="input-group-text">$</span><input type="number" name="precio" value="<?php echo $campo['precio']; ?>" class="form-control"></div>
@@ -64,7 +64,7 @@ if (!isset($_SESSION['correo'])) {
                 <?php
                 } else {
                 ?>
-                    <form method="post" action="alta" enctype="multipart/form-data">
+                    <form method="post" action="alta_panel" enctype="multipart/form-data">
                         <div class="mb-3"><input type="text" name="producto" placeholder="Producto" class="form-control"></div>
                         <div class="mb-3 input-group"><span class="input-group-text">$</span><input type="number" name="precio" placeholder="Precio" class="form-control"></div>
                         <div class="mb-3 input-group"><span class="input-group-text">$</span><input type="number" name="costo" placeholder="Costo" class="form-control"></div>
@@ -99,10 +99,10 @@ if (!isset($_SESSION['correo'])) {
                                 $producto = $campo['producto'];
                             ?>
                                 <tr <?php echo ($campo['estado'] == 'publico') ? 'class="bg-success text-white"' : 'class="bg-secondary text-white"'; ?>>
-                                    <td class="item" onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['producto']; ?></td>
-                                    <td class="item" onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['precio']; ?></td>
-                                    <td class="item" onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['costo']; ?></td>
-                                    <td><a href="baja?id=<?php echo $campo['id']; ?>" onclick="return confirm('¿Desea borrar <?php echo $producto; ?>?')" class="btn btn-danger"><i class="bi bi-trash3"></i></a></td>
+                                    <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['producto']; ?></td>
+                                    <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['precio']; ?></td>
+                                    <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['costo']; ?></td>
+                                    <td><a href="baja_panel?id=<?php echo $campo['id']; ?>" onclick="return confirm('¿Desea borrar <?php echo $producto; ?>?')" class="btn btn-danger"><i class="bi bi-trash3"></i></a></td>
                                 </tr>
                             <?php
                             }
