@@ -13,6 +13,7 @@ include('administracion/conexion.php');
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<!-- erterter -->
     <?php if (isset($_SESSION['correo'])) { ?>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
