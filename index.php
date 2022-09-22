@@ -14,9 +14,7 @@ include('administracion/conexion.php');
 </head>
 
 <body>
-    <?php
-    if (isset($_SESSION['correo'])) {
-    ?>
+    <?php if (isset($_SESSION['correo'])) { ?>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="../">Frani</a>
