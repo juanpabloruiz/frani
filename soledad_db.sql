@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.5deb2
+-- version 4.9.5
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost:3306
--- Tiempo de generación: 19-09-2022 a las 18:16:02
--- Versión del servidor: 8.0.30-0ubuntu0.20.04.2
--- Versión de PHP: 7.4.3
+-- Servidor: localhost
+-- Tiempo de generación: 24-09-2022 a las 19:24:28
+-- Versión del servidor: 5.6.37
+-- Versión de PHP: 5.6.40
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -29,9 +29,9 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `productos` (
-  `id` int NOT NULL,
-  `producto` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
-  `foto` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `id` int(133) NOT NULL,
+  `producto` varchar(255) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
+  `foto` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `precio` double NOT NULL,
   `costo` double NOT NULL,
   `estado` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
@@ -43,13 +43,12 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id`, `producto`, `foto`, `precio`, `costo`, `estado`, `registro`) VALUES
-(1, 'Afiche', 'muestra.jpg', 80, 60, 'publico', '2022-06-08 21:06:46'),
+(1, 'Afiche', '1947959998.jpg', 80, 60, 'publico', '2022-06-08 21:06:46'),
 (2, 'Aro metálico', 'muestra.jpg', 20, 9, 'publico', '2022-05-31 14:44:27'),
 (3, 'Auricular', 'muestra.jpg', 200, 120, 'publico', '2022-05-31 14:50:22'),
 (4, 'Birome Bic', 'muestra.jpg', 70, 38, 'publico', '2022-05-30 22:46:35'),
 (5, 'Birome borrable', 'muestra.jpg', 160, 140, 'publico', '2022-05-31 14:42:24'),
 (6, 'Bolsa de regalo Kraft ', 'muestra.jpg', 70, 46, 'publico', '2022-06-08 21:37:32'),
-(7, 'borrador', 'muestra.jpg', 20, 13, 'publico', '2022-05-30 22:44:44'),
 (8, 'Candado para mochila', 'muestra.jpg', 100, 50, 'publico', '2022-05-31 14:49:45'),
 (9, 'Carpeta Número 5', 'muestra.jpg', 180, 110, 'publico', '2022-05-31 14:48:51'),
 (10, 'Carpeta Número 5 con dibujos', 'muestra.jpg', 230, 180, 'publico', '2022-05-31 14:49:17'),
@@ -78,7 +77,7 @@ INSERT INTO `productos` (`id`, `producto`, `foto`, `precio`, `costo`, `estado`, 
 (33, 'lápiz negro', 'muestra.jpg', 20, 8, 'publico', '2022-05-30 22:44:30'),
 (34, 'Llavero destapador', 'muestra.jpg', 150, 90, 'publico', '2022-06-08 00:24:10'),
 (35, 'Llavero día del padre', 'muestra.jpg', 120, 70, 'publico', '2022-06-08 00:24:23'),
-(36, 'Llavero polímero ', 'muestra.jpg', 90, 50, 'publico', '2022-06-08 00:23:54'),
+(36, 'Llavero polímero ', 'muestra.jpg', 120, 55, 'publico', '2022-06-08 00:23:54'),
 (37, 'Mapas', 'muestra.jpg', 10, 4, 'publico', '2022-05-31 14:43:05'),
 (38, 'Marcador al agua', 'muestra.jpg', 70, 47, 'publico', '2022-05-31 14:46:11'),
 (39, 'Marcador Filgo por 6', 'muestra.jpg', 140, 120, 'publico', '2022-05-31 14:51:47'),
@@ -102,10 +101,10 @@ INSERT INTO `productos` (`id`, `producto`, `foto`, `precio`, `costo`, `estado`, 
 (57, 'Set de mate día del padre', 'muestra.jpg', 800, 550, 'publico', '2022-06-08 00:24:39'),
 (58, 'Silicona 100 ml.', 'muestra.jpg', 280, 260, 'publico', '2022-05-31 14:51:09'),
 (59, 'Tabla periódica', 'muestra.jpg', 80, 45, 'publico', '2022-05-31 14:46:55'),
-(60, 'Taza de cerámica', 'muestra.jpg', 800, 450, 'publico', '2022-06-01 13:31:56'),
-(61, 'Taza polímero asa común ', 'muestra.jpg', 350, 180, 'publico', '2022-06-01 13:31:19'),
-(62, 'Taza polímero asa de corazón ', 'muestra.jpg', 400, 200, 'publico', '2022-06-01 13:31:38'),
-(63, 'Tela mandala por 3 ', 'muestra.jpg', 330, 330, 'publico', '2022-05-31 22:23:53'),
+(60, 'Taza de cerámica', 'muestra.jpg', 950, 570, 'publico', '2022-06-01 13:31:56'),
+(61, 'Taza polímero asa común ', 'muestra.jpg', 450, 240, 'publico', '2022-06-01 13:31:19'),
+(62, 'Taza polímero asa de corazón ', 'muestra.jpg', 450, 250, 'publico', '2022-06-01 13:31:38'),
+(63, 'Tela mandala por 3 ', 'muestra.jpg', 330, 330, 'privado', '2022-05-31 22:23:53'),
 (64, 'Tela provenzal para cucha por metro', 'muestra.jpg', 760, 460, 'publico', '2022-05-31 22:24:36'),
 (65, 'Tela tropical mecánico por metro', 'muestra.jpg', 550, 190, 'publico', '2022-05-31 22:25:04'),
 (66, 'Yerbero', 'muestra.jpg', 480, 365, 'publico', '2022-06-02 00:13:08'),
@@ -114,8 +113,23 @@ INSERT INTO `productos` (`id`, `producto`, `foto`, `precio`, `costo`, `estado`, 
 (71, 'Vaso con pico', 'muestra.jpg', 550, 400, 'publico', '2022-08-23 13:33:02'),
 (72, 'Cuchara', 'muestra.jpg', 120, 50, 'publico', '2022-08-23 22:22:21'),
 (73, 'Cazuelita', 'muestra.jpg', 280, 160, 'publico', '2022-08-23 22:28:05'),
-(103, 'aaa', 'muestra.jpg', 23, 23, 'publico', '2022-09-19 21:04:00'),
-(104, 'aaaa', 'muestra.jpg', 56, 65, 'publico', '2022-09-19 21:05:29');
+(79, 'Encendedor', 'muestra.jpg', 100, 55, 'publico', '2022-09-19 14:05:55'),
+(80, 'Borrador', 'muestra.jpg', 40, 23, 'publico', '2022-09-19 14:08:54'),
+(83, 'Collar chico goma gato', 'muestra.jpg', 250, 180, 'privado', '2022-09-20 15:10:30'),
+(84, 'Identificador', 'muestra.jpg', 200, 55, 'privado', '2022-09-20 22:09:09'),
+(85, 'Collar y correa grueso', 'muestra.jpg', 800, 450, 'privado', '2022-09-20 22:10:45'),
+(86, 'Invisible', 'muestra.jpg', 200, 140, 'privado', '2022-09-21 23:39:27'),
+(87, 'Labiales Argentina', 'muestra.jpg', 320, 243, 'privado', '2022-09-22 22:08:55'),
+(88, 'Pintura Argentina', 'muestra.jpg', 260, 180, 'privado', '2022-09-22 22:09:14'),
+(89, 'Cuadro Feliz día', 'muestra.jpg', 280, 130, 'privado', '2022-09-23 13:35:11'),
+(90, 'Esmalte duo argentina', 'muestra.jpg', 320, 243, 'privado', '2022-09-23 21:14:00'),
+(91, 'Pinta cara Argentina', 'muestra.jpg', 320, 243, 'privado', '2022-09-23 21:15:02'),
+(92, 'Pinta cara Argentina blister', 'muestra.jpg', 260, 138, 'privado', '2022-09-23 21:16:27'),
+(93, 'Brillantina', 'muestra.jpg', 50, 34, 'privado', '2022-09-23 21:20:59'),
+(94, 'Marcador lavable Ezco ', 'muestra.jpg', 240, 190, 'privado', '2022-09-23 21:21:25'),
+(95, 'Pretal más correa chica', 'muestra.jpg', 250, 350, 'privado', '2022-09-24 21:10:47'),
+(96, 'Llavero madera', 'muestra.jpg', 120, 23, 'privado', '2022-09-24 21:13:10'),
+(97, 'Collar cuero con puas', 'muestra.jpg', 450, 300, 'privado', '2022-09-24 22:00:45');
 
 -- --------------------------------------------------------
 
@@ -124,10 +138,10 @@ INSERT INTO `productos` (`id`, `producto`, `foto`, `precio`, `costo`, `estado`, 
 --
 
 CREATE TABLE `usuarios` (
-  `id` int NOT NULL,
-  `correo` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
-  `clave` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
-  `rango` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
+  `id` int(133) NOT NULL,
+  `correo` varchar(255) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
+  `clave` varchar(255) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
+  `rango` varchar(255) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `registro` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
@@ -138,6 +152,45 @@ CREATE TABLE `usuarios` (
 INSERT INTO `usuarios` (`id`, `correo`, `clave`, `rango`, `registro`) VALUES
 (1, 'soledadm77@gmail.com', 'corazon', 'admin', '2022-05-29 20:18:50'),
 (2, 'pabloruiz1980@gmail.com', 'soledad', 'admin', '2022-05-30 13:04:30');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `ventas`
+--
+
+CREATE TABLE `ventas` (
+  `id` int(133) NOT NULL,
+  `producto` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `cantidad` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `unitario` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `total` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `registro` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `ventas`
+--
+
+INSERT INTO `ventas` (`id`, `producto`, `cantidad`, `unitario`, `total`, `registro`) VALUES
+(6, 'Identificador', '2', '200', '400', '2022-09-20 19:14:25'),
+(7, 'Taza de cerámica', '2', '950', '1900', '2022-09-20 19:11:43'),
+(8, 'Alcancía', '1', '480', '480', '2022-09-20 19:11:51'),
+(9, 'Llavero polímero ', '22', '120', '2640', '2022-09-20 19:14:51'),
+(10, 'Collar chico goma gato', '2', '250', '500', '2022-09-20 19:14:05'),
+(11, 'Mate polímero', '2', '650', '1300', '2022-09-20 19:15:07'),
+(12, 'Invisible', '1', '200', '200', '2022-09-21 20:39:45'),
+(13, 'Taza polímero asa común ', '2', '450', '900', '2022-09-21 20:39:56'),
+(14, 'Taza de cerámica', '1', '950', '950', '2022-09-22 19:09:31'),
+(15, 'Labiales Argentina', '1', '300', '300', '2022-09-22 19:09:40'),
+(16, 'Pintura Argentina', '1', '260', '260', '2022-09-22 19:09:55'),
+(17, 'Taza de cerámica', '2', '950', '1900', '2022-09-24 18:11:01'),
+(18, 'Yerbero', '1', '480', '480', '2022-09-24 18:11:09'),
+(19, 'Pretal más correa chica', '1', '250', '250', '2022-09-24 18:11:19'),
+(20, 'Identificador', '1', '200', '200', '2022-09-24 18:11:29'),
+(21, 'Taza polímero asa de corazón ', '1', '450', '450', '2022-09-24 18:25:19'),
+(22, 'Labiales Argentina', '1', '320', '320', '2022-09-24 19:01:28'),
+(23, 'Collar cuero con puas', '1', '450', '450', '2022-09-24 19:02:09');
 
 --
 -- Índices para tablas volcadas
@@ -157,6 +210,12 @@ ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `ventas`
+--
+ALTER TABLE `ventas`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -164,13 +223,19 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
+  MODIFY `id` int(133) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(133) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `ventas`
+--
+ALTER TABLE `ventas`
+  MODIFY `id` int(133) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
