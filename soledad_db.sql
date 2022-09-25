@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 24-09-2022 a las 19:24:28
+-- Tiempo de generación: 24-09-2022 a las 21:57:52
 -- Versión del servidor: 5.6.37
 -- Versión de PHP: 5.6.40
 
@@ -43,7 +43,7 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id`, `producto`, `foto`, `precio`, `costo`, `estado`, `registro`) VALUES
-(1, 'Afiche', '1947959998.jpg', 80, 60, 'publico', '2022-06-08 21:06:46'),
+(1, 'Afiche', 'muestra.jpg', 80, 60, 'publico', '2022-06-08 21:06:46'),
 (2, 'Aro metálico', 'muestra.jpg', 20, 9, 'publico', '2022-05-31 14:44:27'),
 (3, 'Auricular', 'muestra.jpg', 200, 120, 'publico', '2022-05-31 14:50:22'),
 (4, 'Birome Bic', 'muestra.jpg', 70, 38, 'publico', '2022-05-30 22:46:35'),
@@ -115,21 +115,23 @@ INSERT INTO `productos` (`id`, `producto`, `foto`, `precio`, `costo`, `estado`, 
 (73, 'Cazuelita', 'muestra.jpg', 280, 160, 'publico', '2022-08-23 22:28:05'),
 (79, 'Encendedor', 'muestra.jpg', 100, 55, 'publico', '2022-09-19 14:05:55'),
 (80, 'Borrador', 'muestra.jpg', 40, 23, 'publico', '2022-09-19 14:08:54'),
-(83, 'Collar chico goma gato', 'muestra.jpg', 250, 180, 'privado', '2022-09-20 15:10:30'),
-(84, 'Identificador', 'muestra.jpg', 200, 55, 'privado', '2022-09-20 22:09:09'),
-(85, 'Collar y correa grueso', 'muestra.jpg', 800, 450, 'privado', '2022-09-20 22:10:45'),
-(86, 'Invisible', 'muestra.jpg', 200, 140, 'privado', '2022-09-21 23:39:27'),
-(87, 'Labiales Argentina', 'muestra.jpg', 320, 243, 'privado', '2022-09-22 22:08:55'),
-(88, 'Pintura Argentina', 'muestra.jpg', 260, 180, 'privado', '2022-09-22 22:09:14'),
-(89, 'Cuadro Feliz día', 'muestra.jpg', 280, 130, 'privado', '2022-09-23 13:35:11'),
-(90, 'Esmalte duo argentina', 'muestra.jpg', 320, 243, 'privado', '2022-09-23 21:14:00'),
-(91, 'Pinta cara Argentina', 'muestra.jpg', 320, 243, 'privado', '2022-09-23 21:15:02'),
-(92, 'Pinta cara Argentina blister', 'muestra.jpg', 260, 138, 'privado', '2022-09-23 21:16:27'),
-(93, 'Brillantina', 'muestra.jpg', 50, 34, 'privado', '2022-09-23 21:20:59'),
-(94, 'Marcador lavable Ezco ', 'muestra.jpg', 240, 190, 'privado', '2022-09-23 21:21:25'),
-(95, 'Pretal más correa chica', 'muestra.jpg', 250, 350, 'privado', '2022-09-24 21:10:47'),
-(96, 'Llavero madera', 'muestra.jpg', 120, 23, 'privado', '2022-09-24 21:13:10'),
-(97, 'Collar cuero con puas', 'muestra.jpg', 450, 300, 'privado', '2022-09-24 22:00:45');
+(83, 'Collar chico goma gato', 'muestra.jpg', 250, 180, 'publico', '2022-09-20 15:10:30'),
+(84, 'Identificador', 'muestra.jpg', 200, 55, 'publico', '2022-09-20 22:09:09'),
+(85, 'Collar y correa grueso', 'muestra.jpg', 800, 450, 'publico', '2022-09-20 22:10:45'),
+(86, 'Invisible', 'muestra.jpg', 200, 140, 'publico', '2022-09-21 23:39:27'),
+(87, 'Labiales Argentina', 'muestra.jpg', 320, 243, 'publico', '2022-09-22 22:08:55'),
+(88, 'Pintura Argentina', 'muestra.jpg', 260, 180, 'publico', '2022-09-22 22:09:14'),
+(89, 'Cuadro Feliz día', 'muestra.jpg', 280, 130, 'publico', '2022-09-23 13:35:11'),
+(90, 'Esmalte duo argentina', 'muestra.jpg', 320, 243, 'publico', '2022-09-23 21:14:00'),
+(91, 'Pinta cara Argentina', 'muestra.jpg', 320, 243, 'publico', '2022-09-23 21:15:02'),
+(92, 'Pinta cara Argentina blister', 'muestra.jpg', 260, 138, 'publico', '2022-09-23 21:16:27'),
+(93, 'Brillantina', 'muestra.jpg', 50, 34, 'publico', '2022-09-23 21:20:59'),
+(94, 'Marcador lavable Ezco ', 'muestra.jpg', 240, 190, 'publico', '2022-09-23 21:21:25'),
+(95, 'Pretal más correa chica', 'muestra.jpg', 250, 350, 'publico', '2022-09-24 21:10:47'),
+(96, 'Llavero madera', 'muestra.jpg', 120, 23, 'publico', '2022-09-24 21:13:10'),
+(97, 'Collar cuero con puas', 'muestra.jpg', 450, 300, 'publico', '2022-09-24 22:00:45'),
+(98, 'Camiseta Argentina Talle 3', 'muestra.jpg', 800, 450, 'publico', '2022-09-25 00:29:50'),
+(99, 'Camiseta Argentina Talle 4', 'muestra.jpg', 900, 550, 'publico', '2022-09-25 00:30:30');
 
 -- --------------------------------------------------------
 
@@ -190,7 +192,9 @@ INSERT INTO `ventas` (`id`, `producto`, `cantidad`, `unitario`, `total`, `regist
 (20, 'Identificador', '1', '200', '200', '2022-09-24 18:11:29'),
 (21, 'Taza polímero asa de corazón ', '1', '450', '450', '2022-09-24 18:25:19'),
 (22, 'Labiales Argentina', '1', '320', '320', '2022-09-24 19:01:28'),
-(23, 'Collar cuero con puas', '1', '450', '450', '2022-09-24 19:02:09');
+(23, 'Collar cuero con puas', '1', '450', '450', '2022-09-24 19:02:09'),
+(24, 'Camiseta Argentina Talle 3', '1', '800', '800', '2022-09-24 21:30:39'),
+(25, 'Camiseta Argentina Talle 4', '1', '900', '900', '2022-09-24 21:30:45');
 
 --
 -- Índices para tablas volcadas
@@ -223,7 +227,7 @@ ALTER TABLE `ventas`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(133) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
+  MODIFY `id` int(133) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
@@ -235,7 +239,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `id` int(133) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(133) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
