@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 26-09-2022 a las 09:49:53
+-- Tiempo de generación: 15-10-2022 a las 13:35:39
 -- Versión del servidor: 5.6.37
 -- Versión de PHP: 5.6.40
 
@@ -43,10 +43,10 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id`, `producto`, `foto`, `precio`, `costo`, `estado`, `registro`) VALUES
-(1, 'Afiche', 'muestra.jpg', 80, 60, 'publico', '2022-06-08 21:06:46'),
+(1, 'Afiche', 'muestra.jpg', 100, 80, 'publico', '2022-06-08 21:06:46'),
 (2, 'Aro metálico', 'muestra.jpg', 20, 9, 'publico', '2022-05-31 14:44:27'),
 (3, 'Auricular', 'muestra.jpg', 200, 120, 'publico', '2022-05-31 14:50:22'),
-(4, 'Birome Bic', 'muestra.jpg', 70, 38, 'publico', '2022-05-30 22:46:35'),
+(4, 'Birome Bic', 'muestra.jpg', 90, 40, 'publico', '2022-05-30 22:46:35'),
 (5, 'Birome borrable', 'muestra.jpg', 160, 140, 'publico', '2022-05-31 14:42:24'),
 (6, 'Bolsa de regalo Kraft ', 'muestra.jpg', 70, 46, 'publico', '2022-06-08 21:37:32'),
 (8, 'Candado para mochila', 'muestra.jpg', 100, 50, 'publico', '2022-05-31 14:49:45'),
@@ -54,9 +54,9 @@ INSERT INTO `productos` (`id`, `producto`, `foto`, `precio`, `costo`, `estado`, 
 (10, 'Carpeta Número 5 con dibujos', 'muestra.jpg', 230, 180, 'publico', '2022-05-31 14:49:17'),
 (11, 'Carpeta tapa transparente A4', 'muestra.jpg', 120, 60, 'publico', '2022-05-31 14:51:29'),
 (12, 'Cartuchera', 'muestra.jpg', 80, 50, 'publico', '2022-05-30 22:43:59'),
-(13, 'Cartulina blanca', 'muestra.jpg', 40, 18, 'publico', '2022-05-31 14:43:53'),
+(13, 'Cartulina blanca', 'muestra.jpg', 60, 33, 'publico', '2022-05-31 14:43:53'),
 (14, 'Cartulina color', 'muestra.jpg', 60, 40, 'publico', '2022-05-31 14:43:40'),
-(15, 'Chopp polímero', 'muestra.jpg', 1000, 690, 'publico', '2022-06-02 00:14:04'),
+(15, 'Chopp polímero', 'muestra.jpg', 1100, 690, 'publico', '2022-06-02 00:14:04'),
 (16, 'Cinta pack ancha', 'muestra.jpg', 200, 170, 'publico', '2022-05-31 14:48:07'),
 (17, 'Cinta pack fina', 'muestra.jpg', 180, 150, 'publico', '2022-06-09 16:03:19'),
 (18, 'Compás general', 'muestra.jpg', 23, 12, 'publico', '2022-05-31 03:13:48'),
@@ -77,12 +77,12 @@ INSERT INTO `productos` (`id`, `producto`, `foto`, `precio`, `costo`, `estado`, 
 (33, 'lápiz negro', 'muestra.jpg', 20, 8, 'publico', '2022-05-30 22:44:30'),
 (34, 'Llavero destapador', 'muestra.jpg', 150, 90, 'publico', '2022-06-08 00:24:10'),
 (35, 'Llavero día del padre', 'muestra.jpg', 120, 70, 'publico', '2022-06-08 00:24:23'),
-(36, 'Llavero polímero ', 'muestra.jpg', 120, 55, 'publico', '2022-06-08 00:23:54'),
+(36, 'Llavero polímero ', 'muestra.jpg', 150, 55, 'publico', '2022-06-08 00:23:54'),
 (37, 'Mapas', 'muestra.jpg', 10, 4, 'publico', '2022-05-31 14:43:05'),
 (38, 'Marcador al agua', 'muestra.jpg', 70, 47, 'publico', '2022-05-31 14:46:11'),
 (39, 'Marcador Filgo por 6', 'muestra.jpg', 140, 120, 'publico', '2022-05-31 14:51:47'),
 (40, 'Marcador permanente', 'muestra.jpg', 80, 50, 'publico', '2022-05-31 14:45:56'),
-(41, 'Mate polímero', 'muestra.jpg', 650, 470, 'publico', '2022-06-02 00:15:05'),
+(41, 'Mate polímero', 'muestra.jpg', 750, 630, 'publico', '2022-06-02 00:15:05'),
 (42, 'Ojalillo', 'muestra.jpg', 15, 7, 'publico', '2022-05-31 14:43:19'),
 (43, 'Papel de regalo brilloso', 'muestra.jpg', 40, 25, 'publico', '2022-06-08 21:07:17'),
 (44, 'Papel de regalo grande', 'muestra.jpg', 70, 40, 'publico', '2022-06-08 21:07:03'),
@@ -92,7 +92,7 @@ INSERT INTO `productos` (`id`, `producto`, `foto`, `precio`, `costo`, `estado`, 
 (48, 'Portaminas', 'muestra.jpg', 100, 55, 'publico', '2022-05-31 14:44:08'),
 (49, 'regla flexible corta', 'muestra.jpg', 60, 40, 'publico', '2022-05-30 22:44:15'),
 (50, 'Repuesto 3 carpeta ', 'muestra.jpg', 50, 25, 'publico', '2022-05-31 14:47:23'),
-(51, 'Repuesto 5', 'muestra.jpg', 80, 50, 'publico', '2022-05-31 14:47:43'),
+(51, 'Repuesto 5', 'muestra.jpg', 120, 98, 'publico', '2022-05-31 14:47:43'),
 (52, 'Repuesto 6 El Nene', 'muestra.jpg', 240, 180, 'publico', '2022-05-31 14:45:41'),
 (53, 'Repuesto 6 Miguel Angel', 'muestra.jpg', 130, 70, 'publico', '2022-05-31 14:48:30'),
 (54, 'sacapuntas', 'muestra.jpg', 40, 20, 'publico', '2022-05-30 22:44:58'),
@@ -107,7 +107,7 @@ INSERT INTO `productos` (`id`, `producto`, `foto`, `precio`, `costo`, `estado`, 
 (63, 'Tela mandala por 3 ', 'muestra.jpg', 330, 330, 'privado', '2022-05-31 22:23:53'),
 (64, 'Tela provenzal para cucha por metro', 'muestra.jpg', 760, 460, 'publico', '2022-05-31 22:24:36'),
 (65, 'Tela tropical mecánico por metro', 'muestra.jpg', 550, 190, 'publico', '2022-05-31 22:25:04'),
-(66, 'Yerbero', 'muestra.jpg', 480, 365, 'publico', '2022-06-02 00:13:08'),
+(66, 'Yerbero', 'muestra.jpg', 550, 430, 'publico', '2022-06-02 00:13:08'),
 (67, 'Alcancía', 'muestra.jpg', 480, 350, 'publico', '2022-08-20 21:42:23'),
 (68, 'Vaso con tapa (térmico)', 'muestra.jpg', 700, 560, 'publico', '2022-08-20 21:54:47'),
 (71, 'Vaso con pico', 'muestra.jpg', 550, 400, 'publico', '2022-08-23 13:33:02'),
@@ -115,7 +115,7 @@ INSERT INTO `productos` (`id`, `producto`, `foto`, `precio`, `costo`, `estado`, 
 (73, 'Cazuelita', 'muestra.jpg', 280, 160, 'publico', '2022-08-23 22:28:05'),
 (79, 'Encendedor', 'muestra.jpg', 100, 55, 'publico', '2022-09-19 14:05:55'),
 (80, 'Borrador', 'muestra.jpg', 40, 23, 'publico', '2022-09-19 14:08:54'),
-(83, 'Collar chico goma gato', 'muestra.jpg', 250, 180, 'publico', '2022-09-20 15:10:30'),
+(83, 'Collar chico', 'muestra.jpg', 250, 180, 'publico', '2022-09-20 15:10:30'),
 (84, 'Identificador', 'muestra.jpg', 200, 55, 'publico', '2022-09-20 22:09:09'),
 (85, 'Collar y correa grueso', 'muestra.jpg', 800, 450, 'publico', '2022-09-20 22:10:45'),
 (86, 'Invisible', 'muestra.jpg', 200, 140, 'publico', '2022-09-21 23:39:27'),
@@ -131,7 +131,19 @@ INSERT INTO `productos` (`id`, `producto`, `foto`, `precio`, `costo`, `estado`, 
 (96, 'Llavero madera', 'muestra.jpg', 120, 23, 'publico', '2022-09-24 21:13:10'),
 (97, 'Collar cuero con puas', 'muestra.jpg', 450, 300, 'publico', '2022-09-24 22:00:45'),
 (98, 'Camiseta Argentina Talle 3', 'muestra.jpg', 800, 450, 'publico', '2022-09-25 00:29:50'),
-(99, 'Camiseta Argentina Talle 4', 'muestra.jpg', 900, 550, 'publico', '2022-09-25 00:30:30');
+(99, 'Camiseta Argentina Talle 4', 'muestra.jpg', 900, 550, 'publico', '2022-09-25 00:30:30'),
+(100, 'Yoyo', 'muestra.jpg', 200, 120, 'publico', '2022-09-26 21:58:06'),
+(101, 'Camiseta Argentina Talle 5', 'muestra.jpg', 1000, 850, 'publico', '2022-09-30 13:36:01'),
+(102, 'Pretal talle 3', 'muestra.jpg', 450, 300, 'privado', '2022-10-01 22:18:47'),
+(103, 'Pretal más correa mediana', 'muestra.jpg', 450, 350, 'privado', '2022-10-03 23:36:07'),
+(104, 'Marcador permanente Filgo', 'muestra.jpg', 100, 80, 'publico', '2022-10-04 14:32:23'),
+(105, 'Birome color ', 'muestra.jpg', 40, 23, 'publico', '2022-10-04 14:33:13'),
+(106, 'Corrector', 'muestra.jpg', 120, 80, 'publico', '2022-10-04 14:38:54'),
+(107, 'Pistolita de agua', 'muestra.jpg', 100, 30, 'privado', '2022-10-04 14:40:11'),
+(110, 'Pretal más correa talle 3', 'muestra.jpg', 800, 450, 'privado', '2022-10-07 17:05:00'),
+(111, 'Papel Crepé', 'muestra.jpg', 70, 40, 'publico', '2022-10-14 22:32:14'),
+(112, 'Goma Eva', 'muestra.jpg', 150, 120, 'publico', '2022-10-14 22:32:32'),
+(113, 'Birome común azul ABC', 'muestra.jpg', 40, 30, 'privado', '2022-10-14 23:51:47');
 
 -- --------------------------------------------------------
 
@@ -194,7 +206,50 @@ INSERT INTO `ventas` (`id`, `producto`, `cantidad`, `unitario`, `total`, `regist
 (22, 'Labiales Argentina', '1', '320', '320', '2022-09-24 19:01:28'),
 (23, 'Collar cuero con puas', '1', '450', '450', '2022-09-24 19:02:09'),
 (24, 'Camiseta Argentina Talle 3', '1', '800', '800', '2022-09-24 21:30:39'),
-(25, 'Camiseta Argentina Talle 4', '1', '900', '900', '2022-09-24 21:30:45');
+(25, 'Camiseta Argentina Talle 4', '1', '900', '900', '2022-09-24 21:30:45'),
+(26, 'Yoyo', '1', '150', '150', '2022-09-26 18:58:16'),
+(27, 'Afiche', '1', '80', '80', '2022-09-26 20:41:53'),
+(28, 'Taza polímero asa de corazón ', '1', '450', '450', '2022-09-27 19:18:18'),
+(29, 'Taza polímero asa común ', '1', '450', '450', '2022-09-27 19:39:44'),
+(30, 'Taza polímero asa común ', '1', '450', '450', '2022-09-28 12:05:52'),
+(31, 'Camiseta Argentina Talle 5', '1', '1000', '1000', '2022-09-30 10:36:31'),
+(32, 'Taza polímero asa común ', '1', '450', '450', '2022-10-01 19:19:02'),
+(33, 'Identificador', '1', '200', '200', '2022-10-01 19:19:09'),
+(34, 'Pretal talle 3', '1', '450', '450', '2022-10-01 19:19:16'),
+(35, 'Identificador', '1', '200', '200', '2022-10-01 23:15:23'),
+(36, 'Taza de cerámica', '1', '950', '950', '2022-10-01 23:15:33'),
+(38, 'Pretal más correa mediana', '1', '450', '450', '2022-10-03 20:36:24'),
+(39, 'Collar chico', '1', '250', '250', '2022-10-03 20:36:39'),
+(40, 'Cartulina color', '1', '60', '60', '2022-10-04 10:43:19'),
+(41, 'Birome Bic', '1', '70', '70', '2022-10-04 10:43:30'),
+(42, 'regla flexible corta', '1', '60', '60', '2022-10-04 11:31:37'),
+(44, 'Birome color ', '2', '40', '80', '2022-10-04 11:33:25'),
+(45, 'Marcador permanente Filgo', '1', '100', '100', '2022-10-04 11:34:15'),
+(46, 'Corrector', '1', '120', '120', '2022-10-04 11:39:17'),
+(47, 'Pistolita de agua', '1', '100', '100', '2022-10-04 11:40:24'),
+(48, 'Mate polímero', '6', '650', '3900', '2022-10-04 12:18:20'),
+(49, 'Taza polímero asa de corazón ', '2', '450', '900', '2022-10-04 12:18:29'),
+(50, 'Llavero polímero ', '4', '120', '480', '2022-10-05 20:31:01'),
+(53, 'Marcador permanente Filgo', '1', '100', '100', '2022-10-06 13:10:30'),
+(57, 'Yoyo', '1', '200', '200', '2022-10-06 13:11:55'),
+(58, 'Chopp polímero', '1', '1100', '1100', '2022-10-06 20:10:09'),
+(60, 'Llavero polímero ', '1', '150', '150', '2022-10-06 20:11:22'),
+(61, 'Identificador', '1', '200', '200', '2022-10-06 20:11:34'),
+(62, 'Pretal más correa mediana', '1', '450', '450', '2022-10-07 14:04:20'),
+(63, 'Identificador', '1', '200', '200', '2022-10-07 14:05:15'),
+(64, 'Pretal más correa talle 3', '1', '800', '800', '2022-10-07 14:05:24'),
+(65, 'Silicona 100 ml.', '1', '280', '280', '2022-10-07 21:01:07'),
+(66, 'Identificador', '3', '200', '600', '2022-10-11 19:22:46'),
+(67, 'Identificador', '1', '200', '200', '2022-10-12 19:11:44'),
+(68, 'Chopp polímero', '1', '1100', '1100', '2022-10-12 19:55:31'),
+(69, 'Mate polímero', '1', '750', '750', '2022-10-13 10:48:52'),
+(70, 'Taza de cerámica', '1', '950', '950', '2022-10-13 19:40:59'),
+(71, 'Taza polímero asa común ', '1', '450', '450', '2022-10-14 11:53:09'),
+(72, 'Mate polímero', '1', '750', '750', '2022-10-14 11:53:18'),
+(73, 'Yerbero', '1', '550', '550', '2022-10-14 11:53:24'),
+(75, 'Taza polímero asa de corazón ', '2', '450', '900', '2022-10-14 13:05:48'),
+(76, 'Birome Bic', '1', '80', '80', '2022-10-14 20:51:09'),
+(77, 'Birome común azul ABC', '2', '40', '80', '2022-10-14 20:52:01');
 
 --
 -- Índices para tablas volcadas
@@ -227,7 +282,7 @@ ALTER TABLE `ventas`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(133) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+  MODIFY `id` int(133) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
@@ -239,7 +294,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `id` int(133) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(133) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
