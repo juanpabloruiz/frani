@@ -40,91 +40,119 @@ if (!isset($_SESSION['correo'])) {
         <a href="./"><img src="../img/logo.png" alt="Frani" class="img-fluid d-block mx-auto"></a>
     </header>
     <main class="container my-4">
-        <?php
-        if (isset($_GET['id'])) {
-            $id = $_GET['id'];
-            $consulta = mysqli_query($conexion, "SELECT * FROM ventas WHERE id = '$id'");
-            $campo = mysqli_fetch_array($consulta);
-        ?>
-        <h4>Modificar la venta</h4>
-        <div class="card">
-            <div class="card-body">
-                <form method="post" action="modificacion_venta">
-                    <input type="hidden" name="id" value="<?php echo $campo['id']; ?>">
-                    <div class="row">
-                        <div class="col">
-                            <select name="producto" class="form-control">
+        <div class="row">
+            <div class="col-md-4">
+                <?php
+                if (isset($_GET['id'])) {
+                    $id = $_GET['id'];
+                    $consulta = mysqli_query($conexion, "SELECT * FROM ventas WHERE id = '$id'");
+                    $campo = mysqli_fetch_array($consulta);
+                ?>
+                    <h4>Modificar la venta</h4>
+
+                    <form method="post" action="modificacion_venta">
+                        <input type="hidden" name="id" value="<?php echo $campo['id']; ?>">
+
+
+
+
+
+
+
+                        <select id="test" name="producto" class="form-select mb-3" onchange="mostrar('ocultar', this)">
+                            <option value="Elegir producto" class="text-muted">Elegir producto</option>
+                            <?php
+                            $consulta = mysqli_query($conexion, "SELECT * FROM productos ORDER BY producto ASC");
+                            while ($productos = mysqli_fetch_array($consulta)) {
+                            ?>
+                                <option value="<?php echo $productos['producto']; ?>"><?php echo $productos['producto']; ?></option>
+                            <?php
+                            }
+                            ?>
+                        </select>
+
+                        <div class="form-floating mb-3"><input type="number" name="cantidad" value="<?php echo $campo['cantidad']; ?>" class="form-control"><label for="floatingInput">Cantidad</label></div>
+                        <div id="ocultar">
+                        <div class="form-floating mb-3"><input type="text" name="accesorio" value="<?php echo $campo['producto']; ?>" class="form-control"><label for="floatingInput">Producto</label></div>
+                        <div class="form-floating mb-3"><input type="number" name="precio" value="<?php echo $campo['unitario']; ?>" class="form-control"><label for="floatingInput">Precio</label></div>
+                        </div>
+                        <div class="mb-3 d-grid"><input type="submit" name="venta" value="Modificar venta" class="btn btn-primary"></div>
+
+                    </form>
+
+                <?php
+                } else {
+                ?>
+                    <h4>Agregar una nueva venta</h4>
+
+                    <form method="post" action="alta_venta">
+
+                        <select name="producto" class="form-select mb-3" onchange="mostrar('ocultar', this)">
+                            <option value="Elegir producto" class="text-muted" selected>Elegir producto</option>
+                            <?php
+                            $consulta = mysqli_query($conexion, "SELECT * FROM productos ORDER BY producto ASC");
+                            while ($campo = mysqli_fetch_array($consulta)) {
+                            ?>
                                 <option value="<?php echo $campo['producto']; ?>"><?php echo $campo['producto']; ?></option>
-                            </select>
+                            <?php
+                            }
+                            ?>
+                        </select>
+
+                        <div class="mb-3"><input type="number" name="cantidad" placeholder="Cantidad" class="form-control"></div>
+                        <div id="ocultar">
+                        <div class="mb-3"><input type="text" name="accesorio" placeholder="Accesorio" class="form-control"></div>
+                        <div class="mb-3"><input type="number" name="precio" placeholder="Precio" class="form-control"></div>
                         </div>
-                        <div class="col"><input type="number" name="cantidad" value="<?php echo $campo['cantidad']; ?>" class="form-control"></div>
-                        <div class="col d-grid"><input type="submit" name="venta" value="Modificar venta" class="btn btn-primary"></div>
-                    </div>
-                </form>
+                        <div class="mb-3 d-grid"><input type="submit" name="venta" value="Agregar venta" class="btn btn-primary"></div>
+
+                    </form>
+
+                <?php
+                }
+                ?>
+            </div>
+            <div class="col-md-8">
+                <h1>Ventas</h1>
+                <table class="table align-middle table-hover">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Unitario</th>
+                            <th>Total</th>
+                            <th>Fecha</th>
+                            <th>Borrar</th>
+                        </tr>
+                    </thead>
+                    <?php
+                    $consulta = mysqli_query($conexion, "SELECT * FROM ventas ORDER BY id DESC");
+                    while ($campo = mysqli_fetch_array($consulta)) {
+                        $producto = $campo['producto'];
+                    ?>
+                        <tbody>
+                            <tr>
+                                <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['producto']; ?></td>
+                                <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['cantidad']; ?></td>
+                                <td onclick="window.location='?id=<?php echo $campo['id']; ?>'">$ <?php echo $campo['unitario']; ?></td>
+                                <td onclick="window.location='?id=<?php echo $campo['id']; ?>'">$ <?php echo $campo['total']; ?></td>
+                                <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['registro']; ?></td>
+                                <td><a href="baja_venta?id=<?php echo $campo['id']; ?>" onclick="return confirm('¿Desea borrar <?php echo $producto; ?>?')" class="btn btn-danger"><i class="bi bi-trash3"></i></a></td>
+                            </tr>
+                        </tbody>
+                    <?php
+                    }
+                    ?>
+                </table>
             </div>
         </div>
-        <?php
-        } else {
-        ?>
-        <h4>Agregar una nueva venta</h4>
-        <div class="card">
-            <div class="card-body">
-                <form method="post" action="alta_venta">
-                    <div class="row">
-                        <div class="col">
-                            <select name="producto" class="form-control">
-                                <?php
-                                $consulta = mysqli_query($conexion, "SELECT * FROM productos ORDER BY producto ASC");
-                                while ($campo = mysqli_fetch_array($consulta)) {
-                                ?>
-                                    <option value="<?php echo $campo['producto']; ?>"><?php echo $campo['producto']; ?></option>
-                                <?php
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <div class="col"><input type="number" name="cantidad" placeholder="Cantidad" class="form-control"></div>
-                        <div class="col d-grid"><input type="submit" name="venta" value="Agregar venta" class="btn btn-primary"></div>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <?php
-        }
-        ?>
-        <h1>Ventas</h1>
-        <table class="table align-middle table-hover">
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>Unitario</th>
-                    <th>Total</th>
-                    <th>Fecha</th>
-                    <th>Borrar</th>
-                </tr>
-            </thead>
-            <?php
-            $consulta = mysqli_query($conexion, "SELECT * FROM ventas ORDER BY id DESC");
-            while ($campo = mysqli_fetch_array($consulta)) {
-                $producto = $campo['producto'];
-            ?>
-                <tbody>
-                    <tr>
-                        <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['producto']; ?></td>
-                        <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['cantidad']; ?></td>
-                        <td onclick="window.location='?id=<?php echo $campo['id']; ?>'">$ <?php echo $campo['unitario']; ?></td>
-                        <td onclick="window.location='?id=<?php echo $campo['id']; ?>'">$ <?php echo $campo['total']; ?></td>
-                        <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['registro']; ?></td>
-                        <td><a href="baja_venta?id=<?php echo $campo['id']; ?>" onclick="return confirm('¿Desea borrar <?php echo $producto; ?>?')" class="btn btn-danger"><i class="bi bi-trash3"></i></a></td>
-                    </tr>
-                </tbody>
-            <?php
-            }
-            ?>
-        </table>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+    <script>
+        function mostrar(divId, element) {
+            document.getElementById(divId).style.display = element.value == 'Elegir producto' ? 'block' : 'none';
+        }
+    </script>
 </body>
 
 </html>
