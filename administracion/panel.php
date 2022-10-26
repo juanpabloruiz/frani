@@ -33,6 +33,7 @@ if (!isset($_SESSION['correo'])) {
                     <li class="nav-item">
                         <a class="nav-link" href="ventas">Ventas</a>
                     </li>
+                    <li class="nav-item"><a class="nav-link" href="../status">Estadísticas</a></li>
                 </ul>
             </div>
         </div>
