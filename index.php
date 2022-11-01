@@ -1,4 +1,6 @@
-<?php include('administracion/conexion.php'); ?>
+<?php
+session_start();
+include('administracion/conexion.php'); ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
