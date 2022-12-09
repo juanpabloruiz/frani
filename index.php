@@ -32,7 +32,25 @@ include('administracion/conexion.php'); ?>
         </div>
     </nav>
     <?php
-    }
+    } else { 
+    ?>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="./">Frani</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="administracion">Iniciar sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <?php
+    } 
     ?>
     <header class="bg-primary p-4">
         <a href="./"><img src="img/logo.png" alt="Frani" class="img-fluid d-block mx-auto"></a>
@@ -43,12 +61,12 @@ include('administracion/conexion.php'); ?>
             $consulta = mysqli_query($conexion, "SELECT * FROM productos WHERE estado = 'publico' ORDER BY producto ASC");
             while ($campo = mysqli_fetch_array($consulta)) {
             ?>
-                <div class="col-md-3">
+                <div class="col-md-4 col-6">
                     <div class="card mb-3">
                         <img src="imagenes/<?php echo $campo['foto']; ?>" class="card-img-top img-fluid" alt="<?php echo $campo['producto']; ?>">
                         <div class="card-body">
-                            <h5 class="card-title">$ <?php echo $campo['precio']; ?></h5>
-                            <p class="card-text"><?php echo $campo['producto']; ?></p>
+                            <h5 class="card-title"><?php echo $campo['producto']; ?></h5>
+                            <p class="card-text">$ <?php echo $campo['precio']; ?></p>
                         </div>
                     </div>
                 </div>
