@@ -57,7 +57,7 @@ include('administracion/conexion.php'); ?>
     <main class="container my-4">
         <div class="row">
             <?php
-            $consulta = mysqli_query($conexion, "SELECT * FROM productos WHERE estado = 'publico' ORDER BY producto ASC");
+            $consulta = mysqli_query($conexion, "SELECT * FROM productos WHERE estado = 1 ORDER BY producto ASC");
             while ($campo = mysqli_fetch_array($consulta)) {
             ?>
                 <div class="col-md-4 col-6">
