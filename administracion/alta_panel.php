@@ -15,6 +15,7 @@ if ($_POST['estado'] == 'on') {
 } else {
     $estado = 'privado';
 }
+mysqli_query($donweb, "INSERT INTO productos (producto, foto, precio, costo, estado) VALUES ('$producto', 'muestra.jpg', '$precio', '$costo', '$estado')");
 mysqli_query($conexion, "INSERT INTO productos (producto, foto, precio, costo, estado) VALUES ('$producto', 'muestra.jpg', '$precio', '$costo', '$estado')");
 echo '<script>window.location="./"</script>';
 ?>
