@@ -1,5 +1,4 @@
 <?php
-session_start();
 include('conexion.php');
 $correo = $_POST['correo'];
 $clave = $_POST['clave'];

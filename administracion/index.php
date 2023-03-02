@@ -1,8 +1,9 @@
 <?php
+include('conexion.php');
 if (isset($_SESSION['correo'])) {
     echo '<script>window.location="panel"</script>';
 }
-include('conexion.php');
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
