@@ -20,6 +20,7 @@ if ($_POST['estado'] == 'on') {
 if ($_FILES['foto']['name'] == TRUE) {
     mysqli_query($conexion, "UPDATE productos SET foto = '$foto' WHERE id = '$id'");
 }
+mysqli_query($donweb, "UPDATE productos SET producto = '$producto', precio = '$precio', costo = '$costo', estado = '$estado' WHERE id = '$id'");
 mysqli_query($conexion, "UPDATE productos SET producto = '$producto', precio = '$precio', costo = '$costo', estado = '$estado' WHERE id = '$id'");
 echo '<script>window.location="./"</script>';
 ?>
