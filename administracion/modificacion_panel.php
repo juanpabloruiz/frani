@@ -1,9 +1,8 @@
 <?php
-session_start();
+include('conexion.php');
 if (!isset($_SESSION['correo'])) {
     echo '<script>window.location="./"</script>';
 }
-include('conexion.php');
 $id = $_POST['id'];
 $producto = $_POST['producto'];
 $extension = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
