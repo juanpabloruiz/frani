@@ -54,6 +54,7 @@ include('administracion/conexion.php'); ?>
     <header class="bg-primary p-4">
         <a href="./"><img src="img/logo.png" alt="Frani" class="img-fluid d-block mx-auto"></a>
     </header>
+    dfgd
     <main class="container my-4">
         <div class="row">
             <?php
