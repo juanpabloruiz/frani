@@ -1,2 +1,2 @@
-# frani
-Sitio web de la empresa Frani
+# Frani
+Sistema Intranet de la empresa Frani
