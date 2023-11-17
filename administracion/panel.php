@@ -59,6 +59,13 @@ if (!isset($_SESSION['correo'])) {
                             <input class="form-check-input" type="checkbox" name="estado" role="switch" id="flexSwitchCheckDefault" <?php echo ($campo['estado'] == 'publico') ? 'checked' : ''; ?>>
                             <label class="form-check-label" for="flexSwitchCheckDefault">Visible en tienda</label>
                         </div>
+                        <h5>Seleccionar categoría</h5>
+                        <select name="categoria" class="form-select mb-3">
+                            <option value="<?php echo $campo['categoria']; ?>"><?php echo $campo['categoria']; ?></option>    
+                            <option value="Otros">Otros</option>
+                            <option value="Librería">Librería</option>
+                            <option value="Sublimación">Sublimación</option>
+                        </select>
                         <div class="mb-3"><input type="file" name="foto" class="form-control"></div>
                         <div class="d-grid mb-3"><input type="submit" name="actualizar" value="Modificar" class="btn btn-primary"></div>
                     </form>
@@ -73,9 +80,12 @@ if (!isset($_SESSION['correo'])) {
                             <input class="form-check-input" type="checkbox" name="estado" role="switch" id="flexSwitchCheckDefault">
                             <label class="form-check-label" for="flexSwitchCheckDefault">Visible en tienda</label>
                         </div>
-
-
-
+                        <h5>Seleccionar categoría</h5>
+                        <select name="categoria" class="form-select mb-3">
+                            <option value="Otros">Otros</option>
+                            <option value="Librería">Librería</option>
+                            <option value="Sublimación">Sublimación</option>
+                        </select>
                         <div class="mb-3"><input type="file" name="foto" class="form-control"></div>
                         <div class="d-grid mb-3"><input type="submit" name="insertar" value="Agregar" class="btn btn-primary"></div>
                     </form>
@@ -91,42 +101,34 @@ if (!isset($_SESSION['correo'])) {
                         <form method="post">
                             <?php
                             if (isset($_POST['porcentual'])) {
+                                $categoria = $_POST['categoria'];
                                 $porcentaje = $_POST['porcentaje'];
                                 $porcentaje_entero = round($porcentaje);
-                                $cat_post = $_POST['cat'];
-                                $query = mysqli_query($conexion, "SELECT * FROM cat WHERE id = '$cat_post'");
-                                $assoc = mysqli_fetch_assoc($query);
-                                $cat = $assoc['id'];
-                                $sql = "UPDATE productos SET precio = ROUND(precio * (1 + ?/100)) WHERE cat = '$cat'";
-                                $stmt = $conexion->prepare($sql);
-                                $stmt->bind_param("i", $porcentaje_entero);
-                                if ($stmt->execute()) {
-                                    echo '  <div class="alert alert-success d-flex align-items-center" role="alert">
-                                    <span class="spinner-border me-2" role="status" aria-hidden="true"></span>
-                                    <strong>Actualizando...</strong>
-                                </div>';
-                                    echo '<script>
-                                    setTimeout(function(){
-                                        window.location="panel";
-                                    }, 3000);
-                                  </script>';
+                                $consulta = "UPDATE productos SET precio = ROUND(precio * (1 + ?/100)) WHERE categoria = '$categoria'";
+                                $sentencia = $conexion->prepare($consulta);
+                                $sentencia->bind_param("i", $porcentaje_entero);
+                                if ($sentencia->execute()) {
+                                    echo '<script>window.location="panel"</script>';
                                 } else {
-                                    echo '<div class="alert alert-danger">Error en la actualización: ' . $stmt->error . '</div>';
+                                    echo '<div class="alert alert-danger">Error en la actualización: ' . $sentencia->error . '</div>';
                                 }
                             }
                             ?>
-                            <select name="cat" class="form-select mb-3">
-                                <?php
-                                $query2 = mysqli_query($conexion, "SELECT * FROM cat ORDER BY name ASC");
-                                while ($field = mysqli_fetch_assoc($query2)) {
-                                    echo '<option value="' . $field['id'] . '">' . $field['name'] . '</option>';
-                                }
-                                ?>
-                            </select>
-                            <div class="input-group mb-3">
-                                <input type="number" name="porcentaje" class="form-control" aria-label="Amount (to the nearest dollar)">
-                                <span class="input-group-text">%</span>
-                                <input type="submit" name="porcentual" value="Aplicar aumento" class="btn btn-primary">
+                            <div class="row">
+                                <div class="col-md-auto">
+                                    <select name="categoria" class="form-select mb-3">
+                                        <option value="otros">Otros</option>
+                                        <option value="libreria">Librería</option>
+                                        <option value="sublimacion">Sublimación</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-auto">
+                                    <div class="input-group mb-3">
+                                        <input type="number" name="porcentaje" class="form-control" aria-label="Amount (to the nearest dollar)">
+                                        <span class="input-group-text">%</span>
+                                        <input type="submit" name="porcentual" value="Aplicar aumento" class="btn btn-primary">
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>
