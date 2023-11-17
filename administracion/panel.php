@@ -85,7 +85,54 @@ if (!isset($_SESSION['correo'])) {
             </div>
             <div class="col-md-8">
                 <input type="search" placeholder="Buscar aquí..." name="busqueda" id="buscar" class="form-control mb-3">
+                <hr>
+                    <div>
+                        <h5>Generar interés global sobre los productos</h5>
+                        <form method="post">
+                            <?php
+                            if (isset($_POST['porcentual'])) {
+                                $porcentaje = $_POST['porcentaje'];
+                                $porcentaje_entero = round($porcentaje);
+                                $cat_post = $_POST['cat'];
+                                $query = mysqli_query($conexion, "SELECT * FROM cat WHERE id = '$cat_post'");
+                                $assoc = mysqli_fetch_assoc($query);
+                                $cat = $assoc['id'];
+                                $sql = "UPDATE productos SET precio = ROUND(precio * (1 + ?/100)) WHERE cat = '$cat'";
+                                $stmt = $conexion->prepare($sql);
+                                $stmt->bind_param("i", $porcentaje_entero);
+                                if ($stmt->execute()) {
+                                    echo '  <div class="alert alert-success d-flex align-items-center" role="alert">
+                                    <span class="spinner-border me-2" role="status" aria-hidden="true"></span>
+                                    <strong>Actualizando...</strong>
+                                </div>';
+                                    echo '<script>
+                                    setTimeout(function(){
+                                        window.location="panel";
+                                    }, 3000);
+                                  </script>';
+                                } else {
+                                    echo '<div class="alert alert-danger">Error en la actualización: ' . $stmt->error . '</div>';
+                                }
+                            }
+                            ?>
+                            <select name="cat" class="form-select mb-3">
+                                <?php
+                                $query2 = mysqli_query($conexion, "SELECT * FROM cat ORDER BY name ASC");
+                                while ($field = mysqli_fetch_assoc($query2)) {
+                                    echo '<option value="' . $field['id'] . '">' . $field['name'] . '</option>';
+                                }
+                                ?>
+                            </select>
+                            <div class="input-group mb-3">
+                                <input type="number" name="porcentaje" class="form-control" aria-label="Amount (to the nearest dollar)">
+                                <span class="input-group-text">%</span>
+                                <input type="submit" name="porcentual" value="Aplicar aumento" class="btn btn-primary">
+                            </div>
+                        </form>
+                    </div>
+                    <hr>
                 <div id="datos">
+                    
                     <div class="table-responsive">
                         <table class="table align-middle table-hover">
                             <tr>
