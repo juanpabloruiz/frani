@@ -98,7 +98,7 @@ if (!isset($_SESSION['correo'])) {
                 <hr>
                     <div>
                         <h5>Generar interés global sobre los productos</h5>
-                        <form method="post">
+                        <form method="post" action="porcentaje">
                             <?php
                             if (isset($_POST['porcentual'])) {
                                 $categoria = $_POST['categoria'];
