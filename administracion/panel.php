@@ -61,7 +61,7 @@ if (!isset($_SESSION['correo'])) {
                         </div>
                         <h5>Seleccionar categoría</h5>
                         <select name="categoria" class="form-select mb-3">
-                            <option value="<?php echo $campo['categoria']; ?>"><?php echo $campo['categoria']; ?></option>    
+                            <option value="<?php echo $campo['categoria']; ?>" disabled><b><?php echo $campo['categoria']; ?></b></option>    
                             <option value="Otros">Otros</option>
                             <option value="Librería">Librería</option>
                             <option value="Sublimación">Sublimación</option>
