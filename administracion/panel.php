@@ -97,7 +97,7 @@ if (!isset($_SESSION['correo'])) {
                 <input type="search" placeholder="Buscar aquí..." name="busqueda" id="buscar" class="form-control mb-3">
                 <hr>
                     <div>
-                        <h5>Generar interés global sobre los productos</h5>
+                        <h5>Generar interés sobre productos</h5>
                         <form method="post">
                             <?php
                             if (isset($_POST['porcentual'])) {
