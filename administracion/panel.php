@@ -61,7 +61,7 @@ if (!isset($_SESSION['correo'])) {
                         </div>
                         <h5>Seleccionar categoría</h5>
                         <select name="categoria" class="form-select mb-3">
-                            <option value="<?php echo $campo['categoria']; ?>" disabled><b><?php echo $campo['categoria']; ?></b></option>    
+                            <option value="<?php echo $campo['categoria']; ?>" disabled selected><b><?php echo $campo['categoria']; ?></b></option>    
                             <option value="Otros">Otros</option>
                             <option value="Librería">Librería</option>
                             <option value="Sublimación">Sublimación</option>
@@ -98,7 +98,7 @@ if (!isset($_SESSION['correo'])) {
                 <hr>
                     <div>
                         <h5>Generar interés global sobre los productos</h5>
-                        <form method="post" action="porcentaje">
+                        <form method="post">
                             <?php
                             if (isset($_POST['porcentual'])) {
                                 $categoria = $_POST['categoria'];
