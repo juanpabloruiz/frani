@@ -1,12 +1,11 @@
-<?php
-include('conexion.php');
-?>
+<?php include('conexion.php'); ?>
 <table class="table align-middle table-hover">
     <tr>
-        <th>Producto</th>
-        <th>Precio</th>
-        <th>Costo</th>
-        <th>Borrar</th>
+        <th>PRODUCTO</th>
+        <th>CATEGORIA</th>
+        <th>PRECIO</th>
+        <th>COSTO</th>
+        <th>FUNCIONES</th>
     </tr>
     <?php if ($_POST['busqueda'] == TRUE) {
         $busqueda = $_POST['busqueda'];
@@ -17,13 +16,14 @@ include('conexion.php');
                 while ($campo = $resultado->fetch_assoc()) {
                     $producto = $campo['producto'];
     ?>
-    <tr <?php echo ($campo['estado'] == 'publico') ? 'class="bg-success text-white"' : 'class="bg-secondary text-white"'; ?>>
-        <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['producto']; ?></td>
-        <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['precio']; ?></td>
-        <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['costo']; ?></td>
-        <td><a href="baja?id=<?php echo $campo['id']; ?>" onclick="return confirm('¿Desea borrar <?php echo $producto; ?>?')" class="btn btn-danger"><i class="bi bi-trash3"></i></a></td>
-    </tr>
-    <?php
+                    <tr>
+                        <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['producto']; ?></td>
+                        <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['categoria']; ?></td>
+                        <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['precio']; ?></td>
+                        <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['costo']; ?></td>
+                        <td><a href="baja?id=<?php echo $campo['id']; ?>" onclick="return confirm('¿Desea borrar <?php echo $producto; ?>?')" class="btn btn-danger"><i class="bi bi-trash3"></i></a></td>
+                    </tr>
+            <?php
                 }
             }
         }
@@ -31,13 +31,14 @@ include('conexion.php');
         $consulta = mysqli_query($conexion, "SELECT * FROM productos ORDER BY producto ASC");
         while ($campo = mysqli_fetch_array($consulta)) {
             $producto = $campo['producto'];
-    ?>
-    <tr <?php echo ($campo['estado'] == 'publico') ? 'class="bg-success text-white"' : 'class="bg-secondary text-white"'; ?>>
-        <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['producto']; ?></td>
-        <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['precio']; ?></td>
-        <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['costo']; ?></td>
-        <td><a href="baja?id=<?php echo $campo['id']; ?>" onclick="return confirm('¿Desea borrar <?php echo $producto; ?>?')" class="btn btn-danger"><i class="bi bi-trash3"></i></a></td>
-    </tr>
+            ?>
+            <tr>
+                <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['producto']; ?></td>
+                <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['categoria']; ?></td>
+                <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['precio']; ?></td>
+                <td onclick="window.location='?id=<?php echo $campo['id']; ?>'"><?php echo $campo['costo']; ?></td>
+                <td><a href="baja?id=<?php echo $campo['id']; ?>" onclick="return confirm('¿Desea borrar <?php echo $producto; ?>?')" class="btn btn-danger"><i class="bi bi-trash3"></i></a></td>
+            </tr>
     <?php
         }
     }

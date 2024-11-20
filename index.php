@@ -52,7 +52,7 @@
                 </select>
                 <input type="number" name="precio" value="<?php echo $campo['precio']; ?>" class="form-control" required>
                 <input type="number" name="costo" value="<?php echo $campo['costo']; ?>" class="form-control" required>
-                <input type="submit" name="nuevo" value="Actualizar">
+                <input type="submit" name="nuevo" value="Actualizar" class="btn btn-primary">
             </form>
         <?php
         } else {
