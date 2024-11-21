@@ -32,7 +32,7 @@
         <?php
         if (isset($_GET['id'])) {
             $id = $_GET['id'];
-            $consulta = mysqli_query($conexion, "SELECT * FROM productos WHERE id = '$id'");
+            $consulta = mysqli_query($conexion, "SELECT * FROM ventas WHERE id = '$id'");
             $campo = mysqli_fetch_assoc($consulta);
         ?>
             <form method="POST" action="actualizar.php" class="d-flex gap-2 mb-3">
@@ -57,21 +57,11 @@
         <?php
         } else {
         ?>
-            <form method="POST" action="insertar.php" class="d-flex gap-2 mb-3">
-                <input type="text" name="producto" placeholder="Producto" class="form-control" required>
-                <select name="categoria" class="form-select" >
-                    <option>Categoría</option>
-                    <?php
-                    $consulta = mysqli_query($conexion, "SELECT * FROM categorias");
-                    while ($campo = mysqli_fetch_assoc($consulta)) {
-                    ?>
-                        <option value="<?php echo $campo['nombre']; ?>"><?php echo $campo['nombre']; ?></option>
-                    <?php
-                    }
-                    ?>
-                </select>
+            <form method="POST" action="vender.php" class="d-flex gap-2 mb-3">
+                <input type="text" name="detalle" placeholder="Detalle" class="form-control" required>
+                <input type="number" name="cantidad" placeholder="Cantidad" class="form-control" required>
                 <input type="number" step="0.01" name="precio" placeholder="Precio" class="form-control" required>
-                <input type="number" step="0.01" name="costo" placeholder="Costo" class="form-control" required>
+                <input type="text" step="0.01" name="metodo" placeholder="Método" class="form-control" required>
                 <input type="submit" name="nuevo" value="Insertar" class="btn btn-primary">
             </form>
         <?php
@@ -82,22 +72,21 @@
         <div id="datos">
             <table class="table">
                 <tr>
-                    <th class="text-center">PRODUCTO</th>
-                    <th class="text-center">CATEGORIA</th>
+                    <th class="text-center">DETALLE</th>
+                    <th class="text-center">CANTIDAD</th>
                     <th class="text-center">PRECIO</th>
-                    <th class="text-center">COSTO</th>
+                    <th class="text-center">METODO</th>
                     <th class="text-center">FECHA</th>
-                    <th class="text-center">FUNCIONES</th>
                 </tr>
                 <?php
-                $consulta = mysqli_query($conexion, "SELECT * FROM productos ORDER BY producto ASC");
+                $consulta = mysqli_query($conexion, "SELECT * FROM ventas ORDER BY fecha ASC");
                 while ($campo = mysqli_fetch_assoc($consulta)) {
                 ?>
                     <tr>
-                        <td><?php echo $campo['producto']; ?></td>
-                        <td class="text-center"><?php echo $campo['categoria']; ?></td>
+                        <td><?php echo $campo['detalle']; ?></td>
+                        <td class="text-center"><?php echo $campo['cantidad']; ?></td>
                         <td class="text-center"><?php echo '$ ' . $campo['precio']; ?></td>
-                        <td class="text-center"><?php echo '$ ' . $campo['costo']; ?></td>
+                        <td class="text-center"><?php echo $campo['metodo']; ?></td>
                         <?php
                         $fecha = $campo['fecha'];
                         $fecha_normal = date("d/m/Y", strtotime($fecha));

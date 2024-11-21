@@ -59,6 +59,7 @@
         ?>
             <form method="POST" action="insertar.php" class="d-flex gap-2 mb-3">
                 <input type="text" name="producto" placeholder="Producto" class="form-control" required>
+                <input type="number" name="stock" placeholder="Stock" class="form-control" required>
                 <select name="categoria" class="form-select" >
                     <option>Categoría</option>
                     <?php
@@ -83,6 +84,7 @@
             <table class="table">
                 <tr>
                     <th class="text-center">PRODUCTO</th>
+                    <th class="text-center">STOCK</th>
                     <th class="text-center">CATEGORIA</th>
                     <th class="text-center">PRECIO</th>
                     <th class="text-center">COSTO</th>
@@ -95,6 +97,7 @@
                 ?>
                     <tr>
                         <td><?php echo $campo['producto']; ?></td>
+                        <td class="text-center"><?php echo $campo['stock']; ?></td>
                         <td class="text-center"><?php echo $campo['categoria']; ?></td>
                         <td class="text-center"><?php echo '$ ' . $campo['precio']; ?></td>
                         <td class="text-center"><?php echo '$ ' . $campo['costo']; ?></td>
