@@ -22,6 +22,9 @@
                         <a class="nav-link" href="./">Productos</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="factura">Factura</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="ventas">Ventas</a>
                     </li>
                 </ul>
@@ -29,44 +32,6 @@
         </div>
     </nav>
     <main class="container my-3">
-        <?php
-        if (isset($_GET['id'])) {
-            $id = $_GET['id'];
-            $consulta = mysqli_query($conexion, "SELECT * FROM ventas WHERE id = '$id'");
-            $campo = mysqli_fetch_assoc($consulta);
-        ?>
-            <form method="POST" action="actualizar.php" class="d-flex gap-2 mb-3">
-                <input type="hidden" name="id" value="<?php echo $campo['id']; ?>">
-                <input type="text" name="producto" value="<?php echo $campo['producto']; ?>" class="form-control" required>
-                <select name="categoria" class="form-select" >
-                    <option value="<?php echo $campo['categoria']; ?>"><?php echo $campo['categoria']; ?></option>
-                    <?php
-                    $categoria = $campo['categoria'];
-                    $consulta = mysqli_query($conexion, "SELECT * FROM categorias");
-                    while ($campo2 = mysqli_fetch_assoc($consulta)) {
-                    ?>
-                        <option value="<?php echo $campo2['nombre']; ?>"><?php echo $campo2['nombre']; ?></option>
-                    <?php
-                    }
-                    ?>
-                </select>
-                <input type="number" name="precio" value="<?php echo $campo['precio']; ?>" class="form-control" required>
-                <input type="number" name="costo" value="<?php echo $campo['costo']; ?>" class="form-control" required>
-                <input type="submit" name="nuevo" value="Actualizar" class="btn btn-primary">
-            </form>
-        <?php
-        } else {
-        ?>
-            <form method="POST" action="vender.php" class="d-flex gap-2 mb-3">
-                <input type="text" name="detalle" placeholder="Detalle" class="form-control" required>
-                <input type="number" name="cantidad" placeholder="Cantidad" class="form-control" required>
-                <input type="number" step="0.01" name="precio" placeholder="Precio" class="form-control" required>
-                <input type="text" step="0.01" name="metodo" placeholder="Método" class="form-control" required>
-                <input type="submit" name="nuevo" value="Insertar" class="btn btn-primary">
-            </form>
-        <?php
-        }
-        ?>
         <input type="search" placeholder="Buscar aquí..." name="busqueda" id="buscar" class="form-control">
         <hr>
         <div id="datos">

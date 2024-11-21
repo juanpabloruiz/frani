@@ -22,6 +22,9 @@
                         <a class="nav-link" href="./">Productos</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="factura">Factura</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="ventas">Ventas</a>
                     </li>
                 </ul>
