@@ -1,0 +1,7 @@
+@media print {
+
+    #addItemBtn,
+    #facturaForm input[type="submit"] {
+        display: none;
+    }
+}

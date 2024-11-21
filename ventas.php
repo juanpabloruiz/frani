@@ -37,27 +37,26 @@
         <div id="datos">
             <table class="table">
                 <tr>
+                    <th class="text-center">NOMBRE</th>
                     <th class="text-center">DETALLE</th>
-                    <th class="text-center">CANTIDAD</th>
-                    <th class="text-center">PRECIO</th>
                     <th class="text-center">METODO</th>
+                    <th class="text-center">TOTAL</th>
                     <th class="text-center">FECHA</th>
                 </tr>
                 <?php
-                $consulta = mysqli_query($conexion, "SELECT * FROM ventas ORDER BY fecha ASC");
+                $consulta = mysqli_query($conexion, "SELECT * FROM facturas ORDER BY fecha ASC");
                 while ($campo = mysqli_fetch_assoc($consulta)) {
                 ?>
                     <tr>
+                        <td><?php echo $campo['nombre']; ?></td>
                         <td><?php echo $campo['detalle']; ?></td>
-                        <td class="text-center"><?php echo $campo['cantidad']; ?></td>
-                        <td class="text-center"><?php echo '$ ' . $campo['precio']; ?></td>
                         <td class="text-center"><?php echo $campo['metodo']; ?></td>
+                        <td class="text-center"><?php echo '$ ' . $campo['total']; ?></td>
                         <?php
                         $fecha = $campo['fecha'];
                         $fecha_normal = date("d/m/Y", strtotime($fecha));
                         ?>
                         <td class="text-center"><?php echo $fecha_normal; ?></td>
-                        <td class="text-center"><a href="?id=<?php echo $campo['id']; ?>">Editar</a> | <a href="eliminar?id=<?php echo $campo['id']; ?>" onclick="return confirm('¿Desea eliminar <?php echo $campo['producto']; ?>?')">Eliminar</a></td>
                     </tr>
                 <?php
                 }
