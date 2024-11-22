@@ -41,6 +41,7 @@
             <form method="POST" action="actualizar.php" class="d-flex gap-2 mb-3">
                 <input type="hidden" name="id" value="<?php echo $campo['id']; ?>">
                 <input type="text" name="producto" value="<?php echo $campo['producto']; ?>" class="form-control" required>
+                <input type="number" name="stock" value="<?php echo $campo['stock']; ?>" class="form-control" required>
                 <select name="categoria" class="form-select" >
                     <option value="<?php echo $campo['categoria']; ?>"><?php echo $campo['categoria']; ?></option>
                     <?php
