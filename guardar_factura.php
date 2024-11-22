@@ -39,17 +39,6 @@ $detalle = rtrim($detalle, ', ');
 $sql = "INSERT INTO facturas (nombre, metodo, total, detalle) VALUES (?, ?, ?, ?)";
 $stmt = $conexion->prepare($sql);
 $stmt->bind_param('ssis', $nombre, $metodo, $total, $detalle);
-
-if ($stmt->execute()) {
-    echo "Factura guardada correctamente.";
-} else {
-    echo "Error al guardar la factura: " . $stmt->error;
-}
-
-$stmt->close();
-$conexion->close();
-
-header('Location: ./');
-exit;
-
+$stmt->execute();
+header('Location:ventas');
 ?>
