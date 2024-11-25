@@ -42,7 +42,7 @@
                 <input type="hidden" name="id" value="<?php echo $campo['id']; ?>">
                 <input type="text" name="producto" value="<?php echo $campo['producto']; ?>" class="form-control" required>
                 <input type="number" name="stock" value="<?php echo $campo['stock']; ?>" class="form-control" required>
-                <select name="categoria" class="form-select" >
+                <select name="categoria" class="form-select">
                     <option value="<?php echo $campo['categoria']; ?>"><?php echo $campo['categoria']; ?></option>
                     <?php
                     $categoria = $campo['categoria'];
@@ -64,7 +64,7 @@
             <form method="POST" action="insertar.php" class="d-flex gap-2 mb-3">
                 <input type="text" name="producto" placeholder="Producto" class="form-control" required>
                 <input type="number" name="stock" placeholder="Stock" class="form-control" required>
-                <select name="categoria" class="form-select" >
+                <select name="categoria" class="form-select">
                     <option>Categoría</option>
                     <?php
                     $consulta = mysqli_query($conexion, "SELECT * FROM categorias");
@@ -85,39 +85,52 @@
         <input type="search" placeholder="Buscar aquí..." name="busqueda" id="buscar" class="form-control">
         <hr>
         <div id="datos">
-            <table class="table">
-                <tr>
-                    <th class="text-center">PRODUCTO</th>
-                    <th class="text-center">STOCK</th>
-                    <th class="text-center">CATEGORIA</th>
-                    <th class="text-center">PRECIO</th>
-                    <th class="text-center">COSTO</th>
-                    <th class="text-center">FECHA</th>
-                    <th class="text-center">FUNCIONES</th>
-                </tr>
-                <?php
-                $consulta = mysqli_query($conexion, "SELECT * FROM productos ORDER BY producto ASC");
-                while ($campo = mysqli_fetch_assoc($consulta)) {
-                ?>
+            <form method="POST" action="eliminar.php">
+                <button type="submit" class="btn btn-danger mb-3" onclick="return confirm('¿Estás seguro de eliminar los productos seleccionados?')">Eliminar seleccionados</button>
+
+                <table class="table">
                     <tr>
-                        <td><?php echo $campo['producto']; ?></td>
-                        <td class="text-center"><?php echo $campo['stock']; ?></td>
-                        <td class="text-center"><?php echo $campo['categoria']; ?></td>
-                        <td class="text-center"><?php echo '$ ' . $campo['precio']; ?></td>
-                        <td class="text-center"><?php echo '$ ' . $campo['costo']; ?></td>
-                        <?php
-                        $fecha = $campo['fecha'];
-                        $fecha_normal = date("d/m/Y", strtotime($fecha));
-                        ?>
-                        <td class="text-center"><?php echo $fecha_normal; ?></td>
-                        <td class="text-center"><a href="?id=<?php echo $campo['id']; ?>">Editar</a> | <a href="eliminar?id=<?php echo $campo['id']; ?>" onclick="return confirm('¿Desea eliminar <?php echo $campo['producto']; ?>?')">Eliminar</a></td>
+                        <th class="text-center"><input type="checkbox" id="selectAll"></th>
+                        <th class="text-center">PRODUCTO</th>
+                        <th class="text-center">STOCK</th>
+                        <th class="text-center">CATEGORIA</th>
+                        <th class="text-center">PRECIO</th>
+                        <th class="text-center">COSTO</th>
+                        <th class="text-center">FECHA</th>
+                        <th class="text-center">FUNCIONES</th>
                     </tr>
-                <?php
-                }
-                ?>
-            </table>
+                    <?php
+                    $consulta = mysqli_query($conexion, "SELECT * FROM productos ORDER BY producto ASC");
+                    while ($campo = mysqli_fetch_assoc($consulta)) {
+                    ?>
+                        <tr>
+                            <td class="text-center"><input type="checkbox" name="ids[]" value="<?php echo $campo['id']; ?>"></td>
+                            <td><?php echo $campo['producto']; ?></td>
+                            <td class="text-center"><?php echo $campo['stock']; ?></td>
+                            <td class="text-center"><?php echo $campo['categoria']; ?></td>
+                            <td class="text-center"><?php echo '$ ' . $campo['precio']; ?></td>
+                            <td class="text-center"><?php echo '$ ' . $campo['costo']; ?></td>
+                            <?php
+                            $fecha = $campo['fecha'];
+                            $fecha_normal = date("d/m/Y", strtotime($fecha));
+                            ?>
+                            <td class="text-center"><?php echo $fecha_normal; ?></td>
+                            <td class="text-center"><a href="?id=<?php echo $campo['id']; ?>">Editar</a></td>
+                        </tr>
+                    <?php
+                    }
+                    ?>
+                </table>
+            </form>
         </div>
     </main>
+    <script>
+        // Seleccionar/deseleccionar todos los checkboxes
+        document.getElementById('selectAll').addEventListener('click', function(e) {
+            const checkboxes = document.querySelectorAll('input[name="ids[]"]');
+            checkboxes.forEach(checkbox => checkbox.checked = e.target.checked);
+        });
+    </script>
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/buscar.js"></script>
 </body>
