@@ -82,6 +82,53 @@
         <?php
         }
         ?>
+
+
+        <div>
+            <h5>Generar interés sobre productos</h5>
+            <form method="post">
+                <?php
+                if (isset($_POST['porcentual'])) {
+                    $categoria = $_POST['categoria'];
+                    $porcentaje = $_POST['porcentaje'];
+                    $porcentaje_entero = round($porcentaje);
+                    $consulta = "UPDATE productos SET precio = ROUND(precio * (1 + ?/100)) WHERE categoria = '$categoria'";
+                    $sentencia = $conexion->prepare($consulta);
+                    $sentencia->bind_param("i", $porcentaje_entero);
+                    if ($sentencia->execute()) {
+                        echo '<script>window.location="./"</script>';
+                    } else {
+                        echo '<div class="alert alert-danger">Error en la actualización: ' . $sentencia->error . '</div>';
+                    }
+                }
+                ?>
+                <div class="row">
+                    <div class="col-md-auto">
+                        <select name="categoria" class="form-select mb-3">
+                            <option disabled selected>Categoría</option>
+                            <?php
+                            $consulta = mysqli_query($conexion, "SELECT * FROM categorias");
+                            while ($campo = mysqli_fetch_assoc($consulta)) {
+                            ?>
+                                <option value="<?php echo $campo['nombre']; ?>"><?php echo $campo['nombre']; ?></option>
+                            <?php
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="col-md-auto">
+                        <div class="input-group mb-3">
+                            <input type="number" name="porcentaje" class="form-control" aria-label="Amount (to the nearest dollar)">
+                            <span class="input-group-text">%</span>
+                            <input type="submit" name="porcentual" value="Aplicar aumento" class="btn btn-primary">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <hr>
+
+
         <input type="search" placeholder="Buscar aquí..." name="busqueda" id="buscar" class="form-control">
         <hr>
         <div id="datos">
