@@ -41,9 +41,18 @@
             <form method="POST" action="actualizar.php" class="d-flex gap-2 mb-3">
                 <input type="hidden" name="id" value="<?php echo $campo['id']; ?>">
                 <input type="text" name="producto" value="<?php echo $campo['producto']; ?>" class="form-control" required>
-                <input type="number" name="stock" value="<?php echo $campo['stock']; ?>" class="form-control" required>
+                <div class="input-group">
+                    <span class="input-group-text" id="basic-addon1">Stock</span>
+                    <input type="number" name="stock" value="<?php echo $campo['stock']; ?>" class="form-control" required>
+                </div>
                 <select name="categoria" class="form-select">
-                    <option value="<?php echo $campo['categoria']; ?>"><?php echo $campo['categoria']; ?></option>
+                    <?php
+                    if ($campo['categoria'] == NULL) {
+                        echo '<option selected disabled>Categoría no asignada</option>';
+                    } else {
+                        echo '<option disabled selected value="' . $campo['categoria'] . '">' . $campo['categoria'] . '</option>';
+                    }
+                    ?>
                     <?php
                     $categoria = $campo['categoria'];
                     $consulta = mysqli_query($conexion, "SELECT * FROM categorias");
@@ -54,6 +63,7 @@
                     }
                     ?>
                 </select>
+
                 <input type="number" name="precio" value="<?php echo $campo['precio']; ?>" class="form-control" required>
                 <input type="number" name="costo" value="<?php echo $campo['costo']; ?>" class="form-control" required>
                 <input type="submit" name="nuevo" value="Actualizar" class="btn btn-primary">
