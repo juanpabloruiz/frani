@@ -50,7 +50,7 @@
                     if ($campo['categoria'] == NULL) {
                         echo '<option selected disabled>Categoría no asignada</option>';
                     } else {
-                        echo '<option disabled selected value="' . $campo['categoria'] . '">' . $campo['categoria'] . '</option>';
+                        echo '<option selected value="' . $campo['categoria'] . '">' . $campo['categoria'] . '</option>';
                     }
                     ?>
                     <?php
