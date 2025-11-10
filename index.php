@@ -31,14 +31,18 @@
             </div>
         </div>
     </nav>
+
     <main class="container my-3">
+
         <?php
         if (isset($_GET['id'])) {
             $id = $_GET['id'];
             $consulta = mysqli_query($conexion, "SELECT * FROM productos WHERE id = '$id'");
             $campo = mysqli_fetch_assoc($consulta);
         ?>
+
             <form method="POST" action="actualizar.php" class="d-flex gap-2 mb-3">
+
                 <input type="hidden" name="id" value="<?php echo $campo['id']; ?>">
                 <input type="text" name="producto" value="<?php echo $campo['producto']; ?>" class="form-control" required>
                 <div class="input-group">
@@ -64,13 +68,17 @@
                     ?>
                 </select>
 
-                <input type="number" name="precio" value="<?php echo $campo['precio']; ?>" class="form-control" required>
-                <input type="number" name="costo" value="<?php echo $campo['costo']; ?>" class="form-control" required>
+                <input type="text" name="precio" value="<?php echo $campo['precio']; ?>" class="form-control" required>
+                <input type="text" name="costo" value="<?php echo $campo['costo']; ?>" class="form-control" required>
+
                 <input type="submit" name="nuevo" value="Actualizar" class="btn btn-primary">
+
             </form>
+
         <?php
         } else {
         ?>
+
             <form method="POST" action="insertar.php" class="d-flex gap-2 mb-3">
                 <input type="text" name="producto" placeholder="Producto" class="form-control" required>
                 <input type="number" name="stock" placeholder="Stock" class="form-control" required>
