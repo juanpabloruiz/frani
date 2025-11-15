@@ -30,6 +30,7 @@
         ?>
 
         <?php if ($editData): ?>
+
             <!-- Formulario edición -->
             <form method="POST" action="update.php" class="d-flex gap-2 mb-3">
                 <input type="hidden" name="id" value="<?= $editData['id'] ?>">
@@ -40,6 +41,7 @@
             </form>
 
         <?php else: ?>
+
             <!-- Formulario inserción -->
             <form method="POST" action="insertar.php" class="d-flex gap-2 mb-3">
                 <input type="text" name="codigo" class="form-control" placeholder="Código de barras">
@@ -47,8 +49,8 @@
                 <input type="text" name="precio" class="form-control" placeholder="Precio">
                 <input type="submit" value="Agregar" class="btn btn-primary">
             </form>
-        <?php endif; ?>
 
+        <?php endif; ?>
 
         <!-- Tabla de productos -->
         <table class="table">
@@ -60,7 +62,7 @@
             </tr>
 
             <?php
-            $stmt = $pdo->query("SELECT id, codigo, producto, precio FROM productos ORDER BY id DESC");
+            $stmt = $pdo->query("SELECT * FROM productos ORDER BY id DESC");
             while ($p = $stmt->fetch(PDO::FETCH_ASSOC)):
             ?>
                 <tr>
