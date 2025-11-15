@@ -1,12 +1,12 @@
 <?php
-include('conexion.php');
+include('pdo.php');
 
-$codigo = $_POST['codigo'];
-$producto = $_POST['producto'];
-$precio = $_POST['precio'];
+$stmt = $pdo->prepare("INSERT INTO productos (codigo, producto, precio, creado) VALUES (?, ?, ?, NOW())");
+$stmt->execute([
+    $_POST['codigo'],
+    $_POST['producto'],
+    $_POST['precio']
+]);
 
-$stmt = $pdo->prepare(
-    "INSERT INTO productos (codigo, producto, precio) VALUES (?, ?, ?)"
-);
-
-$stmt->execute([$codigo, $producto, $precio]);
+header("Location: ./");
+exit;

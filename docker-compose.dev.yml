@@ -20,14 +20,19 @@ services:
     restart: unless-stopped
     depends_on:
       - mariadb
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
 
   mariadb:
     image: mariadb:11
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: frani
-      MYSQL_USER: frani
-      MYSQL_PASSWORD: frani
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
     volumes:
       - db_data:/var/lib/mysql
     restart: unless-stopped
