@@ -23,7 +23,7 @@
         $editData = null;
 
         if ($id) {
-            $stmt = $pdo->prepare("SELECT * FROM productos WHERE id = ?");
+            $stmt = $pdo->prepare("SELECT * FROM posts WHERE id = ?");
             $stmt->execute([$id]);
             $editData = $stmt->fetch(PDO::FETCH_ASSOC);
         }
@@ -34,19 +34,19 @@
             <!-- Formulario edición -->
             <form method="POST" action="update.php" class="d-flex gap-2 mb-3">
                 <input type="hidden" name="id" value="<?= $editData['id'] ?>">
-                <input type="text" name="codigo" class="form-control" value="<?= $editData['codigo'] ?>">
-                <input type="text" name="producto" class="form-control" value="<?= $editData['producto'] ?>">
-                <input type="text" name="precio" class="form-control" value="<?= $editData['precio'] ?>">
+                <input type="text" name="code" class="form-control" value="<?= $editData['code'] ?>">
+                <input type="text" name="title" class="form-control" value="<?= $editData['title'] ?>">
+                <input type="text" name="price" class="form-control" value="<?= $editData['price'] ?>">
                 <input type="submit" value="Actualizar" class="btn btn-primary">
             </form>
 
         <?php else: ?>
 
             <!-- Formulario inserción -->
-            <form method="POST" action="insertar.php" class="d-flex gap-2 mb-3">
-                <input type="text" name="codigo" class="form-control" placeholder="Código de barras">
-                <input type="text" name="producto" class="form-control" placeholder="Producto">
-                <input type="text" name="precio" class="form-control" placeholder="Precio">
+            <form method="POST" action="insert.php" class="d-flex gap-2 mb-3">
+                <input type="text" name="code" class="form-control" placeholder="Código de barras">
+                <input type="text" name="title" class="form-control" placeholder="Producto">
+                <input type="text" name="price" class="form-control" placeholder="Precio">
                 <input type="submit" value="Agregar" class="btn btn-primary">
             </form>
 
@@ -62,13 +62,13 @@
             </tr>
 
             <?php
-            $stmt = $pdo->query("SELECT * FROM productos ORDER BY id DESC");
+            $stmt = $pdo->query("SELECT * FROM posts ORDER BY id DESC");
             while ($p = $stmt->fetch(PDO::FETCH_ASSOC)):
             ?>
                 <tr>
-                    <td><?= $p['codigo'] ?></td>
-                    <td><?= $p['producto'] ?></td>
-                    <td>$ <?= $p['precio'] ?></td>
+                    <td><?= $p['code'] ?></td>
+                    <td><?= $p['title'] ?></td>
+                    <td>$ <?= $p['price'] ?></td>
                     <td><a href="?edit=<?= $p['id'] ?>">Editar</a></td>
                 </tr>
             <?php endwhile; ?>
