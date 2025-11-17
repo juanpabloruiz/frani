@@ -32,7 +32,7 @@
         <?php if ($editData): ?>
 
             <!-- Formulario edición -->
-            <form method="POST" action="update.php" class="d-flex gap-2 mb-3">
+            <form method="POST" action="update" class="d-flex gap-2 mb-3">
                 <input type="hidden" name="id" value="<?= $editData['id'] ?>">
                 <input type="text" name="code" class="form-control" value="<?= $editData['code'] ?>">
                 <input type="text" name="title" class="form-control" value="<?= $editData['title'] ?>">
@@ -43,7 +43,7 @@
         <?php else: ?>
 
             <!-- Formulario inserción -->
-            <form method="POST" action="insert.php" class="d-flex gap-2 mb-3">
+            <form method="POST" action="/insert" class="d-flex gap-2 mb-3">
                 <input type="text" name="code" class="form-control" placeholder="Código de barras">
                 <input type="text" name="title" class="form-control" placeholder="Producto">
                 <input type="text" name="price" class="form-control" placeholder="Precio">
