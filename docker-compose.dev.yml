@@ -42,8 +42,8 @@ services:
     ports:
       - "8081:80"
     environment:
-      PMA_HOST: mariadb
-      MYSQL_ROOT_PASSWORD: root
+      PMA_HOST: ${DB_HOST}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT}
     depends_on:
       - mariadb
     restart: unless-stopped
