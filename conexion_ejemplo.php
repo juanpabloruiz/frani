@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+// Define raíz
+define('BASE_URL', '/');
+
 // Mostrar errores PHP
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
