@@ -34,7 +34,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mx-auto fs-5">
+                <ul class="navbar-nav mx-auto fs-5 gap-4">
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="<?= BASE_URL ?>">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>panel">Panel</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>panel">Productos</a></li>
