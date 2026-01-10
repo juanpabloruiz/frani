@@ -3,6 +3,18 @@ a {
     text-decoration: none;
 }
 
+.zoom {
+    overflow: hidden;
+}
+
+.zoom img {
+    transition: transform 0.1s linear;
+}
+
+.zoom:hover img {
+    transform: scale(1.2);
+}
+
 @media print {
 
     #addItemBtn,
