@@ -48,107 +48,29 @@
         <!-- Galería -->
         <div data-masonry='{"percentPosition": true }' class="row row-cols-1 row-cols-md-3 g-4">
 
-            <div class="col">
-                <a href="">
-                    <div class="card shadow h-100">
-                        <picture class="zoom">
-                            <source srcset="img/1.webp" type="image/webp">
-                            <img src="img/1.jpg" class="card-img-top" fetchpriority=high height="100%" width="200"
-                                alt="Image1">
-                        </picture>
-                        <div class="card-body">
-                            <h3 class="card-title">$ 20.000 Set de Arte Carpin-bara</h3>
-                            <p class="card-text">Son grandes , tienen 208 piezas. Para niños mayores a 3 años.</p>
-                        </div>
-                        <div class="card-footer text-body-secondary">10 de enero</div>
-                    </div>
-                </a>
-            </div>
+            <?php
+            $resultado = $conexion->query("SELECT * FROM productos ORDER BY id DESC LIMIT 12");
+            while ($fila = $resultado->fetch_assoc()):
+            ?>
 
-            <div class="col">
-                <a href="">
-                    <div class="card shadow h-100">
-                        <picture class="zoom">
-                            <source srcset="img/2.webp" type="image/webp">
-                            <img src="img/2.jpg" class="card-img-top" fetchpriority=high height="100%" width="200"
-                                alt="Image1">
-                        </picture>
-                        <div class="card-body">
-                            <h3 class="card-title">$ 2.000 Gorros navideños</h3>
-                            <p class="card-text">Salieron más gorritos navideños 🎅</p>
+                <div class="col">
+                    <a href="">
+                        <div class="card shadow h-100">
+                            <picture class="zoom">
+                                <source srcset="img/1.webp" type="image/webp">
+                                <img src="img/1.jpg" class="card-img-top" fetchpriority=high height="100%" width="200"
+                                    alt="Image1">
+                            </picture>
+                            <div class="card-body">
+                                <h3 class="card-title"><?= $fila['producto'] ?></h3>
+                                <p class="card-text h5 text-primary">$ <?= $fila['precio'] ?></p>
+                                <p class="card-text">Son grandes , tienen 208 piezas. Para niños mayores a 3 años.</p>
+                            </div>
                         </div>
-                        <div class="card-footer text-body-secondary">10 de enero</div>
-                    </div>
-                </a>
-            </div>
+                    </a>
+                </div>
 
-            <div class="col">
-                <a href="">
-                    <div class="card shadow h-100">
-                        <picture class="zoom">
-                            <source srcset="img/3.webp" type="image/webp">
-                            <img src="img/3.jpg" class="card-img-top" fetchpriority=high height="100%" width="200"
-                                alt="Image1">
-                        </picture>
-                        <div class="card-body">
-                            <h3 class="card-title">$ 4.000 Pizarras</h3>
-                            <p class="card-text">Pizarras para divertirse dibujando!</p>
-                        </div>
-                        <div class="card-footer text-body-secondary">10 de enero</div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col">
-                <a href="">
-                    <div class="card shadow h-100">
-                        <picture class="zoom">
-                            <source srcset="img/4.webp" type="image/webp">
-                            <img src="img/4.jpg" class="card-img-top" fetchpriority=high height="100%" width="200"
-                                alt="Image1">
-                        </picture>
-                        <div class="card-body">
-                            <h3 class="card-title">$ 8.500 Pelotas</h3>
-                            <p class="card-text">Pelotas N° 2 y 5 y de básquet</p>
-                        </div>
-                        <div class="card-footer text-body-secondary">10 de enero</div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col">
-                <a href="">
-                    <div class="card shadow h-100">
-                        <picture class="zoom">
-                            <source srcset="img/6.webp" type="image/webp">
-                            <img src="img/6.jpg" class="card-img-top" fetchpriority=high height="100%" width="200"
-                                alt="Image1">
-                        </picture>
-                        <div class="card-body">
-                            <h3 class="card-title">$ 10.000 Sets de jardín 2026</h3>
-                            <p class="card-text">Combos, taza, cuchara/tenedor, individual, servilleta, toalla, botella, tupper, mochila, cartuchera y más!!!!</p>
-                        </div>
-                        <div class="card-footer text-body-secondary">10 de enero</div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col">
-                <a href="">
-                    <div class="card shadow h-100">
-                        <picture class="zoom">
-                            <source srcset="img/5.webp" type="image/webp">
-                            <img src="img/5.jpg" class="card-img-top" fetchpriority=high height="100%" width="200"
-                                alt="Image1">
-                        </picture>
-                        <div class="card-body">
-                            <h3 class="card-title">$ 21.000 Monopatines - últimos tres</h3>
-                            <p class="card-text">Estamos a una cuadra de las Mil en el barrio Barrio Independencia Corrientes</p>
-                        </div>
-                        <div class="card-footer text-body-secondary">10 de enero</div>
-                    </div>
-                </a>
-            </div>
+            <?php endwhile; ?>
 
         </div>
 
