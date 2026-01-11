@@ -65,7 +65,7 @@
                             </picture>
                             <div class="card-body">
                                 <h3 class="card-title"><?= $fila['producto'] ?></h3>
-                                <p class="card-text h5 text-primary">$ <?= $fila['precio'] ?></p>
+                                <p class="card-text h4 text-primary fw-bolder">$ <?= $fila['precio'] ?></p>
                                 <p class="card-text">Son grandes , tienen 208 piezas. Para niños mayores a 3 años.</p>
                             </div>
                         </div>

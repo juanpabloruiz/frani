@@ -1,6 +1,17 @@
+@font-face {
+  font-family: 'Merriweather';
+  src: url('../fonts/Merriweather_24pt-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 a {
     color: white;
     text-decoration: none;
+}
+
+body {
+  font-family: 'Merriweather', Arial, Sans-serif;
 }
 
 [data-bs-theme="dark"] .nav-link {
