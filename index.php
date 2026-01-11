@@ -15,7 +15,7 @@
 
 </head>
 
-<body>
+<body class="ubuntu">
 
     <!-- Cabecera -->
     <header class="bg-primary p-4 text-white d-none d-md-block">

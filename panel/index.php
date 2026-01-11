@@ -11,11 +11,12 @@
 
     <!-- Estilos -->
     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../fontawesome/css/all.min.css">
     <link rel="stylesheet" href="../css/estilo.css">
 
 </head>
 
-<body>
+<body class="ubuntu">
 
     <!-- Menú -->
     <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
@@ -36,8 +37,9 @@
         </div>
     </nav>
 
-    <main class="container-fluid py-3">
+    <main class="container py-3">
 
+        <!-- Inserción y edición -->
         <?php
         $id = $_GET['editar'] ?? null;
         $editar = null;
@@ -54,10 +56,11 @@
         <?php if ($editar): ?>
 
             <!-- Formulario edición -->
-            <form method="POST" action="update" class="d-flex gap-2 mb-3">
+            <form method="POST" action="update" class="d-flex flex-column flex-md-row gap-2 mb-3">
                 <input type="hidden" name="id" value="<?= $editar['id'] ?>">
                 <input type="text" name="codigo" class="form-control" value="<?= $editar['codigo'] ?>">
                 <input type="text" name="producto" class="form-control" value="<?= $editar['producto'] ?>">
+                <input type="text" name="costo" class="form-control" value="<?= $editar['costo'] ?>">
                 <input type="text" name="precio" class="form-control" value="<?= $editar['precio'] ?>">
                 <input type="submit" value="Actualizar" class="btn btn-primary">
             </form>
@@ -65,22 +68,82 @@
         <?php else: ?>
 
             <!-- Formulario inserción -->
-            <form method="POST" action="/insert" class="d-flex gap-2 mb-3">
-                <input type="text" name="codigo" class="form-control" placeholder="Código de barras">
-                <input type="text" name="producto" class="form-control" placeholder="Producto">
-                <input type="text" name="precio" class="form-control" placeholder="Precio">
-                <input type="submit" value="Agregar" class="btn btn-primary">
+            <form method="POST" action="/insert" class="d-flex flex-column flex-md-row gap-2 mb-3">
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fa-solid fa-barcode"></i></span>
+                    <input type="text" name="codigo" class="form-control" placeholder="Código de barras">
+                </div>
+                <div class="mb-3">
+                    <input type="text" name="producto" class="form-control" placeholder="Producto">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">$</span>
+                    <input type="text" name="costo" class="form-control" placeholder="Costo">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">$</span>
+                    <input type="text" name="precio" class="form-control" placeholder="Precio">
+                </div>
+                <div class="mb-3">
+                    <input type="submit" value="Agregar" class="btn btn-primary">
+                </div>
             </form>
 
         <?php endif; ?>
 
+        <!-- Porcentaje -->
+        <div>
+            <h5>Generar interés sobre productos</h5>
+            <form method="post">
+                <?php
+                if (isset($_POST['porcentual'])) {
+                    $categoria = $_POST['categoria'];
+                    $porcentaje = $_POST['porcentaje'];
+                    $porcentaje_entero = round($porcentaje);
+                    $consulta = "UPDATE productos SET precio = ROUND(precio * (1 + ?/100)) WHERE categoria = '$categoria'";
+                    $sentencia = $conexion->prepare($consulta);
+                    $sentencia->bind_param("i", $porcentaje_entero);
+                    if ($sentencia->execute()) {
+                        echo '<script>window.location="./"</script>';
+                    } else {
+                        echo '<div class="alert alert-danger">Error en la actualización: ' . $sentencia->error . '</div>';
+                    }
+                }
+                ?>
+                <div class="row">
+                    <div class="col-md-auto">
+                        <select name="categoria" class="form-select mb-3">
+                            <option disabled selected>Categoría</option>
+                            <?php
+                            $consulta = mysqli_query($conexion, "SELECT * FROM categorias");
+                            while ($campo = mysqli_fetch_assoc($consulta)) {
+                            ?>
+                                <option value="<?php echo $campo['nombre']; ?>"><?php echo $campo['nombre']; ?></option>
+                            <?php
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="col-md-auto">
+                        <div class="input-group mb-3">
+                            <input type="number" name="porcentaje" class="form-control" aria-label="Amount (to the nearest dollar)">
+                            <span class="input-group-text">%</span>
+                            <input type="submit" name="porcentual" value="Aplicar aumento" class="btn btn-primary">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         <!-- Tabla de productos -->
         <table class="table">
             <tr>
-                <th>Código</th>
-                <th>Producto</th>
-                <th>Precio</th>
-                <th>Editar</th>
+                <th class="text-center">CÓDIGO</th>
+                <th class="text-center">PRODUCTO</th>
+                <th class="text-center">COSTO</th>
+                <th class="text-center">PRECIO</th>
+                <th class="text-center">FECHA</th>
+                <th class="text-center">BORRAR</th>
             </tr>
 
             <?php
@@ -89,10 +152,16 @@
             ?>
 
                 <tr>
-                    <td><?= $fila['codigo'] ?></td>
-                    <td><?= $fila['producto'] ?></td>
-                    <td>$ <?= $fila['precio'] ?></td>
-                    <td><a href="?editar=<?= $fila['id'] ?>">Editar</a></td>
+                    <td class="text-center"><?= $fila['codigo'] ?></td>
+                    <td class="text-left"><?= $fila['producto'] ?></td>
+                    <td class="text-end">$ <?= $fila['costo'] ?></td>
+                    <td class="text-end">$ <?= $fila['precio'] ?></td>
+                    <td class="text-center">
+                        <?= date('d/m/y', strtotime($fila['fecha'])) ?>
+                        <i class="fa-regular fa-alarm-clock mx-2 text-primary"></i>
+                        <?= date('H:i', strtotime($fila['fecha'])) ?>
+                    </td>
+                    <td class="text-center"><a href="?editar=<?= $fila['id'] ?>">Editar</a></td>
                 </tr>
 
             <?php endwhile; ?>

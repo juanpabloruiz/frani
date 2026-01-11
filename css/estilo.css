@@ -5,6 +5,13 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Ubuntu';
+  src: url('../fonts/Ubuntu-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 a {
     color: white;
     text-decoration: none;
@@ -45,6 +52,10 @@ body {
 
 .zoom:hover img {
     transform: scale(1.2);
+}
+
+.ubuntu {
+  font-family: 'Ubuntu', Arial, Serif;
 }
 
 @media print {
