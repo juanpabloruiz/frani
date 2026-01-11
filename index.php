@@ -34,12 +34,12 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mx-auto fs-5 gap-4">
+                <ul class="navbar-nav mx-auto fs-5">
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="<?= BASE_URL ?>">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>panel">Panel</a></li>
-                    <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>panel">Productos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>panel">Nosotros</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Contacto</a></li>
+                    <li class="nav-item"><a class="nav-link px-4" href="<?= BASE_URL ?>panel">Panel</a></li>
+                    <li class="nav-item"><a class="nav-link px-4" href="<?= BASE_URL ?>panel">Productos</a></li>
+                    <li class="nav-item"><a class="nav-link px-4" href="<?= BASE_URL ?>panel">Nosotros</a></li>
+                    <li class="nav-item"><a class="nav-link px-4" href="#">Contacto</a></li>
                 </ul>
             </div>
         </div>

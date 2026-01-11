@@ -18,7 +18,7 @@ a {
 }
 
 .zoom img {
-    transition: transform 0.1s linear;
+    transition: transform 1s linear;
 }
 
 .zoom:hover img {
