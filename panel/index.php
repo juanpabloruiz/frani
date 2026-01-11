@@ -70,10 +70,11 @@
             <!-- Formulario inserción -->
             <form method="POST" action="/insert" class="d-flex flex-column flex-md-row gap-2 mb-3">
                 <div class="input-group mb-3">
-                    <span class="input-group-text"><i class="fa-solid fa-barcode"></i></span>
+                    <span class="input-group-text"><i class="fa-solid fa-barcode text-danger"></i></span>
                     <input type="text" name="codigo" class="form-control" placeholder="Código de barras">
                 </div>
-                <div class="mb-3">
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fa-brands fa-product-hunt"></i></span>
                     <input type="text" name="producto" class="form-control" placeholder="Producto">
                 </div>
                 <div class="input-group mb-3">
@@ -136,32 +137,33 @@
         </div>
 
         <!-- Tabla de productos -->
-        <table class="table">
+        <table class="table table-hover">
             <tr>
                 <th class="text-center">CÓDIGO</th>
                 <th class="text-center">PRODUCTO</th>
                 <th class="text-center">COSTO</th>
                 <th class="text-center">PRECIO</th>
+                <th class="text-center">CATEGORÍA</th>
                 <th class="text-center">FECHA</th>
                 <th class="text-center">BORRAR</th>
             </tr>
 
             <?php
-            $resultado = $conexion->query("SELECT * FROM productos ORDER BY id DESC");
-            while ($fila = $resultado->fetch_assoc()):
+            $consulta = $conexion->query("SELECT * FROM productos p LEFT JOIN categorias c ON c.id = p.categoria");
+            while ($fila = $consulta->fetch_assoc()):
             ?>
-
-                <tr>
+                <tr onclick="window.location='?editar=<?= $fila['id'] ?>';" style="cursor:pointer;">
                     <td class="text-center"><?= $fila['codigo'] ?></td>
                     <td class="text-left"><?= $fila['producto'] ?></td>
                     <td class="text-end">$ <?= $fila['costo'] ?></td>
                     <td class="text-end">$ <?= $fila['precio'] ?></td>
+                    <td class="text-center"><?= $campo['categoria'] ?? '' ?></td>
                     <td class="text-center">
                         <?= date('d/m/y', strtotime($fila['fecha'])) ?>
                         <i class="fa-regular fa-alarm-clock mx-2 text-primary"></i>
                         <?= date('H:i', strtotime($fila['fecha'])) ?>
                     </td>
-                    <td class="text-center"><a href="?editar=<?= $fila['id'] ?>">Editar</a></td>
+                    <td class="text-center"><a href="?eliminar=<?= $fila['id'] ?>" class="btn btn-dark" title="Eliminar"><i class="fa-solid fa-trash"></i></a></td>
                 </tr>
 
             <?php endwhile; ?>
