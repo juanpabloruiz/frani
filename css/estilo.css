@@ -24,6 +24,17 @@ body {
   border-radius: .375rem;
 }
 
+.navbar-toggler {
+  border: none;
+}
+
+.navbar-toggler:focus,
+.navbar-toggler:active,
+.navbar-toggler:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
 .zoom {
     overflow: hidden;
 }

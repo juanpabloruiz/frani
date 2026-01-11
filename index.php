@@ -18,7 +18,7 @@
 <body>
 
     <!-- Cabecera -->
-    <header class="bg-primary p-4 text-white">
+    <header class="bg-primary p-4 text-white d-none d-md-block">
         <a href="./">
             <h1>Frani</h1>
         </a>
@@ -45,7 +45,7 @@
         </div>
     </nav>
 
-    <div class="container my-4">
+    <div class="container my-3">
 
         <!-- Galería -->
         <div data-masonry='{"percentPosition": true }' class="row row-cols-1 row-cols-md-3 g-4">
@@ -77,6 +77,14 @@
         </div>
 
     </div>
+
+    <footer class="container-fluid bg-dark text-white text-center py-5">
+        <p>
+            Derechos Reservados Frani - <?= date('Y') ?>
+            <br>
+            CP W3400 - Corrientes - Argentina
+        </p>
+    </footer>
 
     <!-- Scripts -->
     <script src="js/bootstrap.bundle.min.js"></script>
