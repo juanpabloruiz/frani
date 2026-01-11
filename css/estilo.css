@@ -29,7 +29,7 @@ body {
 }
 
 .zoom img {
-    transition: transform 1s linear;
+    transition: transform 0.2s linear;
 }
 
 .zoom:hover img {
