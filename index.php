@@ -63,7 +63,7 @@
                         <div class="card shadow h-100">
                             <picture class="zoom">
                                 <source srcset="img/1.webp" type="image/webp">
-                                <img src="img/1.jpg" class="card-img-top" fetchpriority=high height="100%" width="200"
+                                <img src="img/1.jpg" class="card-img-top" loading="lazy" height="100%" width="200"
                                     alt="Image1">
                             </picture>
                             <div class="card-body">
