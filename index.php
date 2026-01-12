@@ -20,7 +20,10 @@
     <!-- Cabecera -->
     <header class="bg-primary p-4 text-white d-none d-md-block">
         <a href="./">
-            <h1>Frani</h1>
+            <picture class="">
+                <source srcset="img/logo.webp" type="image/webp">
+                <img src="img/logo.png" class="img-fluid mx-auto d-block" fetchpriority=high height="100%" width="300" alt="Logotipo">
+            </picture>
         </a>
     </header>
 
