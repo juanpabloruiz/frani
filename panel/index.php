@@ -177,7 +177,7 @@ require_once __DIR__ . '/../conexion.php';
         </div>
 
         <!-- Tabla de productos -->
-        <table class="table table-hover align-middle table-sm">
+        <table class="table table-hover align-middle table-sm table-bordered">
             <tr>
                 <th class="text-center">CÓDIGO</th>
                 <th class="text-center">PRODUCTO</th>
