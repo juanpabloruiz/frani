@@ -177,8 +177,8 @@ require_once __DIR__ . '/../conexion.php';
         </div>
 
         <!-- Tabla de productos -->
-        <table class="table table-hover align-middle table-sm table-bordered">
-            <tr>
+        <table class="table table-hover align-middle">
+            <tr class="table-dark">
                 <th class="text-center">CÓDIGO</th>
                 <th class="text-center">PRODUCTO</th>
                 <th class="text-center">COSTO</th>
@@ -189,9 +189,10 @@ require_once __DIR__ . '/../conexion.php';
             </tr>
 
             <?php
-            $consulta = $conexion->query("SELECT * FROM productos p LEFT JOIN categorias c ON c.id = p.categoria");
+            $consulta = $conexion->query("SELECT p.*, c.id AS categoria_id, c.nombre AS categoria FROM productos p LEFT JOIN categorias c ON c.id = p.categoria;");
             while ($fila = $consulta->fetch_assoc()):
             ?>
+
                 <tr onclick="window.location='?editar=<?= $fila['id'] ?>';" style="cursor:pointer;">
                     <td class="text-center"><?= $fila['codigo'] ?></td>
                     <td class="text-left"><?= $fila['producto'] ?></td>
