@@ -1,11 +1,4 @@
 @font-face {
-  font-family: 'Merriweather';
-  src: url('../fonts/Merriweather_24pt-Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
   font-family: 'Ubuntu';
   src: url('../fonts/Ubuntu-Regular.ttf') format('truetype');
   font-weight: normal;
@@ -18,7 +11,7 @@ a {
 }
 
 body {
-  font-family: 'Merriweather', Arial, Sans-serif;
+  font-family: 'Ubuntu', Arial, Sans-serif;
 }
 
 [data-bs-theme="dark"] .nav-link {
