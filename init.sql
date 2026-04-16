@@ -1,0 +1,59 @@
+CREATE DATABASE IF NOT EXISTS `frani`
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE `frani`;
+
+CREATE TABLE IF NOT EXISTS `categorias` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(150) NOT NULL,
+  `agregado` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modificado` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_categorias_nombre` (`nombre`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `productos` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `producto` VARCHAR(200) NOT NULL,
+  `costo` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `precio` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `stock` INT NOT NULL DEFAULT 0,
+  `id_categoria` INT UNSIGNED NOT NULL,
+  `agregado` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modificado` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_productos_id_categoria` (`id_categoria`),
+  CONSTRAINT `fk_productos_categorias`
+    FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id`)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `facturas` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(150) NOT NULL,
+  `metodo` VARCHAR(50) NOT NULL,
+  `total` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `detalle` TEXT NOT NULL,
+  `fecha` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `ventas` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `detalle` TEXT NOT NULL,
+  `cantidad` INT NOT NULL DEFAULT 0,
+  `precio` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `metodo` VARCHAR(50) NOT NULL,
+  `fecha` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `categorias` (`nombre`)
+SELECT 'General'
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM `categorias`
+  WHERE `nombre` = 'General'
+);
