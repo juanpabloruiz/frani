@@ -1,0 +1,7 @@
+.git
+.gitignore
+.env
+.env.example
+.DS_Store
+README.md
+init.sql

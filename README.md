@@ -17,7 +17,12 @@ Aplicación PHP con MySQLi OO para gestión de productos, dockerizada con:
 
 ## Uso
 
-1. Revisar o ajustar `.env`
+1. Crear la configuración local a partir del ejemplo y ajustar las contraseñas si hace falta:
+
+```bash
+cp .env.example .env
+```
+
 2. Levantar el stack:
 
 ```bash

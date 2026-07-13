@@ -2,11 +2,19 @@ FROM php:8.4-fpm
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        nginx \
         default-mysql-client \
     && docker-php-ext-install mysqli \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /var/www/html
+RUN rm -f /etc/nginx/sites-enabled/default
 
-COPY docker/php-fpm/www.conf /usr/local/etc/php-fpm.d/www.conf
-COPY docker/php/conf.d/app.ini /usr/local/etc/php/conf.d/app.ini
+COPY nginx.conf /etc/nginx/nginx.conf
+
+RUN mkdir -p /var/www/html
+
+COPY src/ /var/www/html/
+
+EXPOSE 80
+
+CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
