@@ -55,11 +55,7 @@ $resultado = $conexion->query(
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
             <div>
                 <h1 class="h2 mb-1">Catálogo</h1>
-                <p class="text-secondary mb-0">Productos cargados en la base `frani`.</p>
             </div>
-            <a href="<?= e(base_path('panel.php')) ?>" class="btn btn-primary">
-                Administrar productos
-            </a>
         </div>
 
         <div data-masonry='{"percentPosition": true }' class="row row-cols-1 row-cols-md-3 g-4">
