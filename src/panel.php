@@ -37,25 +37,9 @@ require_once __DIR__ . '/funciones.php';
     </nav>
 
     <main class="container-fluid my-4">
-        <div class="mb-4">
-            <h1 class="h3 mb-1">Administración</h1>
-            <p class="text-secondary mb-0">Alta, edición y consulta de categorías y productos.</p>
-        </div>
+        <?php require __DIR__ . '/controles.php'; ?>
 
-        <div class="row g-4">
-            <div class="col-lg-4">
-                <?php require __DIR__ . '/categorias.php'; ?>
-            </div>
-            <div class="col-lg-8">
-                <?php require __DIR__ . '/porcentaje.php'; ?>
-            </div>
-        </div>
-
-        <section class="mt-4">
-            <?php require __DIR__ . '/controles.php'; ?>
-        </section>
-
-        <section class="mt-4">
+        <section>
             <?php require __DIR__ . '/productos.php'; ?>
         </section>
     </main>
