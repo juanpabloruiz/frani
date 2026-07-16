@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $nombre = trim($_POST['nombre'] ?? '');
 $metodo = trim($_POST['metodo'] ?? '');
-$total = (float) numero($_POST['total'] ?? '0');
+$total = (float) ($_POST['total'] ?? '0');
 $detalleItems = [];
 
 $stmtProducto = $conexion->prepare("SELECT producto FROM productos WHERE id = ?");
@@ -21,7 +21,7 @@ foreach ($_POST as $key => $value) {
     $index = str_replace('producto_', '', $key);
     $idProducto = (int) ($_POST["producto_{$index}"] ?? 0);
     $cantidad = (int) ($_POST["cantidad_{$index}"] ?? 0);
-    $precio = (float) numero($_POST["precio_{$index}"] ?? '0');
+    $precio = (float) ($_POST["precio_{$index}"] ?? '0');
 
     if ($idProducto <= 0 || $cantidad <= 0) {
         continue;
