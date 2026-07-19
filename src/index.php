@@ -2,7 +2,8 @@
 require_once __DIR__ . '/conexion.php';
 require_once __DIR__ . '/funciones.php';
 
-$resultado = $conexion->query(
+$db = conexion();
+$resultado = $db->query(
     "SELECT p.producto, p.precio, p.stock, c.nombre AS categoria
     FROM productos p
     INNER JOIN categorias c ON c.id = p.id_categoria
@@ -43,6 +44,7 @@ $resultado = $conexion->query(
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mx-auto fs-5">
                     <li class="nav-item"><a class="nav-link active px-4" aria-current="page" href="<?= e(base_path()) ?>">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link px-4" href="<?= e(base_path('panel')) ?>">Acceder</a></li>
                 </ul>
             </div>
         </div>

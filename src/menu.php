@@ -12,19 +12,14 @@ $paginaActual = basename($_SERVER['SCRIPT_NAME']);
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link m-1 px-2 <?= $paginaActual === 'panel.php' ? 'active bg-primary rounded' : '' ?>"
-                        aria-current="<?= $paginaActual === 'panel.php' ? 'page' : 'false' ?>"
-                        href="<?= e(base_path('panel.php')) ?>">Panel</a>
+                    <a class="nav-link m-1 px-2 <?= $paginaActual === 'index.php' ? 'active bg-primary rounded' : '' ?>"
+                        href="<?= e(base_path()) ?>">Inicio</a>
                 </li>
+            </ul>
+            <ul class="navbar-nav mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link m-1 px-2 <?= $paginaActual === 'factura.php' ? 'active bg-primary rounded' : '' ?>"
-                        aria-current="<?= $paginaActual === 'factura.php' ? 'page' : 'false' ?>"
-                        href="<?= e(base_path('factura.php')) ?>">Facturar</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link m-1 px-2 <?= $paginaActual === 'ventas.php' ? 'active bg-primary rounded' : '' ?>"
-                        aria-current="<?= $paginaActual === 'ventas.php' ? 'page' : 'false' ?>"
-                        href="<?= e(base_path('ventas.php')) ?>">Ventas</a>
+                    <a class="nav-link m-1 px-2 <?= $paginaActual === 'index.php' && strpos($_SERVER['SCRIPT_NAME'], 'panel') !== false ? 'active bg-primary rounded' : '' ?>"
+                        href="<?= e(base_path('panel')) ?>">Acceder</a>
                 </li>
             </ul>
         </div>

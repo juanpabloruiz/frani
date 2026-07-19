@@ -1,23 +1,11 @@
 <?php
 declare(strict_types=1);
 
-function numero($valor) {
-    // Quitar espacios
-    $valor = trim($valor);
-
-    // Quitar separador de miles
-    $valor = str_replace('.', '', $valor);
-
-    // Cambiar coma decimal a punto
-    $valor = str_replace(',', '.', $valor);
-
-    // Validar
-    return is_numeric($valor) ? $valor : 0;
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
-function mostrar_numero($valor) {
-    return number_format($valor, 0, '', '.');
-}
+define('BASE_URL', '');
 
 function e(?string $valor): string
 {
@@ -40,4 +28,11 @@ function redireccionar(string $ruta = ''): void
 {
     header('Location: ' . base_path($ruta));
     exit;
+}
+
+function numero($valor) {
+    $valor = trim($valor);
+    $valor = str_replace('.', '', $valor);
+    $valor = str_replace(',', '.', $valor);
+    return is_numeric($valor) ? $valor : 0;
 }

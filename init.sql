@@ -42,6 +42,19 @@ CREATE TABLE IF NOT EXISTS `facturas` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `usuarios` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(150) NOT NULL,
+  `foto` VARCHAR(255) DEFAULT NULL,
+  `correo` VARCHAR(200) NOT NULL,
+  `clave` VARCHAR(255) NOT NULL,
+  `token` VARCHAR(255) DEFAULT NULL,
+  `ingreso` TIMESTAMP NULL DEFAULT NULL,
+  `editado` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_usuarios_correo` (`correo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 INSERT INTO `categorias` (`nombre`)
 SELECT 'General'
 WHERE NOT EXISTS (
@@ -49,3 +62,6 @@ WHERE NOT EXISTS (
   FROM `categorias`
   WHERE `nombre` = 'General'
 );
+
+INSERT IGNORE INTO `usuarios` (`nombre`, `correo`, `clave`)
+VALUES ('admin', 'pabloruiz1980@gmail.com', '$2y$12$emBPsJNMpsTuqm7ww9pUFuMFC5G/XwE3r/JmDndscLZ5WC8wsJGau');

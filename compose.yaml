@@ -26,6 +26,7 @@ services:
       start_period: 10s
     volumes:
       - ./src:/var/www/html
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
 
   db:
     image: mariadb:11.4
