@@ -20,7 +20,7 @@ $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias 
 <body>
     <?php require __DIR__ . '/../menu.php'; ?>
 
-    <main class="container-fluid my-4">
+    <div class="container-fluid py-3 px-4">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
             <h1 class="h3 mb-0">Categorías</h1>
             <a href="<?= e(base_path('panel/categorias/nuevo')) ?>" class="btn btn-primary">
@@ -69,9 +69,11 @@ $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias 
                 </div>
             </div>
         </div>
+        </div>
     </main>
 
     <script src="<?= e(base_path('../../js/bootstrap.bundle.min.js')) ?>"></script>
+
 </body>
 
 </html>

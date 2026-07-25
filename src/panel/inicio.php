@@ -24,7 +24,7 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
 <body>
     <?php require __DIR__ . '/menu.php'; ?>
 
-    <main class="container-fluid my-4">
+    <div class="container-fluid py-3 px-4">
         <div class="mb-4">
             <h1 class="h3 mb-1">Bienvenido, <?= e($usuario['nombre']) ?></h1>
             <p class="text-secondary mb-0">Panel de administración de Frani.</p>
@@ -59,9 +59,11 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
                 </a>
             </div>
         </div>
+        </div>
     </main>
 
     <script src="<?= e(base_path('../js/bootstrap.bundle.min.js')) ?>"></script>
+
 </body>
 
 </html>
