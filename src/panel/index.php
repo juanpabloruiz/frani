@@ -23,7 +23,7 @@ $error = $_GET['error'] ?? '';
     <!-- Desktop top bar -->
     <nav class="navbar navbar-dark bg-dark fixed-top d-none d-lg-flex" style="z-index:1030; height:32px; min-height:32px; padding:0 .75rem;">
         <div class="container-fluid d-flex justify-content-between align-items-center" style="height:32px;">
-            <a class="navbar-brand fw-bold mb-0 lh-1" href="<?= e(base_path()) ?>" style="font-size:.9rem;">Frani</a>
+            <a class="navbar-brand fw-bold mb-0 lh-1" href="<?= e(base_path()) ?>">Frani</a>
             <a class="text-white-50 text-decoration-none small" href="<?= e(base_path()) ?>" target="_blank">Ver sitio</a>
         </div>
     </nav>

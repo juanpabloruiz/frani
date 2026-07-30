@@ -2,7 +2,13 @@
 require_once __DIR__ . '/../conexion.php';
 requerir_login();
 
-$id = (int) ($_GET['id'] ?? 0);
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    redireccionar('panel/productos');
+}
+
+verificar_CSRF();
+
+$id = (int) ($_POST['id'] ?? 0);
 
 if ($id <= 0) {
     redireccionar('panel/productos');

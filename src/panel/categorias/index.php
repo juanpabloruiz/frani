@@ -52,9 +52,13 @@ $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias 
                                         <a href="<?= e(base_path('panel/categorias/editar?id=' . $fila['id'])) ?>" class="btn btn-sm btn-outline-primary">
                                             <i class="fa-solid fa-pen"></i>
                                         </a>
-                                        <a href="<?= e(base_path('panel/categorias/eliminar?id=' . $fila['id'])) ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Eliminar esta categoría? Los productos asociados no se eliminarán.');">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </a>
+                                        <form method="POST" action="<?= e(base_path('panel/categorias/eliminar')) ?>" class="d-inline" onsubmit="return confirm('¿Eliminar esta categoría? Los productos asociados no se eliminarán.');">
+                                            <input type="hidden" name="csrf_token" value="<?= e(CSRF_token()) ?>">
+                                            <input type="hidden" name="id" value="<?= e((string) $fila['id']) ?>">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             <?php endwhile; ?>

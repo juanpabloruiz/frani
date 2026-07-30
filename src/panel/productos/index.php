@@ -74,9 +74,14 @@ $consulta = $consulta = $db->query(
                                         <a href="<?= e(base_path('panel/productos/editar?id=' . $fila['id'])) ?>" class="btn btn-sm btn-outline-primary">
                                             <i class="fa-solid fa-pen"></i>
                                         </a>
-                                        <a href="<?= e(base_path('panel/productos/eliminar?id=' . $fila['id'])) ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Eliminar este producto?');">
+                                        <?php $token = CSRF_token(); ?>
+                                    <form method="POST" action="<?= e(base_path('panel/productos/eliminar')) ?>" class="d-inline" onsubmit="return confirm('¿Eliminar este producto?');">
+                                        <input type="hidden" name="csrf_token" value="<?= e($token) ?>">
+                                        <input type="hidden" name="id" value="<?= e((string) $fila['id']) ?>">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
                                             <i class="fa-solid fa-trash"></i>
-                                        </a>
+                                        </button>
+                                    </form>
                                     </td>
                                 </tr>
                             <?php endwhile; ?>

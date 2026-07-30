@@ -66,9 +66,14 @@ $consulta = $db->query(
                                     <td><?= e(date('d/m/Y H:i', strtotime($campo['agregado']))) ?></td>
                                     <td><?= $campo['modificado'] ? e(date('d/m/Y H:i', strtotime($campo['modificado']))) : '-' ?></td>
                                     <td class="text-center">
-                                        <a href="<?= e(base_path('panel/facturas/eliminar?id=' . $campo['id'])) ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Eliminar esta factura?');">
+                                        <?php $token = CSRF_token(); ?>
+                                    <form method="POST" action="<?= e(base_path('panel/facturas/eliminar')) ?>" class="d-inline" onsubmit="return confirm('¿Eliminar esta factura?');">
+                                        <input type="hidden" name="csrf_token" value="<?= e($token) ?>">
+                                        <input type="hidden" name="id" value="<?= e((string) $campo['id']) ?>">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
                                             <i class="fa-solid fa-trash"></i>
-                                        </a>
+                                        </button>
+                                    </form>
                                     </td>
                                 </tr>
                             <?php endwhile; ?>
