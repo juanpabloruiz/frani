@@ -34,27 +34,7 @@
 @media print {
 
     #addItemBtn,
-    #facturaForm input[type="submit"] {
+    #facturaForm button[type="submit"] {
         display: none;
     }
-}
-
-/* ── Admin panel (WordPress-style) ────────────────────── */
-
-/* Sidebar on desktop */
-@media (min-width:992px) {
-  #adminContent { margin-left:160px !important; }
-}
-
-/* Mobile: navbar is ~56px tall, add padding */
-@media (max-width:991.98px) {
-  #adminContent { margin-left:0 !important; padding-top:4.25rem !important; }
-}
-
-/* Login page centering */
-.login-center {
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
 }

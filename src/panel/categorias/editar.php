@@ -36,35 +36,30 @@ if ($categoria === null) {
 <body>
     <?php require __DIR__ . '/../menu.php'; ?>
 
-    <div class="container-fluid py-3 px-4">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h3 mb-0">Editar categoría</h1>
             <a href="<?= e(base_path('panel/categorias')) ?>" class="btn btn-outline-secondary">Volver</a>
         </div>
 
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <form method="POST" action="<?= e(base_path('panel/categorias/actualizar')) ?>" class="row g-3">
-                    <?= CSRF_field() ?>
-                    <input type="hidden" name="id" value="<?= e((string) $categoria['id']) ?>">
+        <form method="POST" action="<?= e(base_path('panel/categorias/actualizar')) ?>" class="row g-3">
+            <?= CSRF_field() ?>
+            <input type="hidden" name="id" value="<?= e((string) $categoria['id']) ?>">
 
-                    <div class="col-md-8">
-                        <label class="form-label fw-semibold">Nombre de la categoría</label>
-                        <input type="text" name="nombre" class="form-control form-control-lg"
-                            value="<?= e($categoria['nombre']) ?>" required>
-                    </div>
-
-                    <div class="col-md-4 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary btn-lg w-100">Actualizar categoría</button>
-                    </div>
-                </form>
+            <div class="col-md-8">
+                <label class="form-label">Nombre de la categoría</label>
+                <input type="text" name="nombre" class="form-control"
+                    value="<?= e($categoria['nombre']) ?>" required>
             </div>
-        </div>
+
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Actualizar categoría</button>
+            </div>
+        </form>
         </div>
     </main>
 
     <script src="<?= e(base_path('../../js/bootstrap.bundle.min.js')) ?>"></script>
-
 </body>
 
 </html>

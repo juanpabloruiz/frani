@@ -17,60 +17,58 @@ requerir_login();
 <body>
     <?php require __DIR__ . '/../menu.php'; ?>
 
-    <div class="container-fluid py-3 px-4">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h3 mb-0">Nueva factura</h1>
             <a href="<?= e(base_path('panel/facturas')) ?>" class="btn btn-outline-secondary">Volver</a>
         </div>
 
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <form id="facturaForm" method="POST" action="<?= e(base_path('panel/facturas/insertar')) ?>">
-                    <?= CSRF_field() ?>
+        <form id="facturaForm" method="POST" action="<?= e(base_path('panel/facturas/insertar')) ?>">
+            <?= CSRF_field() ?>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Nombre del cliente</label>
-                        <input type="text" id="nombre" name="nombre" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Método de pago</label>
-                        <select id="metodo" name="metodo" class="form-select" required>
-                            <option value="">Seleccionar método</option>
-                            <option value="efectivo">Efectivo</option>
-                            <option value="tarjeta">Tarjeta</option>
-                            <option value="transferencia">Transferencia</option>
-                        </select>
-                    </div>
-
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="itemsTable">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>Producto</th>
-                                    <th>Cantidad</th>
-                                    <th>Precio</th>
-                                    <th>Subtotal</th>
-                                    <th class="text-center">Quitar</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-
-                    <button type="button" class="btn btn-success mb-3" id="addItemBtn">
-                        <i class="fa-solid fa-plus"></i> Agregar ítem
-                    </button>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Total</label>
-                        <input type="number" id="total" name="total" class="form-control" step="0.01" readonly>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-lg">Guardar factura</button>
-                </form>
+            <div class="mb-3">
+                <label class="form-label">Nombre del cliente</label>
+                <input type="text" id="nombre" name="nombre" class="form-control" required>
             </div>
-        </div>
+
+            <div class="mb-3">
+                <label class="form-label">Método de pago</label>
+                <select id="metodo" name="metodo" class="form-select" required>
+                    <option value="">Seleccionar método</option>
+                    <option value="efectivo">Efectivo</option>
+                    <option value="tarjeta">Tarjeta</option>
+                    <option value="transferencia">Transferencia</option>
+                </select>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered" id="itemsTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Subtotal</th>
+                            <th class="text-center">Quitar</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <button type="button" class="btn btn-success mb-3" id="addItemBtn">
+                Agregar ítem
+            </button>
+
+            <div class="mb-3">
+                <label class="form-label">Total</label>
+                <input type="number" id="total" name="total" class="form-control" step="0.01" readonly>
+            </div>
+
+            <div class="d-grid d-md-block">
+                <button type="submit" class="btn btn-primary">Guardar factura</button>
+            </div>
+        </form>
         </div>
     </main>
 
@@ -132,7 +130,7 @@ requerir_login();
 
                 const btnQuitar = document.createElement("button");
                 btnQuitar.type = "button";
-                btnQuitar.className = "btn btn-sm btn-outline-danger";
+                btnQuitar.className = "btn btn-sm btn-danger";
                 btnQuitar.innerHTML = '<i class="fa-solid fa-xmark"></i>';
                 btnQuitar.addEventListener("click", () => {
                     row.remove();

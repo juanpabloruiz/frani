@@ -20,64 +20,49 @@ $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias 
 <body>
     <?php require __DIR__ . '/../menu.php'; ?>
 
-    <div class="container-fluid py-3 px-4">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h3 mb-0">Categorías</h1>
-            <a href="<?= e(base_path('panel/categorias/nuevo')) ?>" class="btn btn-primary">
-                <i class="fa-solid fa-plus"></i> Nueva categoría
-            </a>
+            <a href="<?= e(base_path('panel/categorias/nuevo')) ?>" class="btn btn-primary">Nueva categoría</a>
         </div>
 
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <span class="text-secondary"><?= e((string) $consulta->num_rows) ?> registros</span>
+        <table class="table">
+            <thead class="text-uppercase text-center">
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Agregado</th>
+                    <th scope="col">Modificado</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($fila = $consulta->fetch_assoc()): ?>
+                    <tr>
+                        <td><?= e($fila['nombre']) ?></td>
+                        <td class="text-center"><?= e(date('d/m/Y H:i', strtotime($fila['agregado']))) ?></td>
+                        <td class="text-center"><?= $fila['modificado'] ? e(date('d/m/Y H:i', strtotime($fila['modificado']))) : '-' ?></td>
+                        <td class="text-center">
+                            <a href="<?= e(base_path('panel/categorias/editar?id=' . $fila['id'])) ?>" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></a>
+                            <form method="POST" action="<?= e(base_path('panel/categorias/eliminar')) ?>" class="d-inline" onsubmit="return confirm('¿Eliminar esta categoría? Los productos asociados no se eliminarán.');">
+                                <input type="hidden" name="csrf_token" value="<?= e(CSRF_token()) ?>">
+                                <input type="hidden" name="id" value="<?= e((string) $fila['id']) ?>">
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
 
-                <div class="table-responsive mt-3">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Agregado</th>
-                                <th>Modificado</th>
-                                <th class="text-center">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php while ($fila = $consulta->fetch_assoc()): ?>
-                                <tr>
-                                    <td><?= e($fila['nombre']) ?></td>
-                                    <td><?= e(date('d/m/Y H:i', strtotime($fila['agregado']))) ?></td>
-                                    <td><?= $fila['modificado'] ? e(date('d/m/Y H:i', strtotime($fila['modificado']))) : '-' ?></td>
-                                    <td class="text-center">
-                                        <a href="<?= e(base_path('panel/categorias/editar?id=' . $fila['id'])) ?>" class="btn btn-sm btn-outline-primary">
-                                            <i class="fa-solid fa-pen"></i>
-                                        </a>
-                                        <form method="POST" action="<?= e(base_path('panel/categorias/eliminar')) ?>" class="d-inline" onsubmit="return confirm('¿Eliminar esta categoría? Los productos asociados no se eliminarán.');">
-                                            <input type="hidden" name="csrf_token" value="<?= e(CSRF_token()) ?>">
-                                            <input type="hidden" name="id" value="<?= e((string) $fila['id']) ?>">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            <?php endwhile; ?>
-
-                            <?php if ($consulta->num_rows === 0): ?>
-                                <tr>
-                                    <td colspan="4" class="text-center text-secondary py-4">No hay categorías cargadas.</td>
-                                </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+                <?php if ($consulta->num_rows === 0): ?>
+                    <tr>
+                        <td colspan="4" class="text-center text-secondary">No hay categorías cargadas.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
         </div>
     </main>
 
     <script src="<?= e(base_path('../../js/bootstrap.bundle.min.js')) ?>"></script>
-
 </body>
 
 </html>

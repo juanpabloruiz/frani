@@ -20,36 +20,25 @@ $error = $_GET['error'] ?? '';
 </head>
 
 <body class="bg-light">
-    <!-- Desktop top bar -->
-    <nav class="navbar navbar-dark bg-dark fixed-top d-none d-lg-flex" style="z-index:1030; height:32px; min-height:32px; padding:0 .75rem;">
-        <div class="container-fluid d-flex justify-content-between align-items-center" style="height:32px;">
-            <a class="navbar-brand fw-bold mb-0 lh-1" href="<?= e(base_path()) ?>">Frani</a>
-            <a class="text-white-50 text-decoration-none small" href="<?= e(base_path()) ?>" target="_blank">Ver sitio</a>
-        </div>
-    </nav>
-
-    <!-- Mobile navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top d-lg-none" style="z-index:1030;">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary mb-3 mb-md-4">
         <div class="container-fluid">
-            <a class="navbar-brand fw-bold" href="<?= e(base_path()) ?>">Frani</a>
+            <a class="navbar-brand" href="<?= e(base_path()) ?>">Frani</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#mobileNav" aria-controls="mobileNav" aria-expanded="false" aria-label="Menú">
+                data-bs-target="#loginNav" aria-controls="loginNav" aria-expanded="false"
+                aria-label="Menú">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="mobileNav">
-                <ul class="navbar-nav me-auto">
+            <div class="collapse navbar-collapse" id="loginNav">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="<?= e(base_path()) ?>">
-                            <i class="fa-solid fa-house me-2"></i>Inicio
-                        </a>
+                        <a class="nav-link" href="<?= e(base_path()) ?>">Volver al inicio</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <style>@media(max-width:991.98px){#loginWrap{padding-top:4.25rem!important;}}</style>
-    <div id="loginWrap" class="container" style="padding-top:2.5rem;">
+    <div class="container">
         <div class="row justify-content-center mt-3">
             <div class="col-md-5">
                 <div class="card shadow">
