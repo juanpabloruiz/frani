@@ -16,11 +16,11 @@ $error = $_GET['error'] ?? '';
     <title>Acceder | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../css/estilo.css')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('../css/estilo.css?v=3')) ?>">
 </head>
 
 <body class="bg-light">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary mb-3 mb-md-4">
+    <nav class="navbar navbar-expand-lg bg-dark mb-3 mb-md-4" data-bs-theme="dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="<?= e(base_path()) ?>">Frani</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"

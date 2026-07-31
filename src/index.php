@@ -20,7 +20,7 @@ $resultado = $db->query(
     <title>Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=3')) ?>">
 </head>
 
 <body>
@@ -61,7 +61,7 @@ $resultado = $db->query(
             <?php while ($fila = $resultado->fetch_assoc()): ?>
                 <div class="col">
                     <div class="card shadow h-100">
-                        <picture class="zoom">
+                        <picture>
                             <source srcset="<?= e(base_path('img/1.webp')) ?>" type="image/webp">
                             <img src="<?= e(base_path('img/1.jpg')) ?>" class="card-img-top" width="200" alt="<?= e($fila['producto']) ?>">
                         </picture>

@@ -28,7 +28,7 @@ $consulta = $consulta = $db->query(
     <title>Productos | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=3')) ?>">
 </head>
 
 <body>
@@ -41,7 +41,7 @@ $consulta = $consulta = $db->query(
         </div>
 
         <table class="table">
-            <thead class="text-uppercase text-center">
+            <thead class="table-dark text-uppercase text-center">
                 <tr>
                     <th scope="col">Producto</th>
                     <th scope="col">Costo</th>
@@ -57,8 +57,8 @@ $consulta = $consulta = $db->query(
                 <?php while ($fila = $consulta->fetch_assoc()): ?>
                     <tr>
                         <td><?= e($fila['producto']) ?></td>
-                        <td>$ <?= e(number_format((float) $fila['costo'], 2, ',', '.')) ?></td>
-                        <td>$ <?= e(number_format((float) $fila['precio'], 2, ',', '.')) ?></td>
+                        <td class="text-end">$ <?= e(number_format((float) $fila['costo'], 2, ',', '.')) ?></td>
+                        <td class="table-dark text-end">$ <?= e(number_format((float) $fila['precio'], 2, ',', '.')) ?></td>
                         <td class="text-center"><?= e((string) $fila['stock']) ?></td>
                         <td class="text-center"><?= e($fila['categoria']) ?></td>
                         <td class="text-center"><?= e(date('d/m/Y H:i', strtotime($fila['agregado']))) ?></td>

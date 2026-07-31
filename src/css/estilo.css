@@ -1,11 +1,5 @@
-[data-bs-theme="dark"] .nav-link {
-  color: #fff !important;
-}
-
-[data-bs-theme="dark"] .nav-link:hover {
-  background-color: #0d6efd;
-  color: #fff;
-  border-radius: .375rem;
+.nav-link.active {
+  font-weight: 700;
 }
 
 .navbar-toggler {
@@ -17,18 +11,6 @@
 .navbar-toggler:focus-visible {
   outline: none;
   box-shadow: none;
-}
-
-.zoom {
-    overflow: hidden;
-}
-
-.zoom img {
-    transition: transform 0.2s linear;
-}
-
-.zoom:hover img {
-    transform: scale(1.2);
 }
 
 @media print {

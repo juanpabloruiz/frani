@@ -18,7 +18,7 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
     <title>Panel | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../css/estilo.css')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('../css/estilo.css?v=3')) ?>">
 </head>
 
 <body>

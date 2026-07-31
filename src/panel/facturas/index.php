@@ -25,7 +25,7 @@ $consulta = $db->query(
     <title>Facturas | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=3')) ?>">
 </head>
 
 <body>
@@ -38,7 +38,7 @@ $consulta = $db->query(
         </div>
 
         <table class="table">
-            <thead class="text-uppercase text-center">
+            <thead class="table-dark text-uppercase text-center">
                 <tr>
                     <th scope="col">Nombre</th>
                     <th scope="col">Detalle</th>
@@ -54,11 +54,12 @@ $consulta = $db->query(
                     <tr>
                         <td><?= e($campo['nombre']) ?></td>
                         <td><?= e($campo['detalle']) ?></td>
-                        <td><?= e($campo['metodo']) ?></td>
-                        <td>$ <?= e(number_format((float) $campo['total'], 2, ',', '.')) ?></td>
+                        <td class="text-center"><?= e($campo['metodo']) ?></td>
+                        <td class="text-end">$ <?= e(number_format((float) $campo['total'], 2, ',', '.')) ?></td>
                         <td class="text-center"><?= e(date('d/m/Y H:i', strtotime($campo['agregado']))) ?></td>
                         <td class="text-center"><?= $campo['modificado'] ? e(date('d/m/Y H:i', strtotime($campo['modificado']))) : '-' ?></td>
                         <td class="text-center">
+                            <a href="<?= e(base_path('panel/facturas/editar?id=' . $campo['id'])) ?>" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></a>
                             <form method="POST" action="<?= e(base_path('panel/facturas/eliminar')) ?>" class="d-inline" onsubmit="return confirm('¿Eliminar esta factura?');">
                                 <input type="hidden" name="csrf_token" value="<?= e(CSRF_token()) ?>">
                                 <input type="hidden" name="id" value="<?= e((string) $campo['id']) ?>">
