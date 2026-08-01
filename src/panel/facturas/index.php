@@ -38,7 +38,7 @@ $consulta = $db->query(
         </div>
 
         <table class="table">
-            <thead class="table-dark text-uppercase text-center">
+            <thead class="text-center">
                 <tr>
                     <th scope="col">Nombre</th>
                     <th scope="col">Detalle</th>

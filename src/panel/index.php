@@ -20,7 +20,7 @@ $error = $_GET['error'] ?? '';
 </head>
 
 <body class="bg-light">
-    <nav class="navbar navbar-expand-lg bg-dark mb-3 mb-md-4" data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary mb-3 mb-md-4">
         <div class="container-fluid">
             <a class="navbar-brand" href="<?= e(base_path()) ?>">Frani</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"

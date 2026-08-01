@@ -27,7 +27,7 @@ $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias 
         </div>
 
         <table class="table">
-            <thead class="table-dark text-uppercase text-center">
+            <thead class="text-center">
                 <tr>
                     <th scope="col">Nombre</th>
                     <th scope="col">Agregado</th>

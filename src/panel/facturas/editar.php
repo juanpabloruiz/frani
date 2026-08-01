@@ -102,8 +102,8 @@ unset($item);
             </div>
 
             <div class="table-responsive">
-                <table class="table table-bordered" id="itemsTable">
-                    <thead class="table-dark">
+                <table class="table" id="itemsTable">
+                    <thead>
                         <tr>
                             <th>Producto</th>
                             <th>Cantidad</th>
@@ -215,8 +215,10 @@ unset($item);
                 const tdCantidad = document.createElement("td");
                 tdCantidad.appendChild(cantidadInput);
                 const tdPrecio = document.createElement("td");
+                tdPrecio.className = "text-end";
                 tdPrecio.appendChild(precioInput);
                 const tdSubtotal = document.createElement("td");
+                tdSubtotal.className = "text-end";
                 tdSubtotal.appendChild(subtotalInput);
                 const tdQuitar = document.createElement("td");
                 tdQuitar.className = "text-center";

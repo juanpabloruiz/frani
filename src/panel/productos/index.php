@@ -41,11 +41,11 @@ $consulta = $consulta = $db->query(
         </div>
 
         <table class="table">
-            <thead class="table-dark text-uppercase text-center">
+            <thead class="text-center">
                 <tr>
                     <th scope="col">Producto</th>
                     <th scope="col">Costo</th>
-                    <th scope="col">Precio</th>
+                    <th scope="col" class="table-success">Precio</th>
                     <th scope="col">Stock</th>
                     <th scope="col">Categoría</th>
                     <th scope="col">Agregado</th>
@@ -58,7 +58,7 @@ $consulta = $consulta = $db->query(
                     <tr>
                         <td><?= e($fila['producto']) ?></td>
                         <td class="text-end">$ <?= e(number_format((float) $fila['costo'], 2, ',', '.')) ?></td>
-                        <td class="table-dark text-end">$ <?= e(number_format((float) $fila['precio'], 2, ',', '.')) ?></td>
+                        <td class="table-success text-end">$ <?= e(number_format((float) $fila['precio'], 2, ',', '.')) ?></td>
                         <td class="text-center"><?= e((string) $fila['stock']) ?></td>
                         <td class="text-center"><?= e($fila['categoria']) ?></td>
                         <td class="text-center"><?= e(date('d/m/Y H:i', strtotime($fila['agregado']))) ?></td>
