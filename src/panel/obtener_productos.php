@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/conexion.php';
+require_once __DIR__ . '/../conexion.php';
 
 $db = conexion();
 $resultado = $db->query("SELECT id, producto, precio FROM productos ORDER BY producto ASC");
