@@ -36,7 +36,7 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
                     <div class="card shadow-sm text-center py-4">
                         <i class="fa-solid fa-box fa-3x text-primary mb-3"></i>
                         <h2 class="h4"><?= $totalProductos ?></h2>
-                        <p class="text-secondary mb-0">Productos</p>
+                        <p class="text-secondary mb-0"><?= $totalProductos == 1 ? 'Producto' : 'Productos' ?></p>
                     </div>
                 </a>
             </div>
@@ -45,7 +45,7 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
                     <div class="card shadow-sm text-center py-4">
                         <i class="fa-solid fa-tags fa-3x text-success mb-3"></i>
                         <h2 class="h4"><?= $totalCategorias ?></h2>
-                        <p class="text-secondary mb-0">Categorías</p>
+                        <p class="text-secondary mb-0"><?= $totalCategorias == 1 ? 'Categoría' : 'Categorías' ?></p>
                     </div>
                 </a>
             </div>
@@ -54,7 +54,7 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
                     <div class="card shadow-sm text-center py-4">
                         <i class="fa-solid fa-receipt fa-3x text-warning mb-3"></i>
                         <h2 class="h4"><?= $totalFacturas ?></h2>
-                        <p class="text-secondary mb-0">Facturas</p>
+                        <p class="text-secondary mb-0"><?= $totalFacturas == 1 ? 'Factura' : 'Facturas' ?></p>
                     </div>
                 </a>
             </div>
