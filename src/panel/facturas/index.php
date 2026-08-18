@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../conexion.php';
+require_once __DIR__ . '/../../conexion.php';
 requerir_login();
 
 $db = conexion();

@@ -1,10 +1,6 @@
 <?php
 declare(strict_types=1);
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 // Cargar variables de entorno desde .env
 $archivoEnv = __DIR__ . '/../.env';
 if (file_exists($archivoEnv)) {
@@ -22,8 +18,6 @@ if (file_exists($archivoEnv)) {
         }
     }
 }
-
-define('BASE_URL', '');
 
 require_once __DIR__ . '/funciones.php';
 
