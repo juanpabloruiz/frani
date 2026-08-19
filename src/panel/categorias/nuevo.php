@@ -11,7 +11,7 @@ requerir_login();
     <title>Nueva Categoría | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=3')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=4')) ?>">
 </head>
 
 <body>

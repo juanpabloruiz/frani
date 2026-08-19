@@ -1,3 +1,14 @@
+@font-face {
+  font-family: 'Ubuntu';
+  src: url('../fonts/Ubuntu-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Ubuntu', sans-serif;
+}
+
 .nav-link.active {
   font-weight: 700;
 }
