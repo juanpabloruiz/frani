@@ -19,6 +19,7 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
     <link rel="stylesheet" href="<?= e(base_path('../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../fontawesome/css/all.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../css/estilo.css?v=3')) ?>">
+    <script src="<?= e(base_path('../js/chart.js')) ?>"></script>
 </head>
 
 <body>
@@ -28,6 +29,23 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
         <div class="mb-4">
             <h1 class="h3 mb-1">Bienvenido, <?= e($usuario['nombre']) ?></h1>
             <p class="text-secondary mb-0">Panel de administración de Frani.</p>
+        </div>
+
+        <!-- Estadísticas de facturas -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fa-solid fa-chart-bar me-2"></i>Estadísticas de facturas</h5>
+                <div class="btn-group btn-group-sm" role="group">
+                    <button type="button" class="btn btn-light active" data-periodo="dia">Día</button>
+                    <button type="button" class="btn btn-outline-light" data-periodo="semana">Semana</button>
+                    <button type="button" class="btn btn-outline-light" data-periodo="mes">Mes</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div style="position: relative; height: 300px;">
+                    <canvas id="graficoFacturas"></canvas>
+                </div>
+            </div>
         </div>
 
         <div class="row g-4">
@@ -63,6 +81,74 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
     </main>
 
     <script src="<?= e(base_path('../js/bootstrap.bundle.min.js')) ?>"></script>
+    <script>
+        const ctx = document.getElementById('graficoFacturas').getContext('2d');
+        const urlEstadisticas = '<?= e(base_path('panel/estadisticas')) ?>';
+        let grafico = null;
+
+        function cargarGrafico(periodo) {
+            fetch(urlEstadisticas + '?periodo=' + periodo)
+                .then(r => r.json())
+                .then(datos => {
+                    const etiquetas = datos.map(d => d.etiqueta);
+                    const totales = datos.map(d => d.total);
+
+                    if (grafico) grafico.destroy();
+
+                    grafico = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: etiquetas,
+                            datasets: [{
+                                label: 'Total facturado',
+                                data: totales,
+                                backgroundColor: 'rgba(13, 110, 253, 0.7)',
+                                borderColor: 'rgba(13, 110, 253, 1)',
+                                borderWidth: 1,
+                                borderRadius: 4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: ctx => '$' + ctx.parsed.y.toLocaleString('es-AR', { minimumFractionDigits: 2 })
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: v => '$' + v.toLocaleString('es-AR')
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+        }
+
+        // Filtros
+        document.querySelectorAll('[data-periodo]').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('[data-periodo]').forEach(b => {
+                    b.classList.remove('active');
+                    b.classList.add('btn-outline-light');
+                    b.classList.remove('btn-light');
+                });
+                this.classList.add('active');
+                this.classList.remove('btn-outline-light');
+                this.classList.add('btn-light');
+                cargarGrafico(this.dataset.periodo);
+            });
+        });
+
+        cargarGrafico('dia');
+    </script>
 
 </body>
 
