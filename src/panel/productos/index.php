@@ -35,8 +35,7 @@ $consulta = $consulta = $db->query(
     <?php require __DIR__ . '/../menu.php'; ?>
 
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 mb-0">Productos</h1>
+        <div class="mb-4">
             <a href="<?= e(base_path('panel/productos/nuevo')) ?>" class="btn btn-primary">Nuevo producto</a>
         </div>
 

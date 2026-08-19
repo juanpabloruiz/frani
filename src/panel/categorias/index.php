@@ -21,12 +21,18 @@ $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias 
     <?php require __DIR__ . '/../menu.php'; ?>
 
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 mb-0">Categorías</h1>
+        <div class="mb-4">
             <a href="<?= e(base_path('panel/categorias/nuevo')) ?>" class="btn btn-primary">Nueva categoría</a>
         </div>
 
-        <table class="table">
+        <div class="mb-3">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fa-solid fa-search"></i></span>
+                <input type="text" id="buscadorCategorias" class="form-control" placeholder="Buscar categoría..." autofocus>
+            </div>
+        </div>
+
+        <table class="table" id="tablaCategorias">
             <thead class="table-dark text-center text-uppercase">
                 <tr>
                     <th scope="col">Nombre</th>
@@ -63,6 +69,22 @@ $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias 
     </main>
 
     <script src="<?= e(base_path('../../js/bootstrap.bundle.min.js')) ?>"></script>
+    <script>
+        const buscador = document.getElementById('buscadorCategorias');
+        const filas = document.querySelectorAll('#tablaCategorias tbody tr');
+
+        function normalizar(texto) {
+            return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+        }
+
+        buscador.addEventListener('input', function () {
+            const termino = normalizar(this.value);
+            filas.forEach(fila => {
+                const texto = normalizar(fila.textContent);
+                fila.style.display = texto.includes(termino) ? '' : 'none';
+            });
+        });
+    </script>
 </body>
 
 </html>
