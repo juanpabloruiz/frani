@@ -120,8 +120,12 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
                                 }
                             },
                             scales: {
+                                x: {
+                                    grid: { display: false }
+                                },
                                 y: {
                                     beginAtZero: true,
+                                    grid: { display: false },
                                     ticks: {
                                         callback: v => '$' + v.toLocaleString('es-AR')
                                     }

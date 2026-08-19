@@ -40,12 +40,19 @@ $consulta = $consulta = $db->query(
             <a href="<?= e(base_path('panel/productos/nuevo')) ?>" class="btn btn-primary">Nuevo producto</a>
         </div>
 
-        <table class="table">
-            <thead class="text-center">
+        <div class="mb-3">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fa-solid fa-search"></i></span>
+                <input type="text" id="buscadorProductos" class="form-control" placeholder="Buscar producto..." autofocus>
+            </div>
+        </div>
+
+        <table class="table" id="tablaProductos">
+            <thead class="table-dark text-center text-uppercase">
                 <tr>
                     <th scope="col">Producto</th>
                     <th scope="col">Costo</th>
-                    <th scope="col" class="table-success">Precio</th>
+                    <th scope="col">Precio</th>
                     <th scope="col">Stock</th>
                     <th scope="col">Categoría</th>
                     <th scope="col">Agregado</th>
@@ -86,6 +93,22 @@ $consulta = $consulta = $db->query(
     </main>
 
     <script src="<?= e(base_path('../../js/bootstrap.bundle.min.js')) ?>"></script>
+    <script>
+        const buscador = document.getElementById('buscadorProductos');
+        const filas = document.querySelectorAll('#tablaProductos tbody tr');
+
+        function normalizar(texto) {
+            return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+        }
+
+        buscador.addEventListener('input', function () {
+            const termino = normalizar(this.value);
+            filas.forEach(fila => {
+                const texto = normalizar(fila.textContent);
+                fila.style.display = texto.includes(termino) ? '' : 'none';
+            });
+        });
+    </script>
 </body>
 
 </html>

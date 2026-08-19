@@ -103,7 +103,7 @@ unset($item);
 
             <div class="table-responsive">
                 <table class="table" id="itemsTable">
-                    <thead>
+                    <thead class="table-dark text-uppercase">
                         <tr>
                             <th>Producto</th>
                             <th>Cantidad</th>

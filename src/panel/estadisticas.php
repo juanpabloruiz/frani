@@ -12,12 +12,24 @@ switch ($periodo) {
         $resultado = $db->query(
             "SELECT
                 DAY(agregado) AS dia,
-                DAY(agregado) AS etiqueta,
+                CONCAT(
+                    CASE DAYOFWEEK(agregado)
+                        WHEN 1 THEN 'Dom'
+                        WHEN 2 THEN 'Lun'
+                        WHEN 3 THEN 'Mar'
+                        WHEN 4 THEN 'Mié'
+                        WHEN 5 THEN 'Jue'
+                        WHEN 6 THEN 'Vie'
+                        WHEN 7 THEN 'Sáb'
+                    END,
+                    ' ',
+                    DATE_FORMAT(agregado, '%d')
+                ) AS etiqueta,
                 COALESCE(SUM(total), 0) AS total
              FROM facturas
              WHERE MONTH(agregado) = MONTH(CURDATE())
                AND YEAR(agregado) = YEAR(CURDATE())
-             GROUP BY DAY(agregado)
+             GROUP BY DAY(agregado), etiqueta
              ORDER BY dia"
         );
         break;
