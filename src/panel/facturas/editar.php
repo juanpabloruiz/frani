@@ -10,7 +10,7 @@ if ($id <= 0) {
 
 $db = conexion();
 
-$stmt = $db->prepare("SELECT id, nombre, metodo, total, detalle FROM facturas WHERE id = ?");
+$stmt = $db->prepare("SELECT id, nombre, metodo, total, deuda, detalle FROM facturas WHERE id = ?");
 $stmt->bind_param('i', $id);
 $stmt->execute();
 $resultado = $stmt->get_result();
@@ -121,6 +121,12 @@ unset($item);
             </button>
 
             <div class="mb-3">
+                <label class="form-label fw-bold text-danger">Deuda</label>
+                <input type="number" id="deuda" name="deuda" class="form-control border-danger text-danger"
+                    step="0.01" min="0" value="<?= e((string) ($factura['deuda'] ?: '')) ?>" placeholder="0.00">
+            </div>
+
+            <div class="mb-3">
                 <label class="form-label">Total</label>
                 <input type="number" id="total" name="total" class="form-control" step="0.01" readonly>
             </div>
@@ -138,14 +144,18 @@ unset($item);
             const itemsTable = document.getElementById("itemsTable").querySelector("tbody");
             const addItemBtn = document.getElementById("addItemBtn");
             const totalField = document.getElementById("total");
+            const deudaField = document.getElementById("deuda");
             const productos = <?= $productosJSON ?>;
             let itemIndex = 0;
 
             function updateTotal() {
-                const total = Array.from(document.querySelectorAll(".subtotal"))
+                const subtotal = Array.from(document.querySelectorAll(".subtotal"))
                     .reduce((sum, input) => sum + parseFloat(input.value || 0), 0);
-                totalField.value = total.toFixed(2);
+                const deuda = parseFloat(deudaField.value) || 0;
+                totalField.value = (subtotal - deuda).toFixed(2);
             }
+
+            deudaField.addEventListener("input", updateTotal);
 
             function crearFila(selectId, cantidad, precio) {
                 const index = itemIndex;

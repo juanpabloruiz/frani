@@ -12,6 +12,8 @@ $id = (int) ($_POST['id'] ?? 0);
 $nombre = trim($_POST['nombre'] ?? '');
 $metodo = trim($_POST['metodo'] ?? '');
 $total = (float) ($_POST['total'] ?? '0');
+$deudaRaw = $_POST['deuda'] ?? '';
+$deuda = $deudaRaw !== '' && $deudaRaw !== '0' ? (float) $deudaRaw : null;
 $detalleItems = [];
 
 $db = conexion();
@@ -52,10 +54,10 @@ $detalle = implode(', ', $detalleItems);
 
 $stmt = $db->prepare(
     "UPDATE facturas
-    SET nombre = ?, metodo = ?, detalle = ?, total = ?
+    SET nombre = ?, metodo = ?, detalle = ?, total = ?, deuda = ?
     WHERE id = ?"
 );
-$stmt->bind_param('sssdi', $nombre, $metodo, $detalle, $total, $id);
+$stmt->bind_param('sssddi', $nombre, $metodo, $detalle, $total, $deuda, $id);
 $stmt->execute();
 $stmt->close();
 

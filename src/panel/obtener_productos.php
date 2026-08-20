@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../conexion.php';
 
 $db = conexion();
-$resultado = $db->query("SELECT id, producto, precio FROM productos ORDER BY producto ASC");
+$resultado = $db->query("SELECT id, producto, precio, stock FROM productos ORDER BY producto ASC");
 $productos = [];
 
 while ($row = $resultado->fetch_assoc()) {
@@ -10,6 +10,7 @@ while ($row = $resultado->fetch_assoc()) {
         'id' => (int) $row['id'],
         'producto' => $row['producto'],
         'precio' => (float) $row['precio'],
+        'stock' => $row['stock'] !== null ? (int) $row['stock'] : null,
     ];
 }
 

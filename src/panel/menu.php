@@ -7,7 +7,7 @@ $esCategorias = $carpetaActual === 'categorias';
 $esFacturas = $carpetaActual === 'facturas';
 $esPorcentajes = $carpetaActual === 'porcentajes';
 ?>
-<nav class="navbar navbar-expand-lg mb-3 mb-md-4" style="background-color: #0d6efd;">
+<nav class="navbar navbar-expand-lg fixed-top" style="background-color: #0d6efd;">
     <div class="container-fluid">
         <a class="navbar-brand text-white" href="<?= e(base_path()) ?>">Frani</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -45,4 +45,4 @@ $esPorcentajes = $carpetaActual === 'porcentajes';
     </div>
 </nav>
 
-<main id="adminContent">
+<main id="adminContent" style="padding-top: 70px;">

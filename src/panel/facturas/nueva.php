@@ -61,6 +61,12 @@ requerir_login();
             </button>
 
             <div class="mb-3">
+                <label class="form-label fw-bold text-danger">Deuda</label>
+                <input type="number" id="deuda" name="deuda" class="form-control border-danger text-danger"
+                    step="0.01" min="0" placeholder="0.00">
+            </div>
+
+            <div class="mb-3">
                 <label class="form-label">Total</label>
                 <input type="number" id="total" name="total" class="form-control" step="0.01" readonly>
             </div>
@@ -78,7 +84,17 @@ requerir_login();
             const itemsTable = document.getElementById("itemsTable").querySelector("tbody");
             const addItemBtn = document.getElementById("addItemBtn");
             const totalField = document.getElementById("total");
+            const deudaField = document.getElementById("deuda");
             let itemIndex = 0;
+
+            function updateTotal() {
+                const subtotal = Array.from(document.querySelectorAll(".subtotal"))
+                    .reduce((sum, input) => sum + parseFloat(input.value || 0), 0);
+                const deuda = parseFloat(deudaField.value) || 0;
+                totalField.value = (subtotal - deuda).toFixed(2);
+            }
+
+            deudaField.addEventListener("input", updateTotal);
 
             addItemBtn.addEventListener("click", async () => {
                 const row = document.createElement("tr");
@@ -91,7 +107,8 @@ requerir_login();
                 select.name = `producto_${itemIndex}`;
                 select.innerHTML = '<option value="">Seleccione un producto</option>';
                 productos.forEach(producto => {
-                    select.innerHTML += `<option value="${producto.id}" data-precio="${producto.precio}">${producto.producto}</option>`;
+                    const stockAttr = producto.stock !== null ? `data-stock="${producto.stock}"` : '';
+                    select.innerHTML += `<option value="${producto.id}" data-precio="${producto.precio}" ${stockAttr}>${producto.producto}${producto.stock !== null ? ' (Stock: ' + producto.stock + ')' : ''}</option>`;
                 });
 
                 const cantidadInput = document.createElement("input");
@@ -115,16 +132,35 @@ requerir_login();
                 subtotalInput.step = "0.01";
                 subtotalInput.readOnly = true;
 
+                function validarStock() {
+                    const option = select.selectedOptions[0];
+                    const stock = option?.dataset?.stock;
+                    if (stock !== undefined && stock !== 'null') {
+                        const cantidad = parseInt(cantidadInput.value || 0);
+                        const stockDisponible = parseInt(stock);
+                        if (cantidad > stockDisponible) {
+                            cantidadInput.value = stockDisponible;
+                            subtotalInput.value = (parseFloat(precioInput.value || 0) * stockDisponible).toFixed(2);
+                            updateTotal();
+                            alert(`No hay suficiente stock. Solo quedan ${stockDisponible} unidades.`);
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+
                 select.addEventListener("change", () => {
                     const precio = parseFloat(select.selectedOptions[0].dataset.precio || 0);
                     precioInput.value = precio.toFixed(2);
                     subtotalInput.value = (precio * cantidadInput.value).toFixed(2);
+                    validarStock();
                     updateTotal();
                 });
 
                 cantidadInput.addEventListener("input", () => {
                     const precio = parseFloat(precioInput.value || 0);
                     subtotalInput.value = (precio * cantidadInput.value).toFixed(2);
+                    validarStock();
                     updateTotal();
                 });
 
@@ -157,12 +193,6 @@ requerir_login();
                 row.appendChild(tdSubtotal);
                 row.appendChild(tdQuitar);
                 itemsTable.appendChild(row);
-
-                function updateTotal() {
-                    const total = Array.from(document.querySelectorAll(".subtotal"))
-                        .reduce((sum, input) => sum + parseFloat(input.value || 0), 0);
-                    totalField.value = total.toFixed(2);
-                }
 
                 itemIndex++;
             });

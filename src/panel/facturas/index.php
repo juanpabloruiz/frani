@@ -10,6 +10,7 @@ $consulta = $db->query(
         f.detalle,
         f.metodo,
         f.total,
+        f.deuda,
         f.agregado,
         f.modificado
     FROM facturas f
@@ -50,6 +51,7 @@ $consulta = $db->query(
                     <th scope="col">Detalle</th>
                     <th scope="col">Método</th>
                     <th scope="col">Total</th>
+                    <th scope="col">Deuda</th>
                     <th scope="col">Agregado</th>
                     <th scope="col">Modificado</th>
                     <th scope="col">Acciones</th>
@@ -62,6 +64,7 @@ $consulta = $db->query(
                         <td><?= e($campo['detalle']) ?></td>
                         <td class="text-center"><?= e($campo['metodo']) ?></td>
                         <td class="text-end">$ <?= e(number_format((float) $campo['total'], 2, ',', '.')) ?></td>
+                        <td class="text-end text-danger fw-bold"><?= $campo['deuda'] ? '$ ' . e(number_format((float) $campo['deuda'], 2, ',', '.')) : '-' ?></td>
                         <td class="text-center"><?= e(date('d/m/Y H:i', strtotime($campo['agregado']))) ?></td>
                         <td class="text-center"><?= $campo['modificado'] ? e(date('d/m/Y H:i', strtotime($campo['modificado']))) : '-' ?></td>
                         <td class="text-center">
@@ -77,7 +80,7 @@ $consulta = $db->query(
 
                 <?php if ($consulta->num_rows === 0): ?>
                     <tr>
-                        <td colspan="7" class="text-center text-secondary">No hay facturas registradas.</td>
+                        <td colspan="8" class="text-center text-secondary">No hay facturas registradas.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
