@@ -18,7 +18,6 @@ $productosVendidos = [];
 
 $db = conexion();
 $stmtProducto = $db->prepare("SELECT producto FROM productos WHERE id = ?");
-$stmtStockCheck = $db->prepare("SELECT stock FROM productos WHERE id = ? AND stock IS NOT NULL");
 
 foreach ($_POST as $key => $value) {
     if (strpos($key, 'producto_') !== 0) {
@@ -34,14 +33,6 @@ foreach ($_POST as $key => $value) {
         continue;
     }
 
-    $stmtStockCheck->bind_param('i', $idProducto);
-    $stmtStockCheck->execute();
-    $stmtStockCheck->bind_result($stockActual);
-    if ($stmtStockCheck->fetch() && $cantidad > $stockActual) {
-        redireccionar('panel/facturas/nueva');
-    }
-    $stmtStockCheck->free_result();
-
     $stmtProducto->bind_param('i', $idProducto);
     $stmtProducto->execute();
     $stmtProducto->bind_result($nombreProducto);
@@ -55,7 +46,6 @@ foreach ($_POST as $key => $value) {
 }
 
 $stmtProducto->close();
-$stmtStockCheck->close();
 
 if ($nombre === '' || $detalleItems === []) {
     redireccionar('panel/facturas/nueva');

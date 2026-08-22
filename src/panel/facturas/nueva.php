@@ -132,36 +132,17 @@ requerir_login();
                 subtotalInput.step = "0.01";
                 subtotalInput.readOnly = true;
 
-                function validarStock() {
-                    const option = select.selectedOptions[0];
-                    const stock = option?.dataset?.stock;
-                    if (stock !== undefined && stock !== 'null') {
-                        const cantidad = parseInt(cantidadInput.value || 0);
-                        const stockDisponible = parseInt(stock);
-                        if (cantidad > stockDisponible) {
-                            cantidadInput.value = stockDisponible;
-                            subtotalInput.value = (parseFloat(precioInput.value || 0) * stockDisponible).toFixed(2);
-                            updateTotal();
-                            alert(`No hay suficiente stock. Solo quedan ${stockDisponible} unidades.`);
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-
                 select.addEventListener("change", () => {
                     const precioSeleccionado = select.selectedOptions[0].dataset.precio;
                     const precio = precioSeleccionado !== undefined ? parseFloat(precioSeleccionado) : 0;
                     precioInput.value = precioSeleccionado !== undefined ? precio.toFixed(2) : '';
                     subtotalInput.value = precioSeleccionado !== undefined ? (precio * cantidadInput.value).toFixed(2) : '';
-                    validarStock();
                     updateTotal();
                 });
 
                 cantidadInput.addEventListener("input", () => {
                     const precio = parseFloat(precioInput.value || 0);
                     subtotalInput.value = (precio * cantidadInput.value).toFixed(2);
-                    validarStock();
                     updateTotal();
                 });
 
