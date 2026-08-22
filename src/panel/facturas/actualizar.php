@@ -46,7 +46,7 @@ foreach ($_POST as $key => $value) {
 
 $stmtProducto->close();
 
-if ($id <= 0 || $nombre === '' || $metodo === '' || $detalleItems === []) {
+if ($id <= 0 || $nombre === '' || $detalleItems === []) {
     redireccionar('panel/facturas');
 }
 

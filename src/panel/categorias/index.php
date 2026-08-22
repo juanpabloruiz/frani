@@ -14,7 +14,7 @@ $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias 
     <title>Categorías | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=4')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=5')) ?>">
 </head>
 
 <body>
@@ -32,6 +32,7 @@ $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias 
             </div>
         </div>
 
+        <div class="tabla-wrapper">
         <table class="table table-bordered" id="tablaCategorias">
             <thead class="table-dark text-center text-uppercase">
                 <tr class="align-middle">
@@ -65,6 +66,7 @@ $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias 
                 <?php endif; ?>
             </tbody>
         </table>
+        </div>
         </div>
     </main>
 

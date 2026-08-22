@@ -35,7 +35,7 @@ $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nom
     <title>Editar Producto | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=4')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=5')) ?>">
 </head>
 
 <body>
@@ -101,7 +101,7 @@ $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nom
 
             <div class="col-12">
                 <div class="d-grid d-md-block">
-                    <button type="submit" class="btn btn-primary">Actualizar producto</button>
+                    <button type="submit" class="btn btn-primary btn-lg">Actualizar producto</button>
                 </div>
             </div>
         </form>

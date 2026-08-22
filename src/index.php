@@ -20,7 +20,7 @@ $resultado = $db->query(
     <title>Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=4')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=5')) ?>">
 </head>
 
 <body>
@@ -51,12 +51,6 @@ $resultado = $db->query(
     </nav>
 
     <main class="container my-4">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-            <div>
-                <h1 class="h2 mb-1">Catálogo</h1>
-            </div>
-        </div>
-
         <div data-masonry='{"percentPosition": true }' class="row row-cols-1 row-cols-md-3 g-4">
             <?php while ($fila = $resultado->fetch_assoc()): ?>
                 <div class="col">

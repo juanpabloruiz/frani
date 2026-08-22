@@ -65,7 +65,7 @@ unset($item);
     <title>Editar Factura | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=4')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=5')) ?>">
 </head>
 
 <body>
@@ -89,7 +89,7 @@ unset($item);
 
             <div class="mb-3">
                 <label class="form-label">Método de pago</label>
-                <select id="metodo" name="metodo" class="form-select" required>
+                <select id="metodo" name="metodo" class="form-select">
                     <option value="">Seleccionar método</option>
                     <?php
                     $metodos = ['efectivo' => 'Efectivo', 'tarjeta' => 'Tarjeta', 'transferencia' => 'Transferencia'];
@@ -132,7 +132,7 @@ unset($item);
             </div>
 
             <div class="d-grid d-md-block">
-                <button type="submit" class="btn btn-primary">Actualizar factura</button>
+                <button type="submit" class="btn btn-primary btn-lg">Actualizar factura</button>
             </div>
         </form>
         </div>
@@ -205,7 +205,8 @@ unset($item);
                 };
 
                 select.addEventListener("change", () => {
-                    precioInput.value = select.selectedOptions[0].dataset.precio || 0;
+                    const precioSeleccionado = select.selectedOptions[0].dataset.precio;
+                    precioInput.value = precioSeleccionado !== undefined ? precioSeleccionado : '';
                     recalcular();
                 });
 

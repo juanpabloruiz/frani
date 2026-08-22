@@ -18,7 +18,7 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
     <title>Panel | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../css/estilo.css?v=4')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('../css/estilo.css?v=5')) ?>">
     <script src="<?= e(base_path('../js/chart.js')) ?>"></script>
 </head>
 
@@ -26,10 +26,10 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
     <?php require __DIR__ . '/menu.php'; ?>
 
     <div class="container">
-        <!-- Estadísticas de facturas -->
+        <!-- Estadísticas -->
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                <h5 class="mb-0"><i class="fa-solid fa-chart-bar me-2"></i>Estadísticas de facturas</h5>
+                <h5 class="mb-0"><i class="fa-solid fa-chart-bar me-2"></i>Estadísticas</h5>
                 <div class="btn-group btn-group-sm" role="group">
                     <button type="button" class="btn btn-light active" data-periodo="dia">Día</button>
                     <button type="button" class="btn btn-outline-light" data-periodo="semana">Semana</button>

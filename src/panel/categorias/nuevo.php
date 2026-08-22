@@ -11,7 +11,7 @@ requerir_login();
     <title>Nueva Categoría | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=4')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=5')) ?>">
 </head>
 
 <body>
@@ -32,7 +32,7 @@ requerir_login();
             </div>
 
             <div class="col-md-4 d-flex align-items-end">
-                <button type="submit" class="btn btn-primary w-100">Guardar categoría</button>
+                <button type="submit" class="btn btn-primary btn-lg w-100">Guardar categoría</button>
             </div>
         </form>
         </div>

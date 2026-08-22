@@ -11,7 +11,7 @@ requerir_login();
     <title>Nueva Factura | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=4')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=5')) ?>">
 </head>
 
 <body>
@@ -33,7 +33,7 @@ requerir_login();
 
             <div class="mb-3">
                 <label class="form-label">Método de pago</label>
-                <select id="metodo" name="metodo" class="form-select" required>
+                <select id="metodo" name="metodo" class="form-select">
                     <option value="">Seleccionar método</option>
                     <option value="efectivo">Efectivo</option>
                     <option value="tarjeta">Tarjeta</option>
@@ -72,7 +72,7 @@ requerir_login();
             </div>
 
             <div class="d-grid d-md-block">
-                <button type="submit" class="btn btn-primary">Guardar factura</button>
+                <button type="submit" class="btn btn-primary btn-lg">Guardar factura</button>
             </div>
         </form>
         </div>
@@ -150,9 +150,10 @@ requerir_login();
                 }
 
                 select.addEventListener("change", () => {
-                    const precio = parseFloat(select.selectedOptions[0].dataset.precio || 0);
-                    precioInput.value = precio.toFixed(2);
-                    subtotalInput.value = (precio * cantidadInput.value).toFixed(2);
+                    const precioSeleccionado = select.selectedOptions[0].dataset.precio;
+                    const precio = precioSeleccionado !== undefined ? parseFloat(precioSeleccionado) : 0;
+                    precioInput.value = precioSeleccionado !== undefined ? precio.toFixed(2) : '';
+                    subtotalInput.value = precioSeleccionado !== undefined ? (precio * cantidadInput.value).toFixed(2) : '';
                     validarStock();
                     updateTotal();
                 });

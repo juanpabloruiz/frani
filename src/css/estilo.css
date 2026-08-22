@@ -17,6 +17,16 @@ body {
   padding-block: 0.65rem;
 }
 
+.tabla-wrapper {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 2px solid #dee2e6;
+}
+
+.tabla-wrapper .table {
+  margin-bottom: 0;
+}
+
 .navbar-toggler {
   border: none;
 }
