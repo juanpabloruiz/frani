@@ -4,7 +4,12 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         nginx \
         default-mysql-client \
-    && docker-php-ext-install mysqli \
+        libpng-dev \
+        libjpeg62-turbo-dev \
+        libwebp-dev \
+        libfreetype6-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install mysqli gd \
     && rm -rf /var/lib/apt/lists/*
 
 RUN rm -f /etc/nginx/sites-enabled/default

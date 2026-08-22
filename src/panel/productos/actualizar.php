@@ -23,12 +23,33 @@ if ($id <= 0 || $producto === '' || $idCategoria <= 0) {
 $db = conexion();
 $descripcionDB = $descripcion !== '' ? $descripcion : null;
 
+$fotoActual = null;
+$stmtFoto = $db->prepare("SELECT foto FROM productos WHERE id = ?");
+$stmtFoto->bind_param('i', $id);
+$stmtFoto->execute();
+$stmtFoto->bind_result($fotoActual);
+$stmtFoto->fetch();
+$stmtFoto->close();
+
+$fotoNueva = $fotoActual;
+
+if (!empty($_FILES['foto']['name'])) {
+    $directorio = __DIR__ . '/../../img/productos';
+    $nuevaFoto = subir_foto($_FILES['foto'], $directorio);
+    if ($nuevaFoto !== null) {
+        if ($fotoActual !== null) {
+            eliminar_fotos($fotoActual, $directorio);
+        }
+        $fotoNueva = $nuevaFoto;
+    }
+}
+
 $stmt = $db->prepare(
     "UPDATE productos
-    SET producto = ?, descripcion = ?, costo = ?, precio = ?, stock = ?, id_categoria = ?
+    SET producto = ?, foto = ?, descripcion = ?, costo = ?, precio = ?, stock = ?, id_categoria = ?
     WHERE id = ?"
 );
-$stmt->bind_param('ssddiii', $producto, $descripcionDB, $costo, $precio, $stock, $idCategoria, $id);
+$stmt->bind_param('ssssddii', $producto, $fotoNueva, $descripcionDB, $costo, $precio, $stock, $idCategoria, $id);
 $stmt->execute();
 $stmt->close();
 

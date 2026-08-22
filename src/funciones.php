@@ -36,3 +36,88 @@ function numero($valor) {
     $valor = str_replace(',', '.', $valor);
     return is_numeric($valor) ? $valor : 0;
 }
+
+function subir_foto(array $archivo, string $directorio): ?string
+{
+    if ($archivo['error'] !== UPLOAD_ERR_OK) {
+        return null;
+    }
+
+    $tiposPermitidos = [
+        'image/jpeg' => 'jpg',
+        'image/png'  => 'png',
+        'image/webp' => 'webp',
+    ];
+
+    $mime = mime_content_type($archivo['tmp_name']);
+    if (!isset($tiposPermitidos[$mime])) {
+        return null;
+    }
+
+    $tamanioMaximo = 5 * 1024 * 1024;
+    if ($archivo['size'] > $tamanioMaximo) {
+        return null;
+    }
+
+    if (!is_dir($directorio)) {
+        mkdir($directorio, 0755, true);
+    }
+
+    $hash = date('Ymd_His') . '_' . bin2hex(random_bytes(4));
+    $nombreBase = $hash;
+
+    $origen = $archivo['tmp_name'];
+    $anchoMax = 800;
+
+    $info = getimagesize($origen);
+    if ($info === false) {
+        return null;
+    }
+
+    [$anchoOriginal, $altoOriginal] = $info;
+
+    if ($anchoOriginal > $anchoMax) {
+        $altoMax = (int) round($altoOriginal * ($anchoMax / $anchoOriginal));
+    } else {
+        $anchoMax = $anchoOriginal;
+        $altoMax = $altoOriginal;
+    }
+
+    $imagen = match ($mime) {
+        'image/jpeg' => imagecreatefromjpeg($origen),
+        'image/png'  => imagecreatefrompng($origen),
+        'image/webp' => imagecreatefromwebp($origen),
+        default      => null,
+    };
+
+    if ($imagen === null) {
+        return null;
+    }
+
+    $redimensionada = imagecreatetruecolor($anchoMax, $altoMax);
+    imagecopyresampled($redimensionada, $imagen, 0, 0, 0, 0, $anchoMax, $altoMax, $anchoOriginal, $altoOriginal);
+
+    if ($mime === 'image/png' || $mime === 'image/webp') {
+        imagealphablending($redimensionada, false);
+        imagesavealpha($redimensionada, true);
+    }
+
+    imagejpeg($redimensionada, $directorio . '/' . $nombreBase . '.jpg', 85);
+    imagewebp($redimensionada, $directorio . '/' . $nombreBase . '.webp', 85);
+
+    imagedestroy($imagen);
+    imagedestroy($redimensionada);
+
+    return $nombreBase;
+}
+
+function eliminar_fotos(string $nombreBase, string $directorio): void
+{
+    $extensiones = ['jpg', 'webp'];
+    foreach ($extensiones as $ext) {
+        $archivo = $directorio . '/' . $nombreBase . '.' . $ext;
+        if (file_exists($archivo)) {
+            unlink($archivo);
+        }
+    }
+}

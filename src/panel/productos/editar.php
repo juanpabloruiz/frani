@@ -11,7 +11,7 @@ if ($id <= 0) {
 $db = conexion();
 
 $stmt = $db->prepare(
-    "SELECT id, producto, descripcion, costo, precio, stock, id_categoria
+    "SELECT id, producto, foto, descripcion, costo, precio, stock, id_categoria
     FROM productos WHERE id = ?"
 );
 $stmt->bind_param('i', $id);
@@ -47,7 +47,7 @@ $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nom
             <a href="<?= e(base_path('panel/productos')) ?>" class="btn btn-outline-secondary">Volver</a>
         </div>
 
-        <form method="POST" action="<?= e(base_path('panel/productos/actualizar')) ?>" class="row g-3">
+        <form method="POST" action="<?= e(base_path('panel/productos/actualizar')) ?>" enctype="multipart/form-data" class="row g-3">
             <?= CSRF_field() ?>
             <input type="hidden" name="id" value="<?= e((string) $producto['id']) ?>">
 
@@ -99,6 +99,23 @@ $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nom
                 <textarea name="descripcion" class="form-control" rows="5"><?= e($producto['descripcion'] ?? '') ?></textarea>
             </div>
 
+            <div class="col-md-6">
+                <label class="form-label">Foto del producto</label>
+                <input type="file" name="foto" id="fotoInput" class="form-control" accept=".jpg,.jpeg,.png,.webp">
+                <small class="text-muted">Formatos: JPG, JPEG, PNG, WEBP (máx. 5MB). Dejar vacío para mantener la actual.</small>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Vista previa</label>
+                <div id="vistaPrevia" class="border rounded p-2 text-center" style="min-height: 120px;">
+                    <?php if (!empty($producto['foto'])): ?>
+                        <img id="imgPreview" src="<?= e(base_path('img/productos/' . $producto['foto'] . '.jpg')) ?>" alt="Vista previa" style="max-height: 100px;">
+                    <?php else: ?>
+                        <img id="imgPreview" src="" alt="Vista previa" style="max-height: 100px; display: none;">
+                        <p id="placeholderPreview" class="text-muted mb-0 mt-2">Sin imagen</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+
             <div class="col-12">
                 <div class="d-grid d-md-block">
                     <button type="submit" class="btn btn-primary btn-lg">Actualizar producto</button>
@@ -109,6 +126,22 @@ $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nom
     </main>
 
     <script src="<?= e(base_path('../../js/bootstrap.bundle.min.js')) ?>"></script>
+    <script>
+        document.getElementById('fotoInput').addEventListener('change', function(e) {
+            const archivo = e.target.files[0];
+            const imgPreview = document.getElementById('imgPreview');
+            const placeholder = document.getElementById('placeholderPreview');
+            if (archivo) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    imgPreview.src = ev.target.result;
+                    imgPreview.style.display = 'block';
+                    if (placeholder) placeholder.style.display = 'none';
+                };
+                reader.readAsDataURL(archivo);
+            }
+        });
+    </script>
 </body>
 
 </html>

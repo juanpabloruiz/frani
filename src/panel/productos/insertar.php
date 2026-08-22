@@ -22,11 +22,17 @@ if ($producto === '' || $idCategoria <= 0) {
 $db = conexion();
 $descripcionDB = $descripcion !== '' ? $descripcion : null;
 
+$foto = null;
+if (!empty($_FILES['foto']['name'])) {
+    $directorio = __DIR__ . '/../../img/productos';
+    $foto = subir_foto($_FILES['foto'], $directorio);
+}
+
 $stmt = $db->prepare(
-    "INSERT INTO productos (producto, descripcion, costo, precio, stock, id_categoria)
-    VALUES (?, ?, ?, ?, ?, ?)"
+    "INSERT INTO productos (producto, foto, descripcion, costo, precio, stock, id_categoria)
+    VALUES (?, ?, ?, ?, ?, ?, ?)"
 );
-$stmt->bind_param('ssddii', $producto, $descripcionDB, $costo, $precio, $stock, $idCategoria);
+$stmt->bind_param('ssssddi', $producto, $foto, $descripcionDB, $costo, $precio, $stock, $idCategoria);
 $stmt->execute();
 $stmt->close();
 

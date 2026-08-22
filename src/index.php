@@ -4,7 +4,7 @@ require_once __DIR__ . '/funciones.php';
 
 $db = conexion();
 $resultado = $db->query(
-    "SELECT p.producto, p.precio, p.stock, c.nombre AS categoria
+    "SELECT p.producto, p.foto, p.precio, p.stock, c.nombre AS categoria
     FROM productos p
     INNER JOIN categorias c ON c.id = p.id_categoria
     ORDER BY p.precio ASC
@@ -55,10 +55,17 @@ $resultado = $db->query(
             <?php while ($fila = $resultado->fetch_assoc()): ?>
                 <div class="col">
                     <div class="card shadow h-100">
-                        <picture>
-                            <source srcset="<?= e(base_path('img/1.webp')) ?>" type="image/webp">
-                            <img src="<?= e(base_path('img/1.jpg')) ?>" class="card-img-top" width="200" alt="<?= e($fila['producto']) ?>">
-                        </picture>
+                        <?php if (!empty($fila['foto'])): ?>
+                            <picture>
+                                <source srcset="<?= e(base_path('img/productos/' . $fila['foto'] . '.webp')) ?>" type="image/webp">
+                                <img src="<?= e(base_path('img/productos/' . $fila['foto'] . '.jpg')) ?>" class="card-img-top" width="200" alt="<?= e($fila['producto']) ?>">
+                            </picture>
+                        <?php else: ?>
+                            <picture>
+                                <source srcset="<?= e(base_path('img/Ejemplo.webp')) ?>" type="image/webp">
+                                <img src="<?= e(base_path('img/Ejemplo..jpg')) ?>" class="card-img-top" width="200" alt="<?= e($fila['producto']) ?>">
+                            </picture>
+                        <?php endif; ?>
                         <div class="card-body">
                             <span class="badge text-bg-dark mb-2"><?= e($fila['categoria']) ?></span>
                             <h2 class="h4 card-title"><?= e($fila['producto']) ?></h2>
