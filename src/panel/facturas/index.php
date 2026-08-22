@@ -34,7 +34,7 @@ $consulta = $db->query(
 
     <div class="container">
         <div class="mb-4">
-            <a href="<?= e(base_path('panel/facturas/nueva')) ?>" class="btn btn-primary">Nueva factura</a>
+            <a href="<?= e(base_path('panel/facturas/nueva')) ?>" class="btn btn-primary btn-lg">Nueva factura</a>
         </div>
 
         <div class="mb-3">
@@ -44,29 +44,29 @@ $consulta = $db->query(
             </div>
         </div>
 
-        <table class="table" id="tablaFacturas">
+        <table class="table table-bordered" id="tablaFacturas">
             <thead class="table-dark text-center text-uppercase">
-                <tr>
+                <tr class="align-middle">
                     <th scope="col">Nombre</th>
                     <th scope="col">Detalle</th>
                     <th scope="col">Método</th>
-                    <th scope="col">Total</th>
-                    <th scope="col">Deuda</th>
-                    <th scope="col">Agregado</th>
-                    <th scope="col">Modificado</th>
+                    <th scope="col" style="white-space: nowrap; width: 120px;">Total</th>
+                    <th scope="col" style="white-space: nowrap; width: 120px;">Deuda</th>
+                    <th scope="col" style="white-space: nowrap;">Agregado</th>
+                    <th scope="col" style="white-space: nowrap;">Modificado</th>
                     <th scope="col">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <?php while ($campo = $consulta->fetch_assoc()): ?>
-                    <tr>
+                    <tr class="align-middle">
                         <td><?= e($campo['nombre']) ?></td>
                         <td><?= e($campo['detalle']) ?></td>
                         <td class="text-center"><?= e($campo['metodo']) ?></td>
-                        <td class="text-end">$ <?= e(number_format((float) $campo['total'], 2, ',', '.')) ?></td>
-                        <td class="text-end text-danger fw-bold"><?= $campo['deuda'] ? '$ ' . e(number_format((float) $campo['deuda'], 2, ',', '.')) : '-' ?></td>
-                        <td class="text-center"><?= e(date('d/m/Y H:i', strtotime($campo['agregado']))) ?></td>
-                        <td class="text-center"><?= $campo['modificado'] ? e(date('d/m/Y H:i', strtotime($campo['modificado']))) : '-' ?></td>
+                        <td class="text-end" style="white-space: nowrap;">$ <?= e(number_format((float) $campo['total'], 2, ',', '.')) ?></td>
+                        <td class="text-end text-danger fw-bold" style="white-space: nowrap;"><?= $campo['deuda'] ? '$ ' . e(number_format((float) $campo['deuda'], 2, ',', '.')) : '' ?></td>
+                        <td class="text-center" style="white-space: nowrap;"><?= e(date('d/m/Y H:i', strtotime($campo['agregado']))) ?></td>
+                        <td class="text-center" style="white-space: nowrap;"><?= $campo['modificado'] ? e(date('d/m/Y H:i', strtotime($campo['modificado']))) : '' ?></td>
                         <td class="text-center">
                             <a href="<?= e(base_path('panel/facturas/editar?id=' . $campo['id'])) ?>" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></a>
                             <form method="POST" action="<?= e(base_path('panel/facturas/eliminar')) ?>" class="d-inline" onsubmit="return confirm('¿Eliminar esta factura?');">

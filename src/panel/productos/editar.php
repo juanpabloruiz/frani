@@ -78,7 +78,7 @@ $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nom
             <div class="col-md">
                 <label class="form-label">Stock</label>
                 <input type="number" name="stock" class="form-control"
-                    value="<?= e((string) $producto['stock']) ?>" min="0" required>
+                    value="<?= e((string) $producto['stock']) ?>" min="0">
             </div>
 
             <div class="col-md">

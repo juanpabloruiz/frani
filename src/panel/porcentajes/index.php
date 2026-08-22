@@ -78,7 +78,7 @@ unset($_SESSION['toast_exito']);
             </div>
             <div class="card-body">
                 <div class="row g-3 align-items-end">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="calc_precio" class="form-label">Precio</label>
                         <div class="input-group">
                             <span class="input-group-text">$</span>
@@ -86,7 +86,7 @@ unset($_SESSION['toast_exito']);
                                 placeholder="0.00">
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label for="calc_porcentaje" class="form-label">Porcentaje</label>
                         <div class="input-group">
                             <input type="number" step="0.01" id="calc_porcentaje" class="form-control"
@@ -94,7 +94,15 @@ unset($_SESSION['toast_exito']);
                             <span class="input-group-text">%</span>
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-3">
+                        <label class="form-label">Diferencia</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="text" id="calc_diferencia" class="form-control bg-warning text-dark fw-bold"
+                                readonly value="0.00">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
                         <label class="form-label">Resultado</label>
                         <div class="input-group">
                             <span class="input-group-text">$</span>
@@ -115,12 +123,15 @@ unset($_SESSION['toast_exito']);
     <script>
         const calcPrecio = document.getElementById('calc_precio');
         const calcPorcentaje = document.getElementById('calc_porcentaje');
+        const calcDiferencia = document.getElementById('calc_diferencia');
         const calcResultado = document.getElementById('calc_resultado');
 
         function calcularPorcentaje() {
             const precio = parseFloat(calcPrecio.value) || 0;
             const porcentaje = parseFloat(calcPorcentaje.value) || 0;
             const resultado = precio * (1 + porcentaje / 100);
+            const diferencia = precio - resultado;
+            calcDiferencia.value = diferencia.toFixed(2);
             calcResultado.value = resultado.toFixed(2);
         }
 

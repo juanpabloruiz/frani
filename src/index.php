@@ -7,7 +7,7 @@ $resultado = $db->query(
     "SELECT p.producto, p.precio, p.stock, c.nombre AS categoria
     FROM productos p
     INNER JOIN categorias c ON c.id = p.id_categoria
-    ORDER BY p.id DESC
+    ORDER BY p.precio ASC
     LIMIT 12"
 );
 ?>

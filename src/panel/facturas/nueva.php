@@ -42,7 +42,7 @@ requerir_login();
             </div>
 
             <div class="table-responsive">
-                <table class="table" id="itemsTable">
+                <table class="table table-bordered" id="itemsTable">
                     <thead class="table-dark text-uppercase">
                         <tr>
                             <th>Producto</th>

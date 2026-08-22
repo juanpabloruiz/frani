@@ -22,7 +22,7 @@ $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias 
 
     <div class="container">
         <div class="mb-4">
-            <a href="<?= e(base_path('panel/categorias/nuevo')) ?>" class="btn btn-primary">Nueva categoría</a>
+            <a href="<?= e(base_path('panel/categorias/nuevo')) ?>" class="btn btn-primary btn-lg">Nueva categoría</a>
         </div>
 
         <div class="mb-3">
@@ -32,21 +32,21 @@ $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias 
             </div>
         </div>
 
-        <table class="table" id="tablaCategorias">
+        <table class="table table-bordered" id="tablaCategorias">
             <thead class="table-dark text-center text-uppercase">
-                <tr>
+                <tr class="align-middle">
                     <th scope="col">Nombre</th>
-                    <th scope="col">Agregado</th>
-                    <th scope="col">Modificado</th>
+                    <th scope="col" style="white-space: nowrap;">Agregado</th>
+                    <th scope="col" style="white-space: nowrap;">Modificado</th>
                     <th scope="col">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <?php while ($fila = $consulta->fetch_assoc()): ?>
-                    <tr>
+                    <tr class="align-middle">
                         <td><?= e($fila['nombre']) ?></td>
-                        <td class="text-center"><?= e(date('d/m/Y H:i', strtotime($fila['agregado']))) ?></td>
-                        <td class="text-center"><?= $fila['modificado'] ? e(date('d/m/Y H:i', strtotime($fila['modificado']))) : '-' ?></td>
+                        <td class="text-center" style="white-space: nowrap;"><?= e(date('d/m/Y H:i', strtotime($fila['agregado']))) ?></td>
+                        <td class="text-center" style="white-space: nowrap;"><?= $fila['modificado'] ? e(date('d/m/Y H:i', strtotime($fila['modificado']))) : '' ?></td>
                         <td class="text-center">
                             <a href="<?= e(base_path('panel/categorias/editar?id=' . $fila['id'])) ?>" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></a>
                             <form method="POST" action="<?= e(base_path('panel/categorias/eliminar')) ?>" class="d-inline" onsubmit="return confirm('¿Eliminar esta categoría? Los productos asociados no se eliminarán.');">

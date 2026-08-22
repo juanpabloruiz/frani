@@ -16,7 +16,7 @@ $consulta = $consulta = $db->query(
         c.nombre AS categoria
     FROM productos p
     INNER JOIN categorias c ON c.id = p.id_categoria
-    ORDER BY p.id DESC"
+    ORDER BY p.producto ASC"
 );
 ?>
 <!DOCTYPE html>
@@ -36,7 +36,7 @@ $consulta = $consulta = $db->query(
 
     <div class="container">
         <div class="mb-4">
-            <a href="<?= e(base_path('panel/productos/nuevo')) ?>" class="btn btn-primary">Nuevo producto</a>
+            <a href="<?= e(base_path('panel/productos/nuevo')) ?>" class="btn btn-primary btn-lg">Nuevo producto</a>
         </div>
 
         <div class="mb-3">
@@ -46,29 +46,29 @@ $consulta = $consulta = $db->query(
             </div>
         </div>
 
-        <table class="table" id="tablaProductos">
+        <table class="table table-bordered" id="tablaProductos">
             <thead class="table-dark text-center text-uppercase">
-                <tr>
+                <tr class="align-middle"> 
                     <th scope="col">Producto</th>
-                    <th scope="col">Costo</th>
-                    <th scope="col">Precio</th>
+                    <th scope="col" style="white-space: nowrap; width: 120px;">Costo</th>
+                    <th scope="col" style="white-space: nowrap; width: 120px;">Precio</th>
                     <th scope="col">Stock</th>
                     <th scope="col">Categoría</th>
-                    <th scope="col">Agregado</th>
-                    <th scope="col">Modificado</th>
+                    <th scope="col" style="white-space: nowrap;">Agregado</th>
+                    <th scope="col" style="white-space: nowrap;">Modificado</th>
                     <th scope="col">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <?php while ($fila = $consulta->fetch_assoc()): ?>
-                    <tr>
-                        <td><?= e($fila['producto']) ?></td>
-                        <td class="text-end">$ <?= e(number_format((float) $fila['costo'], 2, ',', '.')) ?></td>
-                        <td class="table-success text-end">$ <?= e(number_format((float) $fila['precio'], 2, ',', '.')) ?></td>
+                    <tr class="align-middle">
+                        <td style="background-color: #0d6efd; color: white;"><?= e($fila['producto']) ?></td>
+                        <td class="text-end" style="white-space: nowrap;">$ <?= e(number_format((float) $fila['costo'], 2, ',', '.')) ?></td>
+                        <td class="text-end" style="white-space: nowrap; background-color: #0d6efd; color: white;">$ <?= e(number_format((float) $fila['precio'], 2, ',', '.')) ?></td>
                         <td class="text-center"><?= e((string) $fila['stock']) ?></td>
                         <td class="text-center"><?= e($fila['categoria']) ?></td>
-                        <td class="text-center"><?= e(date('d/m/Y H:i', strtotime($fila['agregado']))) ?></td>
-                        <td class="text-center"><?= $fila['modificado'] ? e(date('d/m/Y H:i', strtotime($fila['modificado']))) : '-' ?></td>
+                        <td class="text-center" style="white-space: nowrap;"><?= e(date('d/m/Y H:i', strtotime($fila['agregado']))) ?></td>
+                        <td class="text-center" style="white-space: nowrap;"><?= $fila['modificado'] ? e(date('d/m/Y H:i', strtotime($fila['modificado']))) : '' ?></td>
                         <td class="text-center">
                             <a href="<?= e(base_path('panel/productos/editar?id=' . $fila['id'])) ?>" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></a>
                             <?php $token = CSRF_token(); ?>

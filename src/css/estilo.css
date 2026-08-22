@@ -13,6 +13,10 @@ body {
   font-weight: 700;
 }
 
+.table > :not(caption) > * > * {
+  padding-block: 0.65rem;
+}
+
 .navbar-toggler {
   border: none;
 }
