@@ -20,25 +20,27 @@ $error = $_GET['error'] ?? '';
 </head>
 
 <body class="bg-light">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary mb-3 mb-md-4">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="<?= e(base_path()) ?>">Frani</a>
+    <nav class="navbar navbar-expand-lg fixed-top" style="background-color: #0d6efd;">
+        <div class="container-fluid d-flex align-items-center">
+            <a class="navbar-brand" href="<?= e(base_path()) ?>">
+                <img src="<?= e(base_path('img/logo.png')) ?>" alt="Frani" style="max-height: 40px; width: auto;">
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#loginNav" aria-controls="loginNav" aria-expanded="false"
                 aria-label="Menú">
-                <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
             </button>
             <div class="collapse navbar-collapse" id="loginNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= e(base_path()) ?>">Volver al inicio</a>
+                        <a class="nav-link text-white" href="<?= e(base_path()) ?>">Volver al inicio</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container" style="padding-top: 76px;">
         <div class="row justify-content-center mt-3">
             <div class="col-md-5">
                 <div class="card shadow">

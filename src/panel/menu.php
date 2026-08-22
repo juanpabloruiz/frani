@@ -8,8 +8,10 @@ $esFacturas = $carpetaActual === 'facturas';
 $esPorcentajes = $carpetaActual === 'porcentajes';
 ?>
 <nav class="navbar navbar-expand-lg fixed-top" style="background-color: #0d6efd;">
-    <div class="container-fluid">
-        <a class="navbar-brand text-white" href="<?= e(base_path()) ?>">Frani</a>
+    <div class="container-fluid d-flex align-items-center">
+        <a class="navbar-brand" href="<?= e(base_path()) ?>">
+            <img src="<?= e(base_path('img/logo.png')) ?>" alt="Frani" style="max-height: 40px; width: auto;">
+        </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#adminNav" aria-controls="adminNav" aria-expanded="false"
             aria-label="Menú">
@@ -45,4 +47,4 @@ $esPorcentajes = $carpetaActual === 'porcentajes';
     </div>
 </nav>
 
-<main id="adminContent" style="padding-top: 70px;">
+<main id="adminContent" style="padding-top: 76px;">

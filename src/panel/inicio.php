@@ -26,11 +26,6 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
     <?php require __DIR__ . '/menu.php'; ?>
 
     <div class="container">
-        <div class="mb-4">
-            <h1 class="h3 mb-1">Bienvenido, <?= e($usuario['nombre']) ?></h1>
-            <p class="text-secondary mb-0">Panel de administración de Frani.</p>
-        </div>
-
         <!-- Estadísticas de facturas -->
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
@@ -114,6 +109,8 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
                             plugins: {
                                 legend: { display: false },
                                 tooltip: {
+                                    titleFont: { size: 14 },
+                                    bodyFont: { size: 14 },
                                     callbacks: {
                                         label: ctx => '$' + ctx.parsed.y.toLocaleString('es-AR', { minimumFractionDigits: 2 })
                                     }
@@ -121,12 +118,14 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
                             },
                             scales: {
                                 x: {
-                                    grid: { display: false }
+                                    grid: { display: false },
+                                    ticks: { font: { size: 13 } }
                                 },
                                 y: {
                                     beginAtZero: true,
                                     grid: { display: false },
                                     ticks: {
+                                        font: { size: 13 },
                                         callback: v => '$' + v.toLocaleString('es-AR')
                                     }
                                 }
