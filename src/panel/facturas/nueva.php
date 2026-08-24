@@ -31,14 +31,23 @@ requerir_login();
                 <input type="text" id="nombre" name="nombre" class="form-control" required>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Método de pago</label>
-                <select id="metodo" name="metodo" class="form-select">
-                    <option value="">Seleccionar método</option>
-                    <option value="efectivo">Efectivo</option>
-                    <option value="tarjeta">Tarjeta</option>
-                    <option value="transferencia">Transferencia</option>
-                </select>
+            <div class="row g-3 mb-3">
+                <div class="col-md">
+                    <label class="form-label">Efectivo</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number" step="0.01" id="efectivo" name="efectivo" class="form-control"
+                            placeholder="0.00" min="0">
+                    </div>
+                </div>
+                <div class="col-md">
+                    <label class="form-label">Transferencia</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number" step="0.01" id="transferencia" name="transferencia" class="form-control"
+                            placeholder="0.00" min="0">
+                    </div>
+                </div>
             </div>
 
             <div class="table-responsive">
@@ -85,16 +94,29 @@ requerir_login();
             const addItemBtn = document.getElementById("addItemBtn");
             const totalField = document.getElementById("total");
             const deudaField = document.getElementById("deuda");
+            const efectivoField = document.getElementById("efectivo");
+            const transferenciaField = document.getElementById("transferencia");
             let itemIndex = 0;
 
             function updateTotal() {
                 const subtotal = Array.from(document.querySelectorAll(".subtotal"))
                     .reduce((sum, input) => sum + parseFloat(input.value || 0), 0);
-                const deuda = parseFloat(deudaField.value) || 0;
-                totalField.value = (subtotal - deuda).toFixed(2);
+                totalField.value = subtotal.toFixed(2);
+                updateDeuda();
             }
 
-            deudaField.addEventListener("input", updateTotal);
+            function updateDeuda() {
+                const total = parseFloat(totalField.value) || 0;
+                const efectivo = parseFloat(efectivoField.value) || 0;
+                const transferencia = parseFloat(transferenciaField.value) || 0;
+                const pagado = efectivo + transferencia;
+                const deuda = total - pagado;
+                deudaField.value = deuda > 0 ? deuda.toFixed(2) : '';
+            }
+
+            deudaField.addEventListener("input", updateDeuda);
+            efectivoField.addEventListener("input", updateDeuda);
+            transferenciaField.addEventListener("input", updateDeuda);
 
             addItemBtn.addEventListener("click", async () => {
                 const row = document.createElement("tr");

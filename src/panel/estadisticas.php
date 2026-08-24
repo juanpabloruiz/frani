@@ -25,7 +25,9 @@ switch ($periodo) {
                     ' ',
                     DATE_FORMAT(agregado, '%d')
                 ) AS etiqueta,
-                COALESCE(SUM(total), 0) AS total
+                COALESCE(SUM(total), 0) AS total,
+                COALESCE(SUM(efectivo), 0) AS efectivo,
+                COALESCE(SUM(transferencia), 0) AS transferencia
              FROM facturas
              WHERE MONTH(agregado) = MONTH(CURDATE())
                AND YEAR(agregado) = YEAR(CURDATE())
@@ -51,7 +53,9 @@ switch ($periodo) {
                     WHEN DAY(agregado) BETWEEN 22 AND 28 THEN 4
                     ELSE 5
                 END AS orden,
-                COALESCE(SUM(total), 0) AS total
+                COALESCE(SUM(total), 0) AS total,
+                COALESCE(SUM(efectivo), 0) AS efectivo,
+                COALESCE(SUM(transferencia), 0) AS transferencia
              FROM facturas
              WHERE MONTH(agregado) = MONTH(CURDATE())
                AND YEAR(agregado) = YEAR(CURDATE())
@@ -71,7 +75,9 @@ switch ($periodo) {
         $resultado = $db->query(
             "SELECT
                 MONTH(agregado) AS mes,
-                COALESCE(SUM(total), 0) AS total
+                COALESCE(SUM(total), 0) AS total,
+                COALESCE(SUM(efectivo), 0) AS efectivo,
+                COALESCE(SUM(transferencia), 0) AS transferencia
              FROM facturas
              WHERE YEAR(agregado) = YEAR(CURDATE())
              GROUP BY MONTH(agregado)
@@ -92,6 +98,8 @@ while ($fila = $resultado->fetch_assoc()) {
     $datos[] = [
         'etiqueta' => $etiqueta,
         'total' => (float) ($fila['total'] ?? 0),
+        'efectivo' => (float) ($fila['efectivo'] ?? 0),
+        'transferencia' => (float) ($fila['transferencia'] ?? 0),
     ];
 }
 

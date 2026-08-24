@@ -87,6 +87,8 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
                 .then(datos => {
                     const etiquetas = datos.map(d => d.etiqueta);
                     const totales = datos.map(d => d.total);
+                    const efectivos = datos.map(d => d.efectivo);
+                    const transferencias = datos.map(d => d.transferencia);
 
                     if (grafico) grafico.destroy();
 
@@ -94,25 +96,46 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
                         type: 'bar',
                         data: {
                             labels: etiquetas,
-                            datasets: [{
-                                label: 'Total facturado',
-                                data: totales,
-                                backgroundColor: 'rgba(13, 110, 253, 0.7)',
-                                borderColor: 'rgba(13, 110, 253, 1)',
-                                borderWidth: 1,
-                                borderRadius: 4
-                            }]
+                            datasets: [
+                                {
+                                    label: 'Efectivo',
+                                    data: efectivos,
+                                    backgroundColor: 'rgba(25, 135, 84, 0.7)',
+                                    borderColor: 'rgba(25, 135, 84, 1)',
+                                    borderWidth: 1,
+                                    borderRadius: 4
+                                },
+                                {
+                                    label: 'Transferencia',
+                                    data: transferencias,
+                                    backgroundColor: 'rgba(13, 110, 253, 0.7)',
+                                    borderColor: 'rgba(13, 110, 253, 1)',
+                                    borderWidth: 1,
+                                    borderRadius: 4
+                                },
+                                {
+                                    label: 'Total',
+                                    data: totales,
+                                    backgroundColor: 'rgba(108, 117, 125, 0.7)',
+                                    borderColor: 'rgba(108, 117, 125, 1)',
+                                    borderWidth: 1,
+                                    borderRadius: 4
+                                }
+                            ]
                         },
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
                             plugins: {
-                                legend: { display: false },
+                                legend: {
+                                    display: true,
+                                    labels: { font: { size: 13 } }
+                                },
                                 tooltip: {
                                     titleFont: { size: 14 },
                                     bodyFont: { size: 14 },
                                     callbacks: {
-                                        label: ctx => '$' + ctx.parsed.y.toLocaleString('es-AR', { minimumFractionDigits: 2 })
+                                        label: ctx => ctx.dataset.label + ': $' + ctx.parsed.y.toLocaleString('es-AR', { minimumFractionDigits: 2 })
                                     }
                                 }
                             },
