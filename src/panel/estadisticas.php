@@ -27,7 +27,8 @@ switch ($periodo) {
                 ) AS etiqueta,
                 COALESCE(SUM(total), 0) AS total,
                 COALESCE(SUM(efectivo), 0) AS efectivo,
-                COALESCE(SUM(transferencia), 0) AS transferencia
+                COALESCE(SUM(transferencia), 0) AS transferencia,
+                COALESCE(SUM(deuda), 0) AS deuda
              FROM facturas
              WHERE MONTH(agregado) = MONTH(CURDATE())
                AND YEAR(agregado) = YEAR(CURDATE())
@@ -55,7 +56,8 @@ switch ($periodo) {
                 END AS orden,
                 COALESCE(SUM(total), 0) AS total,
                 COALESCE(SUM(efectivo), 0) AS efectivo,
-                COALESCE(SUM(transferencia), 0) AS transferencia
+                COALESCE(SUM(transferencia), 0) AS transferencia,
+                COALESCE(SUM(deuda), 0) AS deuda
              FROM facturas
              WHERE MONTH(agregado) = MONTH(CURDATE())
                AND YEAR(agregado) = YEAR(CURDATE())
@@ -77,7 +79,8 @@ switch ($periodo) {
                 MONTH(agregado) AS mes,
                 COALESCE(SUM(total), 0) AS total,
                 COALESCE(SUM(efectivo), 0) AS efectivo,
-                COALESCE(SUM(transferencia), 0) AS transferencia
+                COALESCE(SUM(transferencia), 0) AS transferencia,
+                COALESCE(SUM(deuda), 0) AS deuda
              FROM facturas
              WHERE YEAR(agregado) = YEAR(CURDATE())
              GROUP BY MONTH(agregado)
@@ -100,6 +103,7 @@ while ($fila = $resultado->fetch_assoc()) {
         'total' => (float) ($fila['total'] ?? 0),
         'efectivo' => (float) ($fila['efectivo'] ?? 0),
         'transferencia' => (float) ($fila['transferencia'] ?? 0),
+        'deuda' => (float) ($fila['deuda'] ?? 0),
     ];
 }
 

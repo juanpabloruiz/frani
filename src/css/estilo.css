@@ -23,6 +23,10 @@ body {
   border: 2px solid #dee2e6;
 }
 
+[data-bs-theme="dark"] .tabla-wrapper {
+  border-color: #495057;
+}
+
 .tabla-wrapper .table {
   margin-bottom: 0;
 }

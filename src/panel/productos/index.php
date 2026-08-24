@@ -20,7 +20,7 @@ $consulta = $consulta = $db->query(
 );
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="auto">
 
 <head>
     <meta charset="UTF-8">
@@ -28,7 +28,8 @@ $consulta = $consulta = $db->query(
     <title>Productos | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=5')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css')) ?>">
+    <script src="<?= e(base_path('../../js/tema.js')) ?>"></script>
 </head>
 
 <body>
@@ -47,9 +48,10 @@ $consulta = $consulta = $db->query(
         </div>
 
         <div class="tabla-wrapper">
-        <table class="table table-bordered" id="tablaProductos">
+        <table class="table table-bordered table-hover" id="tablaProductos">
             <thead class="table-dark text-center text-uppercase">
                 <tr class="align-middle"> 
+                    <th scope="col" style="width: 50px;">#</th>
                     <th scope="col">Producto</th>
                     <th scope="col" style="white-space: nowrap; width: 120px;">Costo</th>
                     <th scope="col" style="white-space: nowrap; width: 120px;">Precio</th>
@@ -57,12 +59,19 @@ $consulta = $consulta = $db->query(
                     <th scope="col">Categoría</th>
                     <th scope="col" style="white-space: nowrap;">Agregado</th>
                     <th scope="col" style="white-space: nowrap;">Modificado</th>
-                    <th scope="col">Acciones</th>
                 </tr>
             </thead>
             <tbody>
+                <?php $token = CSRF_token(); ?>
                 <?php while ($fila = $consulta->fetch_assoc()): ?>
-                    <tr class="align-middle">
+                    <tr class="align-middle" style="cursor: pointer;" data-edit="<?= e(base_path('panel/productos/editar?id=' . $fila['id'])) ?>">
+                        <td class="text-center">
+                            <form method="POST" action="<?= e(base_path('panel/productos/eliminar')) ?>" class="d-inline" onsubmit="return confirm('¿Eliminar este producto?');">
+                                <input type="hidden" name="csrf_token" value="<?= e($token) ?>">
+                                <input type="hidden" name="id" value="<?= e((string) $fila['id']) ?>">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="event.stopPropagation();"><i class="fa-solid fa-trash"></i></button>
+                            </form>
+                        </td>
                         <td style="background-color: #0d6efd; color: white;"><?= e($fila['producto']) ?></td>
                         <td class="text-end" style="white-space: nowrap;">$ <?= e(number_format((float) $fila['costo'], 2, ',', '.')) ?></td>
                         <td class="text-end" style="white-space: nowrap; background-color: #0d6efd; color: white;">$ <?= e(number_format((float) $fila['precio'], 2, ',', '.')) ?></td>
@@ -70,15 +79,6 @@ $consulta = $consulta = $db->query(
                         <td class="text-center"><?= e($fila['categoria']) ?></td>
                         <td class="text-center" style="white-space: nowrap;"><?= e(date('d/m/Y H:i', strtotime($fila['agregado']))) ?></td>
                         <td class="text-center" style="white-space: nowrap;"><?= $fila['modificado'] ? e(date('d/m/Y H:i', strtotime($fila['modificado']))) : '' ?></td>
-                        <td class="text-center">
-                            <a href="<?= e(base_path('panel/productos/editar?id=' . $fila['id'])) ?>" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></a>
-                            <?php $token = CSRF_token(); ?>
-                            <form method="POST" action="<?= e(base_path('panel/productos/eliminar')) ?>" class="d-inline" onsubmit="return confirm('¿Eliminar este producto?');">
-                                <input type="hidden" name="csrf_token" value="<?= e($token) ?>">
-                                <input type="hidden" name="id" value="<?= e((string) $fila['id']) ?>">
-                                <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
-                            </form>
-                        </td>
                     </tr>
                 <?php endwhile; ?>
 
@@ -107,6 +107,13 @@ $consulta = $consulta = $db->query(
             filas.forEach(fila => {
                 const texto = normalizar(fila.textContent);
                 fila.style.display = texto.includes(termino) ? '' : 'none';
+            });
+        });
+
+        filas.forEach(fila => {
+            fila.addEventListener('click', function (e) {
+                if (e.target.closest('form')) return;
+                window.location.href = this.dataset.edit;
             });
         });
     </script>

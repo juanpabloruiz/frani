@@ -19,7 +19,7 @@ $consulta = $db->query(
 );
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="auto">
 
 <head>
     <meta charset="UTF-8">
@@ -27,7 +27,8 @@ $consulta = $db->query(
     <title>Facturas | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=5')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css')) ?>">
+    <script src="<?= e(base_path('../../js/tema.js')) ?>"></script>
 </head>
 
 <body>
@@ -46,9 +47,10 @@ $consulta = $db->query(
         </div>
 
         <div class="tabla-wrapper">
-        <table class="table table-bordered" id="tablaFacturas">
+        <table class="table table-bordered table-hover" id="tablaFacturas">
             <thead class="table-dark text-center text-uppercase">
                 <tr class="align-middle">
+                    <th scope="col" style="width: 50px;">#</th>
                     <th scope="col">Nombre</th>
                     <th scope="col">Detalle</th>
                     <th scope="col" style="white-space: nowrap; width: 120px;">Efectivo</th>
@@ -57,12 +59,18 @@ $consulta = $db->query(
                     <th scope="col" style="white-space: nowrap; width: 120px;">Deuda</th>
                     <th scope="col" style="white-space: nowrap;">Agregado</th>
                     <th scope="col" style="white-space: nowrap;">Modificado</th>
-                    <th scope="col">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <?php while ($campo = $consulta->fetch_assoc()): ?>
-                    <tr class="align-middle">
+                    <tr class="align-middle" style="cursor: pointer;" data-edit="<?= e(base_path('panel/facturas/editar?id=' . $campo['id'])) ?>">
+                        <td class="text-center">
+                            <form method="POST" action="<?= e(base_path('panel/facturas/eliminar')) ?>" class="d-inline" onsubmit="return confirm('¿Eliminar esta factura?');">
+                                <input type="hidden" name="csrf_token" value="<?= e(CSRF_token()) ?>">
+                                <input type="hidden" name="id" value="<?= e((string) $campo['id']) ?>">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="event.stopPropagation();"><i class="fa-solid fa-trash"></i></button>
+                            </form>
+                        </td>
                         <td><?= e($campo['nombre']) ?></td>
                         <td><?= e($campo['detalle']) ?></td>
                         <td class="text-end" style="white-space: nowrap;"><?= $campo['efectivo'] ? '$ ' . e(number_format((float) $campo['efectivo'], 2, ',', '.')) : '' ?></td>
@@ -71,14 +79,6 @@ $consulta = $db->query(
                         <td class="text-end text-danger fw-bold" style="white-space: nowrap;"><?= $campo['deuda'] ? '$ ' . e(number_format((float) $campo['deuda'], 2, ',', '.')) : '' ?></td>
                         <td class="text-center" style="white-space: nowrap;"><?= e(date('d/m/Y H:i', strtotime($campo['agregado']))) ?></td>
                         <td class="text-center" style="white-space: nowrap;"><?= $campo['modificado'] ? e(date('d/m/Y H:i', strtotime($campo['modificado']))) : '' ?></td>
-                        <td class="text-center">
-                            <a href="<?= e(base_path('panel/facturas/editar?id=' . $campo['id'])) ?>" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></a>
-                            <form method="POST" action="<?= e(base_path('panel/facturas/eliminar')) ?>" class="d-inline" onsubmit="return confirm('¿Eliminar esta factura?');">
-                                <input type="hidden" name="csrf_token" value="<?= e(CSRF_token()) ?>">
-                                <input type="hidden" name="id" value="<?= e((string) $campo['id']) ?>">
-                                <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
-                            </form>
-                        </td>
                     </tr>
                 <?php endwhile; ?>
 
@@ -107,6 +107,13 @@ $consulta = $db->query(
             filas.forEach(fila => {
                 const texto = normalizar(fila.textContent);
                 fila.style.display = texto.includes(termino) ? '' : 'none';
+            });
+        });
+
+        filas.forEach(fila => {
+            fila.addEventListener('click', function (e) {
+                if (e.target.closest('form')) return;
+                window.location.href = this.dataset.edit;
             });
         });
     </script>

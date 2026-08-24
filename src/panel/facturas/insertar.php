@@ -50,7 +50,7 @@ foreach ($_POST as $key => $value) {
 
 $stmtProducto->close();
 
-if ($nombre === '' || $detalleItems === []) {
+if ($detalleItems === []) {
     redireccionar('panel/facturas/nueva');
 }
 

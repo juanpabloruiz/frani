@@ -6,7 +6,7 @@ $db = conexion();
 $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC");
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="auto">
 
 <head>
     <meta charset="UTF-8">
@@ -14,7 +14,8 @@ $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nom
     <title>Nuevo Producto | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=5')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css')) ?>">
+    <script src="<?= e(base_path('../../js/tema.js')) ?>"></script>
 </head>
 
 <body>

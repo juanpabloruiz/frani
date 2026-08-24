@@ -12,7 +12,7 @@ $resultado = $db->query(
 );
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="auto">
 
 <head>
     <meta charset="UTF-8">
@@ -20,7 +20,8 @@ $resultado = $db->query(
     <title>Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=5')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css')) ?>">
+    <script src="<?= e(base_path('js/tema.js')) ?>"></script>
 </head>
 
 <body>
@@ -33,7 +34,7 @@ $resultado = $db->query(
         </a>
     </header>
 
-    <nav class="navbar sticky-top navbar-expand-lg bg-dark" data-bs-theme="dark">
+    <nav class="navbar sticky-top navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand d-lg-none" href="<?= e(base_path()) ?>">Frani</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"

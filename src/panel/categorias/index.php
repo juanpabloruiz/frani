@@ -6,7 +6,7 @@ $db = conexion();
 $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias ORDER BY nombre ASC");
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="auto">
 
 <head>
     <meta charset="UTF-8">
@@ -14,7 +14,8 @@ $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias 
     <title>Categorías | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=5')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css')) ?>">
+    <script src="<?= e(base_path('../../js/tema.js')) ?>"></script>
 </head>
 
 <body>
@@ -33,29 +34,28 @@ $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias 
         </div>
 
         <div class="tabla-wrapper">
-        <table class="table table-bordered" id="tablaCategorias">
+        <table class="table table-bordered table-hover" id="tablaCategorias">
             <thead class="table-dark text-center text-uppercase">
                 <tr class="align-middle">
+                    <th scope="col" style="width: 50px;">#</th>
                     <th scope="col">Nombre</th>
                     <th scope="col" style="white-space: nowrap;">Agregado</th>
                     <th scope="col" style="white-space: nowrap;">Modificado</th>
-                    <th scope="col">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <?php while ($fila = $consulta->fetch_assoc()): ?>
-                    <tr class="align-middle">
-                        <td><?= e($fila['nombre']) ?></td>
-                        <td class="text-center" style="white-space: nowrap;"><?= e(date('d/m/Y H:i', strtotime($fila['agregado']))) ?></td>
-                        <td class="text-center" style="white-space: nowrap;"><?= $fila['modificado'] ? e(date('d/m/Y H:i', strtotime($fila['modificado']))) : '' ?></td>
+                    <tr class="align-middle" style="cursor: pointer;" data-edit="<?= e(base_path('panel/categorias/editar?id=' . $fila['id'])) ?>">
                         <td class="text-center">
-                            <a href="<?= e(base_path('panel/categorias/editar?id=' . $fila['id'])) ?>" class="btn btn-sm btn-primary"><i class="fa-solid fa-pen"></i></a>
                             <form method="POST" action="<?= e(base_path('panel/categorias/eliminar')) ?>" class="d-inline" onsubmit="return confirm('¿Eliminar esta categoría? Los productos asociados no se eliminarán.');">
                                 <input type="hidden" name="csrf_token" value="<?= e(CSRF_token()) ?>">
                                 <input type="hidden" name="id" value="<?= e((string) $fila['id']) ?>">
-                                <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="event.stopPropagation();"><i class="fa-solid fa-trash"></i></button>
                             </form>
                         </td>
+                        <td><?= e($fila['nombre']) ?></td>
+                        <td class="text-center" style="white-space: nowrap;"><?= e(date('d/m/Y H:i', strtotime($fila['agregado']))) ?></td>
+                        <td class="text-center" style="white-space: nowrap;"><?= $fila['modificado'] ? e(date('d/m/Y H:i', strtotime($fila['modificado']))) : '' ?></td>
                     </tr>
                 <?php endwhile; ?>
 
@@ -84,6 +84,13 @@ $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias 
             filas.forEach(fila => {
                 const texto = normalizar(fila.textContent);
                 fila.style.display = texto.includes(termino) ? '' : 'none';
+            });
+        });
+
+        filas.forEach(fila => {
+            fila.addEventListener('click', function (e) {
+                if (e.target.closest('form')) return;
+                window.location.href = this.dataset.edit;
             });
         });
     </script>

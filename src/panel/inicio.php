@@ -10,7 +10,7 @@ $totalCategorias = $db->query("SELECT COUNT(*) FROM categorias")->fetch_row()[0]
 $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="auto">
 
 <head>
     <meta charset="UTF-8">
@@ -18,7 +18,8 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
     <title>Panel | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../css/estilo.css?v=5')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('../css/estilo.css')) ?>">
+    <script src="<?= e(base_path('../js/tema.js')) ?>"></script>
     <script src="<?= e(base_path('../js/chart.js')) ?>"></script>
 </head>
 
@@ -89,8 +90,12 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
                     const totales = datos.map(d => d.total);
                     const efectivos = datos.map(d => d.efectivo);
                     const transferencias = datos.map(d => d.transferencia);
+                    const deudas = datos.map(d => d.deuda);
 
                     if (grafico) grafico.destroy();
+
+                    const esOscuro = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+                    const colorTexto = esOscuro ? '#ffffff' : '#212529';
 
                     grafico = new Chart(ctx, {
                         type: 'bar',
@@ -120,6 +125,14 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
                                     borderColor: 'rgba(108, 117, 125, 1)',
                                     borderWidth: 1,
                                     borderRadius: 4
+                                },
+                                {
+                                    label: 'Deuda',
+                                    data: deudas,
+                                    backgroundColor: 'rgba(220, 53, 69, 0.7)',
+                                    borderColor: 'rgba(220, 53, 69, 1)',
+                                    borderWidth: 1,
+                                    borderRadius: 4
                                 }
                             ]
                         },
@@ -129,7 +142,10 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
                             plugins: {
                                 legend: {
                                     display: true,
-                                    labels: { font: { size: 13 } }
+                                    labels: {
+                                        font: { size: 13 },
+                                        color: colorTexto
+                                    }
                                 },
                                 tooltip: {
                                     titleFont: { size: 14 },
@@ -142,13 +158,14 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
                             scales: {
                                 x: {
                                     grid: { display: false },
-                                    ticks: { font: { size: 13 } }
+                                    ticks: { font: { size: 13 }, color: colorTexto }
                                 },
                                 y: {
                                     beginAtZero: true,
                                     grid: { display: false },
                                     ticks: {
                                         font: { size: 13 },
+                                        color: colorTexto,
                                         callback: v => '$' + v.toLocaleString('es-AR')
                                     }
                                 }
