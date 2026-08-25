@@ -105,10 +105,10 @@ unset($item);
             </div>
 
             <div class="mb-3">
-                <button type="button" class="btn btn-success" id="addItemBtn">
-                    <i class="fa-solid fa-plus me-1"></i>Agregar ítem
-                </button>
-                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalProducto">
+                <select id="selectAgregarProducto" class="form-select mb-2" style="max-width: 400px;">
+                    <option value="">Seleccione un producto</option>
+                </select>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalProducto">
                     <i class="fa-solid fa-box-open me-1"></i>Agregar producto nuevo
                 </button>
             </div>
@@ -152,7 +152,7 @@ unset($item);
 
     <!-- Modal Nuevo Producto -->
     <div class="modal fade" id="modalProducto" tabindex="-1" aria-labelledby="modalProductoLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="modalProductoLabel"><i class="fa-solid fa-box-open me-2"></i>Nuevo producto</h5>
@@ -161,60 +161,42 @@ unset($item);
                 <form id="formProductoModal">
                     <?= CSRF_field() ?>
                     <div class="modal-body">
-                        <div class="row g-3">
-                            <div class="col-md">
-                                <label class="form-label">Nombre</label>
-                                <input type="text" name="producto" class="form-control" required placeholder="Nombre">
-                            </div>
-                            <div class="col-md">
-                                <label class="form-label">Costo</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">$</span>
-                                    <input type="number" step="1" name="costo" class="form-control" required>
-                                </div>
-                            </div>
-                            <div class="col-md">
-                                <label class="form-label">Precio</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">$</span>
-                                    <input type="number" step="1" name="precio" class="form-control" required>
-                                </div>
-                            </div>
-                            <div class="col-md">
-                                <label class="form-label">Stock</label>
-                                <input type="number" name="stock" class="form-control" min="0">
-                            </div>
-                            <div class="col-md">
-                                <label class="form-label">Categoría</label>
-                                <select name="id_categoria" class="form-select" required>
-                                    <option value="">Seleccionar</option>
-                                    <?php foreach ($categorias as $cat): ?>
-                                        <option value="<?= e((string) $cat['id']) ?>"><?= e($cat['nombre']) ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label">Descripción</label>
-                                <textarea name="descripcion" class="form-control" rows="3" placeholder="Descripción (opcional)"></textarea>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Foto del producto</label>
-                                <input type="file" name="foto" id="fotoInputModal" class="form-control" accept=".jpg,.jpeg,.png,.webp">
-                                <small class="text-muted">JPG, JPEG, PNG, WEBP (máx. 5MB)</small>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Vista previa</label>
-                                <div class="border rounded p-2 text-center" style="min-height: 100px;">
-                                    <img id="imgPreviewModal" src="" alt="Vista previa" style="max-height: 80px; display: none;">
-                                    <p id="placeholderModal" class="text-muted mb-0 mt-2">Sin imagen</p>
-                                </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" name="producto" class="form-control" required placeholder="Nombre">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Costo</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" step="1" name="costo" class="form-control" required>
                             </div>
                         </div>
-                        <div id="productoError" class="alert alert-danger mt-3 d-none"></div>
+                        <div class="mb-3">
+                            <label class="form-label">Precio</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" step="1" name="precio" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Stock</label>
+                            <input type="number" name="stock" class="form-control" min="0">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Categoría</label>
+                            <select name="id_categoria" class="form-select" required>
+                                <option value="">Seleccionar</option>
+                                <?php foreach ($categorias as $cat): ?>
+                                    <option value="<?= e((string) $cat['id']) ?>"><?= e($cat['nombre']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div id="productoError" class="alert alert-danger d-none"></div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary btn-lg">Guardar producto</button>
+                        <button type="submit" class="btn btn-primary">Guardar producto</button>
                     </div>
                 </form>
             </div>
@@ -304,6 +286,13 @@ unset($item);
                     const precioSeleccionado = select.selectedOptions[0].dataset.precio;
                     precioInput.value = precioSeleccionado !== undefined ? precioSeleccionado : '';
                     recalcular();
+
+                    const filas = itemsTable.querySelectorAll("tr");
+                    const ultimaFila = filas[filas.length - 1];
+                    if (row === ultimaFila && select.value !== '') {
+                        crearFila(null, 1, 0);
+                        itemIndex++;
+                    }
                 });
 
                 cantidadInput.addEventListener("input", recalcular);
@@ -312,10 +301,11 @@ unset($item);
                 btnQuitar.type = "button";
                 btnQuitar.className = "btn btn-sm btn-danger";
                 btnQuitar.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-                btnQuitar.addEventListener("click", () => {
-                    row.remove();
-                    updateTotal();
-                });
+                    btnQuitar.addEventListener("click", () => {
+                        if (!confirm('¿Está seguro de quitar este ítem?')) return;
+                        row.remove();
+                        updateTotal();
+                    });
 
                 const tdProducto = document.createElement("td");
                 tdProducto.appendChild(select);
@@ -346,24 +336,25 @@ unset($item);
                 itemIndex++;
             <?php endforeach; ?>
 
-            addItemBtn.addEventListener("click", () => {
-                crearFila(null, 1, 0);
-                itemIndex++;
-            });
+            const selectAgregar = document.getElementById('selectAgregarProducto');
+            function cargarSelectAgregar() {
+                selectAgregar.innerHTML = '<option value="">Seleccione un producto</option>';
+                productos.forEach(p => {
+                    const opt = document.createElement('option');
+                    opt.value = p.id;
+                    opt.dataset.precio = p.precio;
+                    opt.textContent = p.nombre + (p.stock !== null ? ' (Stock: ' + p.stock + ')' : '');
+                    selectAgregar.appendChild(opt);
+                });
+            }
+            cargarSelectAgregar();
 
-            document.getElementById('fotoInputModal').addEventListener('change', function(e) {
-                const archivo = e.target.files[0];
-                const img = document.getElementById('imgPreviewModal');
-                const placeholder = document.getElementById('placeholderModal');
-                if (archivo) {
-                    const reader = new FileReader();
-                    reader.onload = function(ev) {
-                        img.src = ev.target.result;
-                        img.style.display = 'block';
-                        placeholder.style.display = 'none';
-                    };
-                    reader.readAsDataURL(archivo);
-                }
+            selectAgregar.addEventListener('change', () => {
+                const id = selectAgregar.value;
+                if (id === '') return;
+                crearFila(parseInt(id), 1, 0);
+                itemIndex++;
+                selectAgregar.value = '';
             });
 
             document.getElementById('formProductoModal').addEventListener('submit', async function(e) {
@@ -375,31 +366,40 @@ unset($item);
                 try {
                     const response = await fetch("<?= e(base_path('panel/productos/insertar')) ?>", {
                         method: 'POST',
-                        body: formData
+                        body: formData,
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
                     });
 
-                    if (response.redirected || response.ok) {
+                    const datos = await response.json();
+
+                    if (datos.ok) {
                         const res = await fetch("<?= e(base_path('panel/obtener_productos')) ?>");
                         productos = await res.json();
 
                         document.querySelectorAll('.select-producto').forEach(sel => {
-                            const selected = sel.value;
-                            sel.innerHTML = '<option value="">Seleccione un producto</option>';
-                            productos.forEach(p => {
-                                const opt = document.createElement('option');
-                                opt.value = p.id;
-                                opt.dataset.precio = p.precio;
-                                opt.textContent = p.producto + (p.stock !== null ? ' (Stock: ' + p.stock + ')' : '');
-                                if (String(p.id) === String(selected)) opt.selected = true;
-                                sel.appendChild(opt);
-                            });
+                            const opt = document.createElement('option');
+                            opt.value = datos.id;
+                            opt.dataset.precio = datos.precio;
+                            opt.textContent = datos.nombre;
+                            sel.appendChild(opt);
                         });
+
+                        cargarSelectAgregar();
+
+                        const filas = itemsTable.querySelectorAll("tr");
+                        const ultimaFila = filas[filas.length - 1];
+                        const ultimoSelect = ultimaFila ? ultimaFila.querySelector('.select-producto') : null;
+                        if (ultimoSelect && ultimoSelect.value === '') {
+                            ultimoSelect.value = datos.id;
+                            ultimoSelect.dispatchEvent(new Event('change'));
+                        } else {
+                            crearFila(datos.id, 1, 0);
+                            itemIndex++;
+                        }
 
                         const modal = bootstrap.Modal.getInstance(document.getElementById('modalProducto'));
                         modal.hide();
                         this.reset();
-                        document.getElementById('imgPreviewModal').style.display = 'none';
-                        document.getElementById('placeholderModal').style.display = 'block';
                     } else {
                         errorDiv.textContent = 'Error al guardar el producto.';
                         errorDiv.classList.remove('d-none');
