@@ -22,7 +22,7 @@ if ($categoria === null) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="es" data-bs-theme="auto">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -31,7 +31,6 @@ if ($categoria === null) {
     <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css')) ?>">
-    <script src="<?= e(base_path('../../js/tema.js')) ?>"></script>
 </head>
 
 <body>

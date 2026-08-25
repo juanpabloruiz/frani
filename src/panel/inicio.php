@@ -10,7 +10,7 @@ $totalCategorias = $db->query("SELECT COUNT(*) FROM categorias")->fetch_row()[0]
 $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
 ?>
 <!DOCTYPE html>
-<html lang="es" data-bs-theme="auto">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -19,7 +19,6 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
     <link rel="stylesheet" href="<?= e(base_path('../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../fontawesome/css/all.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../css/estilo.css')) ?>">
-    <script src="<?= e(base_path('../js/tema.js')) ?>"></script>
     <script src="<?= e(base_path('../js/chart.js')) ?>"></script>
 </head>
 
@@ -151,7 +150,7 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
                                     titleFont: { size: 14 },
                                     bodyFont: { size: 14 },
                                     callbacks: {
-                                        label: ctx => ctx.dataset.label + ': $' + ctx.parsed.y.toLocaleString('es-AR', { minimumFractionDigits: 2 })
+                                        label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString('es-AR', { maximumFractionDigits: 0 })
                                     }
                                 }
                             },
@@ -166,7 +165,7 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
                                     ticks: {
                                         font: { size: 13 },
                                         color: colorTexto,
-                                        callback: v => '$' + v.toLocaleString('es-AR')
+                                        callback: v => v.toLocaleString('es-AR', { maximumFractionDigits: 0 })
                                     }
                                 }
                             }

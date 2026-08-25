@@ -16,7 +16,7 @@ $precio = (float) ($_POST['precio'] ?? '0');
 $idCategoria = (int) ($_POST['id_categoria'] ?? 0);
 
 if ($producto === '' || $idCategoria <= 0) {
-    redireccionar('panel/productos/nuevo');
+    redireccionar('panel/productos');
 }
 
 $db = conexion();

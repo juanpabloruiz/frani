@@ -27,7 +27,7 @@ if ($producto === null) {
 $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC");
 ?>
 <!DOCTYPE html>
-<html lang="es" data-bs-theme="auto">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -36,7 +36,6 @@ $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nom
     <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css')) ?>">
-    <script src="<?= e(base_path('../../js/tema.js')) ?>"></script>
 </head>
 
 <body>
@@ -62,7 +61,7 @@ $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nom
                 <label class="form-label">Costo</label>
                 <div class="input-group">
                     <span class="input-group-text">$</span>
-                    <input type="number" step="0.01" name="costo" class="form-control"
+                    <input type="number" step="1" name="costo" class="form-control"
                         value="<?= e((string) $producto['costo']) ?>" required>
                 </div>
             </div>
@@ -71,7 +70,7 @@ $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nom
                 <label class="form-label">Precio</label>
                 <div class="input-group">
                     <span class="input-group-text">$</span>
-                    <input type="number" step="0.01" name="precio" class="form-control"
+                    <input type="number" step="1" name="precio" class="form-control"
                         value="<?= e((string) $producto['precio']) ?>" required>
                 </div>
             </div>

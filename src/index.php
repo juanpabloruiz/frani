@@ -12,7 +12,7 @@ $resultado = $db->query(
 );
 ?>
 <!DOCTYPE html>
-<html lang="es" data-bs-theme="auto">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -21,7 +21,6 @@ $resultado = $db->query(
     <link rel="stylesheet" href="<?= e(base_path('css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('fontawesome/css/all.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('css/estilo.css')) ?>">
-    <script src="<?= e(base_path('js/tema.js')) ?>"></script>
 </head>
 
 <body>
@@ -34,7 +33,7 @@ $resultado = $db->query(
         </a>
     </header>
 
-    <nav class="navbar sticky-top navbar-expand-lg">
+    <nav class="navbar sticky-top navbar-expand-lg bg-dark" data-bs-theme="dark">
         <div class="container">
             <a class="navbar-brand d-lg-none" href="<?= e(base_path()) ?>">Frani</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -70,7 +69,7 @@ $resultado = $db->query(
                         <div class="card-body">
                             <span class="badge text-bg-dark mb-2"><?= e($fila['categoria']) ?></span>
                             <h2 class="h4 card-title"><?= e($fila['producto']) ?></h2>
-                            <p class="card-text h4 text-primary fw-bolder mb-2">$ <?= e(number_format((float) $fila['precio'], 2, ',', '.')) ?></p>
+                            <p class="card-text h4 text-primary fw-bolder mb-2"><?= e(number_format((float) $fila['precio'], 0, '.', '')) ?></p>
                             <p class="card-text text-secondary mb-0">Stock disponible: <?= e((string) $fila['stock']) ?></p>
                         </div>
                     </div>

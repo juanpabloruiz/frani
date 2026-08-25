@@ -8,7 +8,7 @@ if (!empty($_SESSION['usuario_id'])) {
 $error = $_GET['error'] ?? '';
 ?>
 <!DOCTYPE html>
-<html lang="es" data-bs-theme="auto">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -17,10 +17,9 @@ $error = $_GET['error'] ?? '';
     <link rel="stylesheet" href="<?= e(base_path('../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../fontawesome/css/all.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../css/estilo.css')) ?>">
-    <script src="<?= e(base_path('../js/tema.js')) ?>"></script>
 </head>
 
-<body>
+<body class="bg-light">
     <nav class="navbar navbar-expand-lg fixed-top" style="background-color: #0d6efd;">
         <div class="container-fluid d-flex align-items-center">
             <a class="navbar-brand" href="<?= e(base_path()) ?>">

@@ -9,7 +9,7 @@ $toastExito = $_SESSION['toast_exito'] ?? null;
 unset($_SESSION['toast_exito']);
 ?>
 <!DOCTYPE html>
-<html lang="es" data-bs-theme="auto">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -18,7 +18,6 @@ unset($_SESSION['toast_exito']);
     <link rel="stylesheet" href="<?= e(base_path('../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../fontawesome/css/all.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../css/estilo.css')) ?>">
-    <script src="<?= e(base_path('../js/tema.js')) ?>"></script>
 </head>
 
 <body>
@@ -83,8 +82,7 @@ unset($_SESSION['toast_exito']);
                         <label for="calc_precio" class="form-label">Precio</label>
                         <div class="input-group">
                             <span class="input-group-text">$</span>
-                            <input type="number" step="0.01" id="calc_precio" class="form-control"
-                                placeholder="0.00">
+                            <input type="number" step="1" id="calc_precio" class="form-control">
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -100,7 +98,7 @@ unset($_SESSION['toast_exito']);
                         <div class="input-group">
                             <span class="input-group-text">$</span>
                             <input type="text" id="calc_diferencia" class="form-control bg-warning text-dark fw-bold"
-                                readonly value="0.00">
+                                readonly value="0">
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -108,7 +106,7 @@ unset($_SESSION['toast_exito']);
                         <div class="input-group">
                             <span class="input-group-text">$</span>
                             <input type="text" id="calc_resultado" class="form-control bg-success text-white fw-bold"
-                                readonly value="0.00">
+                                readonly value="0">
                         </div>
                     </div>
                 </div>
@@ -132,8 +130,8 @@ unset($_SESSION['toast_exito']);
             const porcentaje = parseFloat(calcPorcentaje.value) || 0;
             const resultado = precio * (1 + porcentaje / 100);
             const diferencia = precio - resultado;
-            calcDiferencia.value = diferencia.toFixed(2);
-            calcResultado.value = resultado.toFixed(2);
+            calcDiferencia.value = Math.round(diferencia);
+            calcResultado.value = Math.round(resultado);
         }
 
         calcPrecio.addEventListener('input', calcularPorcentaje);

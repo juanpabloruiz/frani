@@ -6,7 +6,7 @@ $db = conexion();
 $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias ORDER BY nombre ASC");
 ?>
 <!DOCTYPE html>
-<html lang="es" data-bs-theme="auto">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -15,7 +15,6 @@ $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias 
     <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css')) ?>">
-    <script src="<?= e(base_path('../../js/tema.js')) ?>"></script>
 </head>
 
 <body>
@@ -29,13 +28,12 @@ $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias 
         <div class="mb-3">
             <div class="input-group">
                 <span class="input-group-text"><i class="fa-solid fa-search"></i></span>
-                <input type="text" id="buscadorCategorias" class="form-control" placeholder="Buscar categoría..." autofocus>
+                <input type="text" id="buscadorCategorias" class="form-control" placeholder="Buscar categoría...">
             </div>
         </div>
 
-        <div class="tabla-wrapper">
-        <table class="table table-bordered table-hover" id="tablaCategorias">
-            <thead class="table-dark text-center text-uppercase">
+        <table class="table table-hover" id="tablaCategorias">
+            <thead class="text-center">
                 <tr class="align-middle">
                     <th scope="col" style="width: 50px;">#</th>
                     <th scope="col">Nombre</th>
@@ -54,8 +52,8 @@ $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias 
                             </form>
                         </td>
                         <td><?= e($fila['nombre']) ?></td>
-                        <td class="text-center" style="white-space: nowrap;"><?= e(date('d/m/Y H:i', strtotime($fila['agregado']))) ?></td>
-                        <td class="text-center" style="white-space: nowrap;"><?= $fila['modificado'] ? e(date('d/m/Y H:i', strtotime($fila['modificado']))) : '' ?></td>
+                        <td class="text-center" style="white-space: nowrap;"><?= e(date('d-m | H:i', strtotime($fila['agregado']))) ?></td>
+                        <td class="text-center" style="white-space: nowrap;"><?= $fila['modificado'] ? e(date('d-m | H:i', strtotime($fila['modificado']))) : '' ?></td>
                     </tr>
                 <?php endwhile; ?>
 
@@ -66,7 +64,6 @@ $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias 
                 <?php endif; ?>
             </tbody>
         </table>
-        </div>
         </div>
     </main>
 

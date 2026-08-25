@@ -19,7 +19,7 @@ $db = conexion();
 
 $stmt = $db->prepare(
     "UPDATE productos
-     SET precio = ROUND(precio * (1 + ? / 100), 2),
+     SET precio = ROUND(precio * (1 + ? / 100)),
          modificado = NOW()
      WHERE id_categoria = ?"
 );

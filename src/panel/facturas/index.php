@@ -19,7 +19,7 @@ $consulta = $db->query(
 );
 ?>
 <!DOCTYPE html>
-<html lang="es" data-bs-theme="auto">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -28,7 +28,6 @@ $consulta = $db->query(
     <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css')) ?>">
-    <script src="<?= e(base_path('../../js/tema.js')) ?>"></script>
 </head>
 
 <body>
@@ -42,13 +41,12 @@ $consulta = $db->query(
         <div class="mb-3">
             <div class="input-group">
                 <span class="input-group-text"><i class="fa-solid fa-search"></i></span>
-                <input type="text" id="buscadorFacturas" class="form-control" placeholder="Buscar factura..." autofocus>
+                <input type="text" id="buscadorFacturas" class="form-control" placeholder="Buscar factura...">
             </div>
         </div>
 
-        <div class="tabla-wrapper">
-        <table class="table table-bordered table-hover" id="tablaFacturas">
-            <thead class="table-dark text-center text-uppercase">
+        <table class="table table-hover" id="tablaFacturas">
+            <thead class="text-center">
                 <tr class="align-middle">
                     <th scope="col" style="width: 50px;">#</th>
                     <th scope="col">Nombre</th>
@@ -73,12 +71,12 @@ $consulta = $db->query(
                         </td>
                         <td><?= e($campo['nombre']) ?></td>
                         <td><?= e($campo['detalle']) ?></td>
-                        <td class="text-end" style="white-space: nowrap;"><?= $campo['efectivo'] ? '$ ' . e(number_format((float) $campo['efectivo'], 2, ',', '.')) : '' ?></td>
-                        <td class="text-end" style="white-space: nowrap;"><?= $campo['transferencia'] ? '$ ' . e(number_format((float) $campo['transferencia'], 2, ',', '.')) : '' ?></td>
-                        <td class="text-end" style="white-space: nowrap;">$ <?= e(number_format((float) $campo['total'], 2, ',', '.')) ?></td>
-                        <td class="text-end text-danger fw-bold" style="white-space: nowrap;"><?= $campo['deuda'] ? '$ ' . e(number_format((float) $campo['deuda'], 2, ',', '.')) : '' ?></td>
-                        <td class="text-center" style="white-space: nowrap;"><?= e(date('d/m/Y H:i', strtotime($campo['agregado']))) ?></td>
-                        <td class="text-center" style="white-space: nowrap;"><?= $campo['modificado'] ? e(date('d/m/Y H:i', strtotime($campo['modificado']))) : '' ?></td>
+                        <td class="text-center" style="white-space: nowrap;"><?= $campo['efectivo'] ? e(number_format((float) $campo['efectivo'], 0, '.', '')) : '' ?></td>
+                        <td class="text-center" style="white-space: nowrap;"><?= $campo['transferencia'] ? e(number_format((float) $campo['transferencia'], 0, '.', '')) : '' ?></td>
+                        <td class="text-center bg-success text-white" style="white-space: nowrap;"><?= $campo['total'] ? e(number_format((float) $campo['total'], 0, '.', '')) : '' ?></td>
+                        <td class="text-center text-danger fw-bold" style="white-space: nowrap;"><?= $campo['deuda'] ? e(number_format((float) $campo['deuda'], 0, '.', '')) : '' ?></td>
+                        <td class="text-center" style="white-space: nowrap;"><?= e(date('d-m | H:i', strtotime($campo['agregado']))) ?></td>
+                        <td class="text-center" style="white-space: nowrap;"><?= $campo['modificado'] ? e(date('d-m | H:i', strtotime($campo['modificado']))) : '' ?></td>
                     </tr>
                 <?php endwhile; ?>
 
@@ -89,7 +87,6 @@ $consulta = $db->query(
                 <?php endif; ?>
             </tbody>
         </table>
-        </div>
         </div>
     </main>
 
