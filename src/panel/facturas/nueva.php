@@ -35,7 +35,7 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
             </div>
 
             <div class="table-responsive">
-                <table class="table" id="itemsTable">
+                <table class="table table-bordered" id="itemsTable">
                     <thead>
                         <tr>
                             <th>Producto</th>

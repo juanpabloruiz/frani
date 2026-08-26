@@ -135,14 +135,15 @@ $consulta = $db->query(
 
             <!-- Columna derecha: Tabla -->
             <div class="col-md-8">
-                <div class="mb-3">
+                <div style="position: sticky; top: 76px; z-index: 10; background: white; padding: 16px; border-bottom: 1px solid #dee2e6; margin-bottom: 16px;">
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa-solid fa-search"></i></span>
                         <input type="text" id="buscadorProductos" class="form-control" placeholder="Buscar producto...">
                     </div>
                 </div>
 
-                <table class="table table-hover" id="tablaProductos">
+                <div class="card shadow-sm" style="max-height: calc(100vh - 180px); overflow-y: auto;">
+                    <table class="table table-hover table-bordered mb-0" id="tablaProductos">
                     <thead class="text-center">
                         <tr class="align-middle">
                             <th scope="col" style="width: 50px;">#</th>
@@ -185,6 +186,7 @@ $consulta = $db->query(
                         <?php endif; ?>
                     </tbody>
                 </table>
+                </div>
             </div>
 
         </div>

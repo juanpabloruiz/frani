@@ -45,7 +45,7 @@ $consulta = $db->query(
             </div>
         </div>
 
-        <table class="table table-hover" id="tablaFacturas">
+        <table class="table table-hover table-bordered" id="tablaFacturas">
             <thead class="text-center">
                 <tr class="align-middle">
                     <th scope="col" style="width: 50px;">#</th>

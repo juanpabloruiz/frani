@@ -32,7 +32,7 @@ $consulta = $db->query("SELECT id, nombre, agregado, modificado FROM categorias 
             </div>
         </div>
 
-        <table class="table table-hover" id="tablaCategorias">
+        <table class="table table-hover table-bordered" id="tablaCategorias">
             <thead class="text-center">
                 <tr class="align-middle">
                     <th scope="col" style="width: 50px;">#</th>
