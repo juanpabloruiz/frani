@@ -11,7 +11,7 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nueva Factura | Frani</title>
+    <title>Nueva Venta | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css')) ?>">
@@ -22,7 +22,7 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
 
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 mb-0">Nueva factura</h1>
+            <h1 class="h3 mb-0">Nueva venta</h1>
             <a href="<?= e(base_path('panel/facturas')) ?>" class="btn btn-outline-secondary">Volver</a>
         </div>
 
@@ -86,7 +86,7 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
             </div>
 
             <div class="d-grid d-md-block">
-                <button type="submit" class="btn btn-primary btn-lg">Guardar factura</button>
+                <button type="submit" class="btn btn-primary btn-lg">Guardar venta</button>
             </div>
         </form>
         </div>

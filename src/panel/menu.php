@@ -29,7 +29,7 @@ $esPorcentajes = $carpetaActual === 'porcentajes';
                     <a class="nav-link text-white <?= $esCategorias ? 'active' : '' ?>" <?= $esCategorias ? 'aria-current="page"' : '' ?> href="<?= e(base_path('panel/categorias')) ?>">Categorías</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white <?= $esFacturas ? 'active' : '' ?>" <?= $esFacturas ? 'aria-current="page"' : '' ?> href="<?= e(base_path('panel/facturas')) ?>">Facturas</a>
+                    <a class="nav-link text-white <?= $esFacturas ? 'active' : '' ?>" <?= $esFacturas ? 'aria-current="page"' : '' ?> href="<?= e(base_path('panel/facturas')) ?>">Ventas</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white <?= $esPorcentajes ? 'active' : '' ?>" <?= $esPorcentajes ? 'aria-current="page"' : '' ?> href="<?= e(base_path('panel/porcentajes')) ?>">Porcentajes</a>

@@ -24,7 +24,7 @@ $consulta = $db->query(
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facturas | Frani</title>
+    <title>Ventas | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css')) ?>">
@@ -35,13 +35,13 @@ $consulta = $db->query(
 
     <div class="container">
         <div class="mb-4">
-            <a href="<?= e(base_path('panel/facturas/nueva')) ?>" class="btn btn-primary btn-lg">Nueva factura</a>
+            <a href="<?= e(base_path('panel/facturas/nueva')) ?>" class="btn btn-primary btn-lg">Nueva venta</a>
         </div>
 
         <div class="mb-3">
             <div class="input-group">
                 <span class="input-group-text"><i class="fa-solid fa-search"></i></span>
-                <input type="text" id="buscadorFacturas" class="form-control" placeholder="Buscar factura...">
+                <input type="text" id="buscadorFacturas" class="form-control" placeholder="Buscar venta...">
             </div>
         </div>
 
@@ -63,7 +63,7 @@ $consulta = $db->query(
                 <?php while ($campo = $consulta->fetch_assoc()): ?>
                     <tr class="align-middle" style="cursor: pointer;" data-edit="<?= e(base_path('panel/facturas/editar?id=' . $campo['id'])) ?>">
                         <td class="text-center">
-                            <form method="POST" action="<?= e(base_path('panel/facturas/eliminar')) ?>" class="d-inline" onsubmit="return confirm('¿Eliminar esta factura?');">
+                            <form method="POST" action="<?= e(base_path('panel/facturas/eliminar')) ?>" class="d-inline" onsubmit="return confirm('¿Eliminar esta venta?');">
                                 <input type="hidden" name="csrf_token" value="<?= e(CSRF_token()) ?>">
                                 <input type="hidden" name="id" value="<?= e((string) $campo['id']) ?>">
                                 <button type="submit" class="btn btn-sm btn-danger" onclick="event.stopPropagation();"><i class="fa-solid fa-trash"></i></button>
@@ -82,7 +82,7 @@ $consulta = $db->query(
 
                 <?php if ($consulta->num_rows === 0): ?>
                     <tr>
-                        <td colspan="9" class="text-center text-secondary">No hay facturas registradas.</td>
+                        <td colspan="9" class="text-center text-secondary">No hay ventas registradas.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>

@@ -7,7 +7,7 @@ $db = conexion();
 
 $totalProductos = $db->query("SELECT COUNT(*) FROM productos")->fetch_row()[0];
 $totalCategorias = $db->query("SELECT COUNT(*) FROM categorias")->fetch_row()[0];
-$totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
+$totalVentas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -66,8 +66,8 @@ $totalFacturas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
                 <a href="<?= e(base_path('panel/facturas')) ?>" class="text-decoration-none">
                     <div class="card shadow-sm text-center py-4">
                         <i class="fa-solid fa-receipt fa-3x text-warning mb-3"></i>
-                        <h2 class="h4"><?= $totalFacturas ?></h2>
-                        <p class="text-secondary mb-0"><?= $totalFacturas == 1 ? 'Factura' : 'Facturas' ?></p>
+                        <h2 class="h4"><?= $totalVentas ?></h2>
+                        <p class="text-secondary mb-0"><?= $totalVentas == 1 ? 'Venta' : 'Ventas' ?></p>
                     </div>
                 </a>
             </div>
