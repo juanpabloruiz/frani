@@ -59,7 +59,7 @@ $consulta = $db->query(
             <div class="col-md-4" style="position: sticky; top: 84px; align-self: flex-start;">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <form method="POST" action="<?= e(base_path('panel/productos/' . ($editando ? 'actualizar' : 'insertar'))) ?>" enctype="multipart/form-data">
+                        <form method="POST" action="<?= e(base_path('panel/productos/' . ($editando ? 'actualizar' : 'insertar') . ($editando ? '#producto-' . $producto['id'] : ''))) ?>" enctype="multipart/form-data">
                             <?= CSRF_field() ?>
                             <?php if ($editando): ?>
                                 <input type="hidden" name="id" value="<?= e((string) $producto['id']) ?>">
@@ -142,7 +142,7 @@ $consulta = $db->query(
                     </div>
                 </div>
 
-                <div class="card shadow-sm" style="max-height: calc(100vh - 180px); overflow-y: auto;">
+                <div id="contenedorTabla" class="card shadow-sm" style="max-height: calc(100vh - 180px); overflow-y: auto;">
                     <table class="table table-hover table-bordered mb-0" id="tablaProductos">
                     <thead class="text-center">
                         <tr class="align-middle">
@@ -159,7 +159,7 @@ $consulta = $db->query(
                     <tbody>
                         <?php $token = CSRF_token(); ?>
                         <?php while ($fila = $consulta->fetch_assoc()): ?>
-                            <tr class="align-middle <?= $editando && (int) $fila['id'] === (int) $producto['id'] ? 'table-active' : '' ?>"
+                            <tr id="producto-<?= e((string) $fila['id']) ?>" class="align-middle <?= $editando && (int) $fila['id'] === (int) $producto['id'] ? 'table-active' : '' ?>"
                                 style="cursor: pointer;"
                                 data-edit="<?= e(base_path('panel/productos?id=' . $fila['id'])) ?>">
                                 <td class="text-center">
@@ -258,6 +258,16 @@ $consulta = $db->query(
                 }
             });
         });
+
+        <?php if ($editando): ?>
+        window.addEventListener('load', () => {
+            const fila = document.getElementById('producto-<?= e((string) $producto['id']) ?>');
+            const contenedor = document.getElementById('contenedorTabla');
+            if (fila && contenedor) {
+                contenedor.scrollTop = fila.offsetTop;
+            }
+        });
+        <?php endif; ?>
 
     </script>
 </body>
