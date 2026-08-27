@@ -51,10 +51,10 @@ $resultado = $db->query(
     </nav>
 
     <main class="container my-4">
-        <div data-masonry='{"percentPosition": true }' class="row row-cols-1 row-cols-md-3 g-4">
+        <div data-masonry='{"percentPosition": true }' class="row row-cols-1 row-cols-md-4 g-4">
             <?php while ($fila = $resultado->fetch_assoc()): ?>
                 <div class="col">
-                    <div class="card shadow h-100">
+                    <div class="card card-fade shadow h-100">
                         <?php if (!empty($fila['foto'])): ?>
                             <picture>
                                 <source srcset="<?= e(base_path('img/productos/' . $fila['foto'] . '.webp')) ?>" type="image/webp">
@@ -95,6 +95,28 @@ $resultado = $db->query(
 
     <script src="<?= e(base_path('js/bootstrap.bundle.min.js')) ?>"></script>
     <script src="<?= e(base_path('js/masonry.pkgd.min.js')) ?>"></script>
+    <style>
+        .card-fade {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .card-fade.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+    <script>
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.card-fade').forEach(card => observer.observe(card));
+    </script>
 </body>
 
 </html>
