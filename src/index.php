@@ -8,7 +8,7 @@ $resultado = $db->query(
     FROM productos p
     INNER JOIN categorias c ON c.id = p.id_categoria
     ORDER BY p.precio ASC
-    LIMIT 12"
+    LIMIT 15"
 );
 ?>
 <!DOCTYPE html>
@@ -51,10 +51,10 @@ $resultado = $db->query(
     </nav>
 
     <main class="container my-4">
-        <div data-masonry='{"percentPosition": true }' class="row row-cols-1 row-cols-md-4 g-4">
+        <div data-masonry='{"percentPosition": true }' class="row row-cols-1 row-cols-md-5 g-4">
             <?php while ($fila = $resultado->fetch_assoc()): ?>
                 <div class="col">
-                    <div class="card card-fade shadow h-100">
+                    <div class="card shadow h-100">
                         <?php if (!empty($fila['foto'])): ?>
                             <picture>
                                 <source srcset="<?= e(base_path('img/productos/' . $fila['foto'] . '.webp')) ?>" type="image/webp">
@@ -69,7 +69,7 @@ $resultado = $db->query(
                         <div class="card-body">
                             <span class="badge text-bg-dark mb-2"><?= e($fila['categoria']) ?></span>
                             <h2 class="h4 card-title"><?= e($fila['producto']) ?></h2>
-                            <p class="card-text h4 text-primary fw-bolder mb-2"><?= e(number_format((float) $fila['precio'], 0, '.', '')) ?></p>
+                            <p class="card-text h4 text-primary fw-bolder mb-2">$ <?= e(number_format((float) $fila['precio'], 0, '.', '.')) ?></p>
                             <p class="card-text text-secondary mb-0">Stock disponible: <?= e((string) $fila['stock']) ?></p>
                         </div>
                     </div>
@@ -95,28 +95,6 @@ $resultado = $db->query(
 
     <script src="<?= e(base_path('js/bootstrap.bundle.min.js')) ?>"></script>
     <script src="<?= e(base_path('js/masonry.pkgd.min.js')) ?>"></script>
-    <style>
-        .card-fade {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-        .card-fade.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
-    <script>
-        const observer = new IntersectionObserver((entries, obs) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    obs.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.card-fade').forEach(card => observer.observe(card));
-    </script>
 </body>
 
 </html>
