@@ -34,4 +34,6 @@ if ($id === 0) {
     $stmt2->close();
 }
 
+respaldar_bd();
+
 echo json_encode(['ok' => true, 'id' => (int) $id, 'nombre' => $nombre]);

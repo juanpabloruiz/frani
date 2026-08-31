@@ -68,4 +68,6 @@ foreach ($productosVendidos as $prod) {
 }
 $stmtStock->close();
 
+respaldar_bd();
+
 redireccionar('panel/facturas');

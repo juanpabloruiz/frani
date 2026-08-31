@@ -64,4 +64,6 @@ $stmt->bind_param('ssddddi', $nombre, $detalle, $total, $efectivo, $transferenci
 $stmt->execute();
 $stmt->close();
 
+respaldar_bd();
+
 redireccionar('panel/facturas');

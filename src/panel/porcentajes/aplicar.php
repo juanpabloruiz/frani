@@ -28,6 +28,8 @@ $stmt->execute();
 $cantAffected = $stmt->affected_rows;
 $stmt->close();
 
+respaldar_bd();
+
 $_SESSION['toast_exito'] = "Se actualizaron $cantAffected productos con un {$porcentaje}%.";
 
 redireccionar('panel/porcentajes');

@@ -53,4 +53,6 @@ $stmt->bind_param('ssssddii', $producto, $fotoNueva, $descripcionDB, $costo, $pr
 $stmt->execute();
 $stmt->close();
 
+respaldar_bd();
+
 redireccionar('panel/productos#producto-' . $id);

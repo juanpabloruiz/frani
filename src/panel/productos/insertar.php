@@ -37,6 +37,8 @@ $stmt->execute();
 $idNuevo = $stmt->insert_id;
 $stmt->close();
 
+respaldar_bd();
+
 if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
     header('Content-Type: application/json');
     echo json_encode(['ok' => true, 'id' => (int) $idNuevo, 'nombre' => $producto, 'precio' => (int) $precio]);

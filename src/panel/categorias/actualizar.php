@@ -22,4 +22,6 @@ $stmt->bind_param('si', $nombre, $id);
 $stmt->execute();
 $stmt->close();
 
+respaldar_bd();
+
 redireccionar('panel/categorias');

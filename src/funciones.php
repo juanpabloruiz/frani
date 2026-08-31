@@ -121,3 +121,29 @@ function eliminar_fotos(string $nombreBase, string $directorio): void
         }
     }
 }
+
+function respaldar_bd(): void
+{
+    $host = getenv('DB_HOST');
+    $user = getenv('DB_USER');
+    $pass = getenv('DB_PASSWORD');
+    $name = getenv('DB_NAME');
+    $port = (int) getenv('DB_PORT');
+
+    $destino = getenv('BACKUP_DIR');
+    if ($destino === false || $destino === '') {
+        $destino = '/var/www/backup/respaldo.sql';
+    }
+
+    $cmd = sprintf(
+        'mysqldump --single-transaction --routines -h %s -P %d -u %s -p%s %s > %s',
+        escapeshellarg($host),
+        $port,
+        escapeshellarg($user),
+        escapeshellarg($pass),
+        escapeshellarg($name),
+        escapeshellarg($destino)
+    );
+
+    @exec($cmd);
+}
