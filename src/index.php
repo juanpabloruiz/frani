@@ -24,77 +24,40 @@ $resultado = $db->query(
 </head>
 
 <body>
-    <header class="bg-primary p-4 text-white d-none d-md-block">
-        <a href="<?= e(base_path()) ?>">
-            <picture>
-                <source srcset="<?= e(base_path('img/logo.webp')) ?>" type="image/webp">
-                <img src="<?= e(base_path('img/logo.png')) ?>" class="img-fluid mx-auto d-block" fetchpriority="high" width="300" alt="Logotipo Frani">
-            </picture>
-        </a>
-    </header>
+    <?php include __DIR__ . '/cabecera.php'; ?>
 
-    <nav class="navbar sticky-top navbar-expand-lg bg-dark" data-bs-theme="dark">
-        <div class="container">
-            <a class="navbar-brand d-lg-none" href="<?= e(base_path()) ?>">Frani</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mx-auto fs-5">
-                    <li class="nav-item"><a class="nav-link active px-4" aria-current="page" href="<?= e(base_path()) ?>">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link px-4" href="<?= e(base_path('panel')) ?>">Acceder</a></li>
-                </ul>
+    <div data-masonry='{"percentPosition": true }' class="row row-cols-1 row-cols-md-5 g-4">
+        <?php while ($fila = $resultado->fetch_assoc()): ?>
+            <div class="col">
+                <div class="card shadow h-100">
+                    <?php if (!empty($fila['foto'])): ?>
+                        <picture>
+                            <source srcset="<?= e(base_path('img/productos/' . $fila['foto'] . '.webp')) ?>" type="image/webp">
+                            <img src="<?= e(base_path('img/productos/' . $fila['foto'] . '.jpg')) ?>" class="card-img-top" width="200" alt="<?= e($fila['producto']) ?>">
+                        </picture>
+                    <?php else: ?>
+                        <picture>
+                            <source srcset="<?= e(base_path('img/Ejemplo.webp')) ?>" type="image/webp">
+                            <img src="<?= e(base_path('img/Ejemplo..jpg')) ?>" class="card-img-top" width="200" alt="<?= e($fila['producto']) ?>">
+                        </picture>
+                    <?php endif; ?>
+                    <div class="card-body">
+                        <span class="badge text-bg-dark mb-2"><?= e($fila['categoria']) ?></span>
+                        <h2 class="h4 card-title"><?= e($fila['producto']) ?></h2>
+                        <p class="card-text h4 text-primary fw-bolder mb-2">$ <?= e(number_format((float) $fila['precio'], 0, '.', '.')) ?></p>
+                        <p class="card-text text-secondary mb-0">Stock disponible: <?= e((string) $fila['stock']) ?></p>
+                    </div>
+                </div>
             </div>
-        </div>
-    </nav>
+        <?php endwhile; ?>
 
-    <main class="container my-4">
-        <div data-masonry='{"percentPosition": true }' class="row row-cols-1 row-cols-md-5 g-4">
-            <?php while ($fila = $resultado->fetch_assoc()): ?>
-                <div class="col">
-                    <div class="card shadow h-100">
-                        <?php if (!empty($fila['foto'])): ?>
-                            <picture>
-                                <source srcset="<?= e(base_path('img/productos/' . $fila['foto'] . '.webp')) ?>" type="image/webp">
-                                <img src="<?= e(base_path('img/productos/' . $fila['foto'] . '.jpg')) ?>" class="card-img-top" width="200" alt="<?= e($fila['producto']) ?>">
-                            </picture>
-                        <?php else: ?>
-                            <picture>
-                                <source srcset="<?= e(base_path('img/Ejemplo.webp')) ?>" type="image/webp">
-                                <img src="<?= e(base_path('img/Ejemplo..jpg')) ?>" class="card-img-top" width="200" alt="<?= e($fila['producto']) ?>">
-                            </picture>
-                        <?php endif; ?>
-                        <div class="card-body">
-                            <span class="badge text-bg-dark mb-2"><?= e($fila['categoria']) ?></span>
-                            <h2 class="h4 card-title"><?= e($fila['producto']) ?></h2>
-                            <p class="card-text h4 text-primary fw-bolder mb-2">$ <?= e(number_format((float) $fila['precio'], 0, '.', '.')) ?></p>
-                            <p class="card-text text-secondary mb-0">Stock disponible: <?= e((string) $fila['stock']) ?></p>
-                        </div>
-                    </div>
+        <?php if ($resultado->num_rows === 0): ?>
+            <div class="col-12">
+                <div class="alert alert-info mb-0">
+                    No hay productos cargados todavía.
                 </div>
-            <?php endwhile; ?>
+            </div>
+        <?php endif; ?>
+    </div>
 
-            <?php if ($resultado->num_rows === 0): ?>
-                <div class="col-12">
-                    <div class="alert alert-info mb-0">
-                        No hay productos cargados todavía.
-                    </div>
-                </div>
-            <?php endif; ?>
-        </div>
-    </main>
-
-    <footer class="container-fluid bg-dark text-white text-center py-5">
-        <p class="mb-0">
-            Derechos reservados Frani - <?= date('Y') ?><br>
-            Corrientes - Argentina
-        </p>
-    </footer>
-
-    <script src="<?= e(base_path('js/bootstrap.bundle.min.js')) ?>"></script>
-    <script src="<?= e(base_path('js/masonry.pkgd.min.js')) ?>"></script>
-</body>
-
-</html>
+    <?php include __DIR__ . '/pie.php'; ?>
