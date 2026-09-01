@@ -82,7 +82,7 @@ unset($_SESSION['toast_exito']);
                         <label for="calc_precio" class="form-label">Precio</label>
                         <div class="input-group">
                             <span class="input-group-text">$</span>
-                            <input type="number" step="1" id="calc_precio" class="form-control">
+                            <input type="number" step="0.01" id="calc_precio" class="form-control">
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -130,8 +130,8 @@ unset($_SESSION['toast_exito']);
             const porcentaje = parseFloat(calcPorcentaje.value) || 0;
             const resultado = precio * (1 + porcentaje / 100);
             const diferencia = precio - resultado;
-            calcDiferencia.value = Math.round(diferencia);
-            calcResultado.value = Math.round(resultado);
+            calcDiferencia.value = diferencia.toFixed(2);
+            calcResultado.value = resultado.toFixed(2);
         }
 
         calcPrecio.addEventListener('input', calcularPorcentaje);

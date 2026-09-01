@@ -150,7 +150,7 @@ $totalVentas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
                                     titleFont: { size: 14 },
                                     bodyFont: { size: 14 },
                                     callbacks: {
-                                        label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString('es-AR', { maximumFractionDigits: 0 })
+                                        label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                                     }
                                 }
                             },
@@ -165,7 +165,7 @@ $totalVentas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
                                     ticks: {
                                         font: { size: 13 },
                                         color: colorTexto,
-                                        callback: v => v.toLocaleString('es-AR', { maximumFractionDigits: 0 })
+                                        callback: v => v.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                                     }
                                 }
                             }

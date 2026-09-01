@@ -147,3 +147,17 @@ function respaldar_bd(): void
 
     @exec($cmd);
 }
+
+function moneda($valor): string
+{
+    return number_format((float) $valor, 2, ',', '.');
+}
+
+function numero_limpio($valor): string
+{
+    $n = (float) $valor;
+    if (floor($n) == $n) {
+        return number_format($n, 0, '.', '');
+    }
+    return number_format($n, 2, '.', '');
+}

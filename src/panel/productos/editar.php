@@ -61,8 +61,8 @@ $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nom
                 <label class="form-label">Costo</label>
                 <div class="input-group">
                     <span class="input-group-text">$</span>
-                    <input type="number" step="1" name="costo" class="form-control"
-                        value="<?= e((string) $producto['costo']) ?>" required>
+                    <input type="number" step="0.01" name="costo" class="form-control"
+                        value="<?= e(numero_limpio($producto['costo'])) ?>" required>
                 </div>
             </div>
 
@@ -70,8 +70,8 @@ $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nom
                 <label class="form-label">Precio</label>
                 <div class="input-group">
                     <span class="input-group-text">$</span>
-                    <input type="number" step="1" name="precio" class="form-control"
-                        value="<?= e((string) $producto['precio']) ?>" required>
+                    <input type="number" step="0.01" name="precio" class="form-control"
+                        value="<?= e(numero_limpio($producto['precio'])) ?>" required>
                 </div>
             </div>
 

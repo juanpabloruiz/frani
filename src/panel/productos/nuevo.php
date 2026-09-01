@@ -38,7 +38,7 @@ $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nom
                 <label class="form-label">Costo</label>
                 <div class="input-group">
                     <span class="input-group-text">$</span>
-                    <input type="number" step="1" name="costo" class="form-control" required>
+                    <input type="number" step="0.01" name="costo" class="form-control" required>
                 </div>
             </div>
 
@@ -46,7 +46,7 @@ $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nom
                 <label class="form-label">Precio</label>
                 <div class="input-group">
                     <span class="input-group-text">$</span>
-                    <input type="number" step="1" name="precio" class="form-control" required>
+                    <input type="number" step="0.01" name="precio" class="form-control" required>
                 </div>
             </div>
 

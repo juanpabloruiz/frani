@@ -60,7 +60,7 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
                     <label class="form-label">Efectivo</label>
                     <div class="input-group">
                         <span class="input-group-text">$</span>
-                        <input type="number" step="1" id="efectivo" name="efectivo" class="form-control"
+                        <input type="number" step="0.01" id="efectivo" name="efectivo" class="form-control"
                             min="0">
                     </div>
                 </div>
@@ -68,7 +68,7 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
                     <label class="form-label">Transferencia</label>
                     <div class="input-group">
                         <span class="input-group-text">$</span>
-                        <input type="number" step="1" id="transferencia" name="transferencia" class="form-control"
+                        <input type="number" step="0.01" id="transferencia" name="transferencia" class="form-control"
                             min="0">
                     </div>
                 </div>
@@ -77,12 +77,12 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
             <div class="mb-3">
                 <label class="form-label fw-bold text-danger">Deuda</label>
                 <input type="number" id="deuda" name="deuda" class="form-control border-danger text-danger"
-                    step="1" min="0">
+                    step="0.01" min="0">
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Total</label>
-                <input type="number" id="total" name="total" class="form-control" step="1" readonly>
+                <input type="number" id="total" name="total" class="form-control" step="0.01" readonly>
             </div>
 
             <div class="d-grid d-md-block">
@@ -111,14 +111,14 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
                             <label class="form-label">Costo</label>
                             <div class="input-group">
                                 <span class="input-group-text">$</span>
-                                <input type="number" step="1" name="costo" class="form-control" required>
+                                <input type="number" step="0.01" name="costo" class="form-control" required>
                             </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Precio</label>
                             <div class="input-group">
                                 <span class="input-group-text">$</span>
-                                <input type="number" step="1" name="precio" class="form-control" required>
+                                <input type="number" step="0.01" name="precio" class="form-control" required>
                             </div>
                         </div>
                         <div class="mb-3">
@@ -160,7 +160,7 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
             function updateTotal() {
                 const subtotal = Array.from(document.querySelectorAll(".subtotal"))
                     .reduce((sum, input) => sum + parseFloat(input.value || 0), 0);
-                totalField.value = subtotal.toFixed(0);
+                totalField.value = subtotal.toFixed(2);
                 updateDeuda();
             }
 
@@ -170,7 +170,7 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
                 const transferencia = parseFloat(transferenciaField.value) || 0;
                 const pagado = efectivo + transferencia;
                 const deuda = total - pagado;
-                deudaField.value = deuda > 0 ? deuda.toFixed(0) : '';
+                deudaField.value = deuda > 0 ? deuda.toFixed(2) : '';
             }
 
             deudaField.addEventListener("input", updateDeuda);
@@ -209,21 +209,21 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
                     precioInput.type = "number";
                     precioInput.className = "form-control precio";
                     precioInput.name = `precio_${itemIndex}`;
-                    precioInput.step = "1";
+                    precioInput.step = "0.01";
                     precioInput.readOnly = true;
 
                     const subtotalInput = document.createElement("input");
                     subtotalInput.type = "number";
                     subtotalInput.className = "form-control subtotal";
                     subtotalInput.name = `subtotal_${itemIndex}`;
-                    subtotalInput.step = "1";
+                    subtotalInput.step = "0.01";
                     subtotalInput.readOnly = true;
 
                     select.addEventListener("change", () => {
                         const precioSeleccionado = select.selectedOptions[0].dataset.precio;
                         const precio = precioSeleccionado !== undefined ? parseFloat(precioSeleccionado) : 0;
-                        precioInput.value = precioSeleccionado !== undefined ? precio.toFixed(0) : '';
-                        subtotalInput.value = precioSeleccionado !== undefined ? (precio * cantidadInput.value).toFixed(0) : '';
+                        precioInput.value = precioSeleccionado !== undefined ? precio.toFixed(2) : '';
+                        subtotalInput.value = precioSeleccionado !== undefined ? (precio * cantidadInput.value).toFixed(2) : '';
                         updateTotal();
 
                         const filas = itemsTable.querySelectorAll("tr");
@@ -235,7 +235,7 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
 
                     cantidadInput.addEventListener("input", () => {
                         const precio = parseFloat(precioInput.value || 0);
-                        subtotalInput.value = (precio * cantidadInput.value).toFixed(0);
+                        subtotalInput.value = (precio * cantidadInput.value).toFixed(2);
                         updateTotal();
                     });
 

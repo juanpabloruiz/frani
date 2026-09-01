@@ -118,16 +118,16 @@ unset($item);
                     <label class="form-label">Efectivo</label>
                     <div class="input-group">
                         <span class="input-group-text">$</span>
-                        <input type="number" step="1" id="efectivo" name="efectivo" class="form-control"
-                            min="0" value="<?= e((string) ($factura['efectivo'] ?: '')) ?>">
+                        <input type="number" step="0.01" id="efectivo" name="efectivo" class="form-control"
+                            min="0" value="<?= e(numero_limpio($factura['efectivo'])) ?>">
                     </div>
                 </div>
                 <div class="col-md">
                     <label class="form-label">Transferencia</label>
                     <div class="input-group">
                         <span class="input-group-text">$</span>
-                        <input type="number" step="1" id="transferencia" name="transferencia" class="form-control"
-                            min="0" value="<?= e((string) ($factura['transferencia'] ?: '')) ?>">
+                        <input type="number" step="0.01" id="transferencia" name="transferencia" class="form-control"
+                            min="0" value="<?= e(numero_limpio($factura['transferencia'])) ?>">
                     </div>
                 </div>
             </div>
@@ -135,12 +135,12 @@ unset($item);
             <div class="mb-3">
                 <label class="form-label fw-bold text-danger">Deuda</label>
                 <input type="number" id="deuda" name="deuda" class="form-control border-danger text-danger"
-                    step="1" min="0" value="<?= e((string) ($factura['deuda'] ?: '')) ?>">
+                    step="0.01" min="0" value="<?= e(numero_limpio($factura['deuda'])) ?>">
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Total</label>
-                <input type="number" id="total" name="total" class="form-control" step="1" readonly>
+                <input type="number" id="total" name="total" class="form-control" step="0.01" readonly>
             </div>
 
             <div class="d-grid d-md-block">
@@ -169,14 +169,14 @@ unset($item);
                             <label class="form-label">Costo</label>
                             <div class="input-group">
                                 <span class="input-group-text">$</span>
-                                <input type="number" step="1" name="costo" class="form-control" required>
+                                <input type="number" step="0.01" name="costo" class="form-control" required>
                             </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Precio</label>
                             <div class="input-group">
                                 <span class="input-group-text">$</span>
-                                <input type="number" step="1" name="precio" class="form-control" required>
+                                <input type="number" step="0.01" name="precio" class="form-control" required>
                             </div>
                         </div>
                         <div class="mb-3">
@@ -218,7 +218,7 @@ unset($item);
             function updateTotal() {
                 const subtotal = Array.from(document.querySelectorAll(".subtotal"))
                     .reduce((sum, input) => sum + parseFloat(input.value || 0), 0);
-                totalField.value = subtotal.toFixed(0);
+                totalField.value = subtotal.toFixed(2);
                 updateDeuda();
             }
 
@@ -228,7 +228,7 @@ unset($item);
                 const transferencia = parseFloat(transferenciaField.value) || 0;
                 const pagado = efectivo + transferencia;
                 const deuda = total - pagado;
-                deudaField.value = deuda > 0 ? deuda.toFixed(0) : '';
+                deudaField.value = deuda > 0 ? deuda.toFixed(2) : '';
             }
 
             deudaField.addEventListener("input", updateDeuda);
@@ -278,7 +278,7 @@ unset($item);
 
                 const recalcular = () => {
                     const p = parseFloat(precioInput.value || 0);
-                    subtotalInput.value = (p * cantidadInput.value).toFixed(0);
+                    subtotalInput.value = (p * cantidadInput.value).toFixed(2);
                     updateTotal();
                 };
 

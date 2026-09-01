@@ -75,8 +75,8 @@ $consulta = $db->query(
                                 <label class="form-label">Costo</label>
                                 <div class="input-group">
                                     <span class="input-group-text">$</span>
-                                    <input type="number" step="1" name="costo" class="form-control" required
-                                        value="<?= e((string) $producto['costo']) ?>">
+                                    <input type="number" step="0.01" name="costo" class="form-control" required
+                                        value="<?= e(numero_limpio($producto['costo'])) ?>">
                                 </div>
                             </div>
 
@@ -84,8 +84,8 @@ $consulta = $db->query(
                                 <label class="form-label">Precio</label>
                                 <div class="input-group">
                                     <span class="input-group-text">$</span>
-                                    <input type="number" step="1" name="precio" class="form-control" required
-                                        value="<?= e((string) $producto['precio']) ?>">
+                                    <input type="number" step="0.01" name="precio" class="form-control" required
+                                        value="<?= e(numero_limpio($producto['precio'])) ?>">
                                 </div>
                             </div>
 
@@ -170,8 +170,8 @@ $consulta = $db->query(
                                     </form>
                                 </td>
                                 <td class="bg-success text-white"><?= e($fila['producto']) ?></td>
-                                <td class="text-center" style="white-space: nowrap;"><?= $fila['costo'] ? e(number_format((float) $fila['costo'], 0, '.', '')) : '' ?></td>
-                                <td class="text-center bg-success text-white" style="white-space: nowrap;"><?= $fila['precio'] ? e(number_format((float) $fila['precio'], 0, '.', '')) : '' ?></td>
+                                <td class="text-center" style="white-space: nowrap;"><?= $fila['costo'] ? e(moneda($fila['costo'])) : '' ?></td>
+                                <td class="text-center bg-success text-white" style="white-space: nowrap;"><?= $fila['precio'] ? e(moneda($fila['precio'])) : '' ?></td>
                                 <td class="text-center"><?= e((string) $fila['stock']) ?></td>
                                 <td class="text-center"><?= e($fila['categoria']) ?></td>
                                 <td class="text-center" style="white-space: nowrap;"><?= e(date('d-m | H:i', strtotime($fila['agregado']))) ?></td>
