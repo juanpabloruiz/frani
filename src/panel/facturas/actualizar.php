@@ -10,13 +10,17 @@ verificar_CSRF();
 
 $id = (int) ($_POST['id'] ?? 0);
 $nombre = trim($_POST['nombre'] ?? '');
-$efectivoRaw = $_POST['efectivo'] ?? '';
-$efectivo = $efectivoRaw !== '' ? (float) $efectivoRaw : null;
-$transferenciaRaw = $_POST['transferencia'] ?? '';
-$transferencia = $transferenciaRaw !== '' ? (float) $transferenciaRaw : null;
+$efectivo1 = ($_POST['efectivo'] ?? '') !== '' ? (float) $_POST['efectivo'] : 0;
+$efectivo2 = ($_POST['efectivo2'] ?? '') !== '' ? (float) $_POST['efectivo2'] : 0;
+$transf1 = ($_POST['transferencia'] ?? '') !== '' ? (float) $_POST['transferencia'] : 0;
+$transf2 = ($_POST['transferencia2'] ?? '') !== '' ? (float) $_POST['transferencia2'] : 0;
+$efectivo = $efectivo1 + $efectivo2;
+$transferencia = $transf1 + $transf2;
 $total = (float) ($_POST['total'] ?? '0');
-$deudaRaw = $_POST['deuda'] ?? '';
-$deuda = $deudaRaw !== '' && $deudaRaw !== '0' ? (float) $deudaRaw : null;
+$deuda = $total - $efectivo - $transferencia;
+if ($deuda <= 0) {
+    $deuda = null;
+}
 $detalleItems = [];
 
 $db = conexion();

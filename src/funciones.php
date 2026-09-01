@@ -155,7 +155,13 @@ function moneda($valor): string
 
 function numero_limpio($valor): string
 {
+    if ($valor === null || $valor === '') {
+        return '';
+    }
     $n = (float) $valor;
+    if ($n == 0) {
+        return '';
+    }
     if (floor($n) == $n) {
         return number_format($n, 0, '.', '');
     }

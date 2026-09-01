@@ -98,7 +98,7 @@ unset($_SESSION['toast_exito']);
                         <div class="input-group">
                             <span class="input-group-text">$</span>
                             <input type="text" id="calc_diferencia" class="form-control bg-warning text-dark fw-bold"
-                                readonly value="0">
+                                readonly placeholder="0,00">
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -106,7 +106,7 @@ unset($_SESSION['toast_exito']);
                         <div class="input-group">
                             <span class="input-group-text">$</span>
                             <input type="text" id="calc_resultado" class="form-control bg-success text-white fw-bold"
-                                readonly value="0">
+                                readonly placeholder="0,00">
                         </div>
                     </div>
                 </div>

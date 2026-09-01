@@ -113,7 +113,7 @@ unset($item);
                 </button>
             </div>
 
-            <div class="row g-3 mb-3">
+            <div class="row g-3 mb-2">
                 <div class="col-md">
                     <label class="form-label">Efectivo</label>
                     <div class="input-group">
@@ -132,10 +132,29 @@ unset($item);
                 </div>
             </div>
 
-            <div class="mb-3">
+            <div id="filaPago2" class="row g-3 mb-2 <?= ((float) $factura['deuda'] > 0) ? '' : 'd-none' ?>">
+                <div class="col-md">
+                    <label class="form-label text-muted">Efectivo (Línea 2)</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number" step="0.01" id="efectivo2" name="efectivo2" class="form-control"
+                            min="0" placeholder="0,00">
+                    </div>
+                </div>
+                <div class="col-md">
+                    <label class="form-label text-muted">Transferencia (Línea 2)</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number" step="0.01" id="transferencia2" name="transferencia2" class="form-control"
+                            min="0" placeholder="0,00">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3 <?= ((float) $factura['deuda'] > 0) ? '' : 'd-none' ?>" id="deudaRow">
                 <label class="form-label fw-bold text-danger">Deuda</label>
                 <input type="number" id="deuda" name="deuda" class="form-control border-danger text-danger"
-                    step="0.01" min="0" value="<?= e(numero_limpio($factura['deuda'])) ?>">
+                    step="0.01" min="0" readonly>
             </div>
 
             <div class="mb-3">
@@ -210,8 +229,12 @@ unset($item);
             const addItemBtn = document.getElementById("addItemBtn");
             const totalField = document.getElementById("total");
             const deudaField = document.getElementById("deuda");
+            const deudaRow = document.getElementById("deudaRow");
             const efectivoField = document.getElementById("efectivo");
             const transferenciaField = document.getElementById("transferencia");
+            const efectivo2Field = document.getElementById("efectivo2");
+            const transferencia2Field = document.getElementById("transferencia2");
+            const filaPago2 = document.getElementById("filaPago2");
             let productos = <?= $productosJSON ?>;
             let itemIndex = 0;
 
@@ -226,14 +249,24 @@ unset($item);
                 const total = parseFloat(totalField.value) || 0;
                 const efectivo = parseFloat(efectivoField.value) || 0;
                 const transferencia = parseFloat(transferenciaField.value) || 0;
-                const pagado = efectivo + transferencia;
+                const efectivo2 = parseFloat(efectivo2Field.value) || 0;
+                const transferencia2 = parseFloat(transferencia2Field.value) || 0;
+                const pagado = efectivo + transferencia + efectivo2 + transferencia2;
                 const deuda = total - pagado;
-                deudaField.value = deuda > 0 ? deuda.toFixed(2) : '';
+
+                if (deuda > 0) {
+                    deudaField.value = deuda.toFixed(2);
+                    deudaRow.classList.remove('d-none');
+                } else {
+                    deudaField.value = '';
+                    deudaRow.classList.add('d-none');
+                }
             }
 
-            deudaField.addEventListener("input", updateDeuda);
             efectivoField.addEventListener("input", updateDeuda);
             transferenciaField.addEventListener("input", updateDeuda);
+            efectivo2Field.addEventListener("input", updateDeuda);
+            transferencia2Field.addEventListener("input", updateDeuda);
 
             function crearFila(selectId, cantidad, precio) {
                 const index = itemIndex;
