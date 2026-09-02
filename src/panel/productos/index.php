@@ -6,7 +6,7 @@ $db = conexion();
 
 $editando = false;
 $producto = [
-    'id' => '', 'producto' => '', 'descripcion' => '',
+    'id' => '', 'producto' => '', 'descripcion' => '', 'observaciones' => '',
     'costo' => '', 'precio' => '', 'stock' => '',
     'id_categoria' => '', 'foto' => ''
 ];
@@ -14,7 +14,7 @@ $producto = [
 $idEditar = (int) ($_GET['id'] ?? 0);
 if ($idEditar > 0) {
     $stmt = $db->prepare(
-        "SELECT id, producto, foto, descripcion, costo, precio, stock, id_categoria
+        "SELECT id, producto, foto, descripcion, observaciones, costo, precio, stock, id_categoria
         FROM productos WHERE id = ?"
     );
     $stmt->bind_param('i', $idEditar);
@@ -111,6 +111,11 @@ $consulta = $db->query(
                                         <i class="fa-solid fa-plus"></i>
                                     </button>
                                 </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Observaciones</label>
+                                <textarea name="observaciones" class="form-control" rows="2"><?= e($producto['observaciones'] ?? '') ?></textarea>
                             </div>
 
                             <div class="mb-3">

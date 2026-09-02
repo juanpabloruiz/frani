@@ -66,6 +66,11 @@ $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nom
             </div>
 
             <div class="col-12">
+                <label class="form-label">Observaciones</label>
+                <textarea name="observaciones" class="form-control" rows="2" placeholder="Observaciones (opcional)"></textarea>
+            </div>
+
+            <div class="col-12">
                 <label class="form-label">Descripción</label>
                 <textarea name="descripcion" class="form-control" rows="5" placeholder="Descripción (opcional)"></textarea>
             </div>

@@ -85,6 +85,12 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
                 <input type="number" id="total" name="total" class="form-control" step="0.01" readonly>
             </div>
 
+            <div class="mb-3">
+                <label class="form-label">Observaciones</label>
+                <input type="text" name="observaciones" class="form-control"
+                    placeholder="Ej: Se le hizo un descuento por falla de $ 1000">
+            </div>
+
             <div class="d-grid d-md-block">
                 <button type="submit" class="btn btn-primary btn-lg">Guardar venta</button>
             </div>

@@ -10,6 +10,8 @@ verificar_CSRF();
 
 $id = (int) ($_POST['id'] ?? 0);
 $nombre = trim($_POST['nombre'] ?? '');
+$observaciones = trim($_POST['observaciones'] ?? '');
+$observacionesDB = $observaciones !== '' ? $observaciones : null;
 $efectivo1 = ($_POST['efectivo'] ?? '') !== '' ? (float) $_POST['efectivo'] : 0;
 $efectivo2 = ($_POST['efectivo2'] ?? '') !== '' ? (float) $_POST['efectivo2'] : 0;
 $transf1 = ($_POST['transferencia'] ?? '') !== '' ? (float) $_POST['transferencia'] : 0;
@@ -61,10 +63,10 @@ $detalle = implode(', ', $detalleItems);
 
 $stmt = $db->prepare(
     "UPDATE facturas
-    SET nombre = ?, detalle = ?, total = ?, efectivo = ?, transferencia = ?, deuda = ?
+    SET nombre = ?, detalle = ?, total = ?, efectivo = ?, transferencia = ?, deuda = ?, observaciones = ?
     WHERE id = ?"
 );
-$stmt->bind_param('ssddddi', $nombre, $detalle, $total, $efectivo, $transferencia, $deuda, $id);
+$stmt->bind_param('ssddddss', $nombre, $detalle, $total, $efectivo, $transferencia, $deuda, $observacionesDB, $id);
 $stmt->execute();
 $stmt->close();
 

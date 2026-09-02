@@ -10,7 +10,7 @@ if ($id <= 0) {
 
 $db = conexion();
 
-$stmt = $db->prepare("SELECT id, nombre, total, efectivo, transferencia, deuda, detalle FROM facturas WHERE id = ?");
+$stmt = $db->prepare("SELECT id, nombre, total, efectivo, transferencia, deuda, detalle, observaciones FROM facturas WHERE id = ?");
 $stmt->bind_param('i', $id);
 $stmt->execute();
 $resultado = $stmt->get_result();
@@ -160,6 +160,13 @@ unset($item);
             <div class="mb-3">
                 <label class="form-label">Total</label>
                 <input type="number" id="total" name="total" class="form-control" step="0.01" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Observaciones</label>
+                <input type="text" name="observaciones" class="form-control"
+                    value="<?= e($factura['observaciones'] ?? '') ?>"
+                    placeholder="Ej: Se le hizo un descuento por falla de $ 1000">
             </div>
 
             <div class="d-grid d-md-block">

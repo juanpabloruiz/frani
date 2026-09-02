@@ -9,6 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 verificar_CSRF();
 
 $nombre = trim($_POST['nombre'] ?? '');
+$observaciones = trim($_POST['observaciones'] ?? '');
+$observacionesDB = $observaciones !== '' ? $observaciones : null;
 $efectivoRaw = $_POST['efectivo'] ?? '';
 $efectivo = $efectivoRaw !== '' ? (float) $efectivoRaw : null;
 $transferenciaRaw = $_POST['transferencia'] ?? '';
@@ -56,8 +58,8 @@ if ($detalleItems === []) {
 
 $detalle = implode(', ', $detalleItems);
 
-$stmt = $db->prepare("INSERT INTO facturas (nombre, total, efectivo, transferencia, deuda, detalle) VALUES (?, ?, ?, ?, ?, ?)");
-$stmt->bind_param('sdddss', $nombre, $total, $efectivo, $transferencia, $deuda, $detalle);
+$stmt = $db->prepare("INSERT INTO facturas (nombre, total, efectivo, transferencia, deuda, detalle, observaciones) VALUES (?, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param('sddddss', $nombre, $total, $efectivo, $transferencia, $deuda, $detalle, $observacionesDB);
 $stmt->execute();
 $stmt->close();
 
