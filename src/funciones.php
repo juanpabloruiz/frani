@@ -1,7 +1,12 @@
 <?php
 declare(strict_types=1);
 
+// Sesión persistente: no expira ni por inactividad, ni al cerrar el navegador,
+// ni al reiniciar el sistema. Solo se cierra con el botón Salir del panel.
 if (session_status() === PHP_SESSION_NONE) {
+    $vidaSesion = 10 * 365 * 24 * 3600; // 10 años (~sin expiración)
+    ini_set('session.gc_maxlifetime', (string) $vidaSesion);
+    session_set_cookie_params($vidaSesion, '/', '', false, true);
     session_start();
 }
 

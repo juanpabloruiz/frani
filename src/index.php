@@ -43,7 +43,7 @@ $resultado = $db->query(
                     <?php endif; ?>
                     <div class="card-body">
                         <span class="badge text-bg-dark mb-2"><?= e($fila['categoria']) ?></span>
-                        <h2 class="h4 card-title"><?= e($fila['producto']) ?></h2>
+                        <h2 class="h5 card-title"><?= e($fila['producto']) ?></h2>
                         <p class="card-text h4 text-primary fw-bolder mb-2">$ <?= e(moneda($fila['precio'])) ?></p>
                         <p class="card-text text-secondary mb-0">Stock disponible: <?= e((string) $fila['stock']) ?></p>
                     </div>

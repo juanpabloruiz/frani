@@ -34,7 +34,7 @@ $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nom
                 <input type="text" name="producto" class="form-control" required placeholder="Nombre">
             </div>
 
-            <div class="col-md">
+            <div class="col-md-6">
                 <label class="form-label">Costo</label>
                 <div class="input-group">
                     <span class="input-group-text">$</span>
@@ -42,7 +42,7 @@ $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nom
                 </div>
             </div>
 
-            <div class="col-md">
+            <div class="col-md-6">
                 <label class="form-label">Precio</label>
                 <div class="input-group">
                     <span class="input-group-text">$</span>

@@ -71,21 +71,22 @@ $consulta = $db->query(
                                     value="<?= e($producto['producto']) ?>">
                             </div>
 
-                            <div class="mb-3">
-                                <label class="form-label">Costo</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">$</span>
-                                    <input type="number" step="0.01" name="costo" class="form-control" required
-                                        value="<?= e(numero_limpio($producto['costo'])) ?>">
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Costo</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" step="0.01" name="costo" class="form-control" required
+                                            value="<?= e(numero_limpio($producto['costo'])) ?>">
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Precio</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">$</span>
-                                    <input type="number" step="0.01" name="precio" class="form-control" required
-                                        value="<?= e(numero_limpio($producto['precio'])) ?>">
+                                <div class="col-md-6">
+                                    <label class="form-label">Precio</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" step="0.01" name="precio" class="form-control" required
+                                            value="<?= e(numero_limpio($producto['precio'])) ?>">
+                                    </div>
                                 </div>
                             </div>
 
