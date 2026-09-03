@@ -1,0 +1,26 @@
+<?php
+require_once __DIR__ . '/../../conexion.php';
+requerir_login();
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    redireccionar('panel/clientes');
+}
+
+verificar_CSRF();
+
+$id = (int) ($_POST['id'] ?? 0);
+
+if ($id <= 0) {
+    redireccionar('panel/clientes');
+}
+
+$db = conexion();
+
+$stmt = $db->prepare("DELETE FROM clientes WHERE id = ?");
+$stmt->bind_param('i', $id);
+$stmt->execute();
+$stmt->close();
+
+respaldar_bd();
+
+redireccionar('panel/clientes');

@@ -6,6 +6,7 @@ $esProductos = $carpetaActual === 'productos';
 $esCategorias = $carpetaActual === 'categorias';
 $esFacturas = $carpetaActual === 'facturas';
 $esPorcentajes = $carpetaActual === 'porcentajes';
+$esClientes = $carpetaActual === 'clientes';
 ?>
 <nav class="navbar navbar-expand-lg fixed-top" style="background-color: #0d6efd;">
     <div class="container-fluid d-flex align-items-center">
@@ -30,6 +31,9 @@ $esPorcentajes = $carpetaActual === 'porcentajes';
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white <?= $esFacturas ? 'active' : '' ?>" <?= $esFacturas ? 'aria-current="page"' : '' ?> href="<?= e(base_path('panel/facturas')) ?>">Ventas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white <?= $esClientes ? 'active' : '' ?>" <?= $esClientes ? 'aria-current="page"' : '' ?> href="<?= e(base_path('panel/clientes')) ?>">Clientes</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white <?= $esPorcentajes ? 'active' : '' ?>" <?= $esPorcentajes ? 'aria-current="page"' : '' ?> href="<?= e(base_path('panel/porcentajes')) ?>">Porcentajes</a>
