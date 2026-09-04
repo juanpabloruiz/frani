@@ -14,6 +14,11 @@ RUN apt-get update \
 
 RUN rm -f /etc/nginx/sites-enabled/default
 
+# Límites de subida de imágenes (productos/clientes). El tope real de la app
+# (subir_foto) es 5MB; nginx-proxy central permite 32M.
+RUN printf 'upload_max_filesize = 8M\npost_max_size = 16M\nmax_file_uploads = 20\n' \
+    > /usr/local/etc/php/conf.d/zz-uploads.ini
+
 COPY nginx.conf /etc/nginx/nginx.conf
 
 RUN mkdir -p /var/www/html
