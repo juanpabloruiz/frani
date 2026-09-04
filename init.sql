@@ -18,7 +18,6 @@ CREATE TABLE IF NOT EXISTS `productos` (
   `producto` VARCHAR(200) NOT NULL,
   `foto` VARCHAR(255) DEFAULT NULL,
   `descripcion` TEXT DEFAULT NULL,
-  `observaciones` TEXT DEFAULT NULL,
   `costo` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
   `precio` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
   `stock` INT NULL DEFAULT NULL,

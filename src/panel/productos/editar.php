@@ -11,7 +11,7 @@ if ($id <= 0) {
 $db = conexion();
 
 $stmt = $db->prepare(
-    "SELECT id, producto, foto, descripcion, observaciones, costo, precio, stock, id_categoria
+    "SELECT id, producto, foto, descripcion, costo, precio, stock, id_categoria
     FROM productos WHERE id = ?"
 );
 $stmt->bind_param('i', $id);
@@ -95,11 +95,6 @@ $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nom
             </div>
 
             <div class="col-12">
-                <label class="form-label">Observaciones</label>
-                <textarea name="observaciones" class="form-control" rows="2"><?= e($producto['observaciones'] ?? '') ?></textarea>
-            </div>
-
-            <div class="col-12">
                 <label class="form-label">Descripción</label>
                 <textarea name="descripcion" class="form-control" rows="5"><?= e($producto['descripcion'] ?? '') ?></textarea>
             </div>
@@ -113,9 +108,9 @@ $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nom
                 <label class="form-label">Vista previa</label>
                 <div id="vistaPrevia" class="border rounded p-2 text-center" style="min-height: 120px;">
                     <?php if (!empty($producto['foto'])): ?>
-                        <img id="imgPreview" src="<?= e(base_path('img/productos/' . $producto['foto'] . '.jpg')) ?>" alt="Vista previa" style="max-height: 100px;">
+                        <img id="imgPreview" src="<?= e(base_path('img/productos/' . $producto['foto'] . '.jpg')) ?>" alt="Vista previa" style="width: 100%; height: auto;">
                     <?php else: ?>
-                        <img id="imgPreview" src="" alt="Vista previa" style="max-height: 100px; display: none;">
+                        <img id="imgPreview" src="" alt="Vista previa" style="width: 100%; height: auto; display: none;">
                         <p id="placeholderPreview" class="text-muted mb-0 mt-2">Sin imagen</p>
                     <?php endif; ?>
                 </div>
