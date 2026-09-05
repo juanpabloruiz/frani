@@ -58,6 +58,17 @@ if ($detalleItems === []) {
 
 $detalle = implode(', ', $detalleItems);
 
+if ($nombre !== '') {
+    $stmtCliente = $db->prepare(
+        "INSERT INTO clientes (nombre)
+        SELECT ? FROM DUAL
+        WHERE NOT EXISTS (SELECT 1 FROM clientes WHERE nombre = ?)"
+    );
+    $stmtCliente->bind_param('ss', $nombre, $nombre);
+    $stmtCliente->execute();
+    $stmtCliente->close();
+}
+
 $stmt = $db->prepare("INSERT INTO facturas (nombre, total, efectivo, transferencia, deuda, detalle, observaciones) VALUES (?, ?, ?, ?, ?, ?, ?)");
 $stmt->bind_param('sddddss', $nombre, $total, $efectivo, $transferencia, $deuda, $detalle, $observacionesDB);
 $stmt->execute();

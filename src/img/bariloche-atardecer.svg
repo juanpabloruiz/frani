@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Atardecer en un lago de Bariloche">
+  <defs>
+    <linearGradient id="cielo" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2a1a5e"/>
+      <stop offset="30%" stop-color="#7a2d6e"/>
+      <stop offset="55%" stop-color="#d95d5d"/>
+      <stop offset="75%" stop-color="#f5a55a"/>
+      <stop offset="100%" stop-color="#ffe08a"/>
+    </linearGradient>
+    <linearGradient id="lago" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8b07a"/>
+      <stop offset="30%" stop-color="#c06550"/>
+      <stop offset="70%" stop-color="#4a4a8a"/>
+      <stop offset="100%" stop-color="#3a2a5e"/>
+    </linearGradient>
+    <linearGradient id="montanaLejana" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4a3a7a"/>
+      <stop offset="100%" stop-color="#7a4a8a"/>
+    </linearGradient>
+    <linearGradient id="montanaCercana" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2e4a6e"/>
+      <stop offset="100%" stop-color="#3e6e8e"/>
+    </linearGradient>
+    <radialGradient id="sol" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#fff6b0"/>
+      <stop offset="40%" stop-color="#ffe08a"/>
+      <stop offset="100%" stop-color="rgba(255,224,138,0)"/>
+    </radialGradient>
+    <filter id="desenfoque" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+  </defs>
+
+  <!-- Cielo -->
+  <rect x="0" y="0" width="1600" height="470" fill="url(#cielo)"/>
+
+  <!-- Sol -->
+  <circle cx="800" cy="400" r="120" fill="url(#sol)"/>
+  <circle cx="800" cy="400" r="70" fill="#ffe08a"/>
+  <circle cx="800" cy="400" r="45" fill="#fff6b0"/>
+
+  <!-- Nubes teñidas -->
+  <g filter="url(#desenfoque)" opacity="0.6">
+    <ellipse cx="600" cy="180" rx="180" ry="25" fill="#d95d5d"/>
+    <ellipse cx="1100" cy="150" rx="220" ry="28" fill="#c05a8a"/>
+    <ellipse cx="380" cy="250" rx="140" ry="20" fill="#7a2d6e"/>
+    <ellipse cx="1300" cy="260" rx="160" ry="22" fill="#7a459a"/>
+  </g>
+
+  <!-- Montañas lejanas -->
+  <polygon points="0,470 240,300 420,470" fill="url(#montanaLejana)"/>
+  <polygon points="320,470 560,250 820,470" fill="url(#montanaLejana)"/>
+  <polygon points="700,470 1000,270 1260,470" fill="url(#montanaLejana)"/>
+  <polygon points="1160,470 1400,290 1600,470" fill="url(#montanaLejana)"/>
+
+  <!-- Nieve en cumbres lejanas -->
+  <polygon points="540,262 560,250 583,265 575,268 570,262 562,270 556,264 550,270 545,265 540,262" fill="#ffe8d0" opacity="0.9"/>
+  <polygon points="980,282 1000,270 1023,285 1015,288 1010,282 1002,290 996,284 990,290 984,283 980,282" fill="#ffe8d0" opacity="0.9"/>
+
+  <!-- Montañas cercanas -->
+  <polygon points="0,470 180,360 380,470" fill="url(#montanaCercana)"/>
+  <polygon points="300,470 520,330 760,470" fill="url(#montanaCercana)"/>
+  <polygon points="720,470 960,300 1230,470" fill="url(#montanaCercana)"/>
+  <polygon points="1120,470 1350,340 1600,470" fill="url(#montanaCercana)"/>
+
+  <!-- Bosque en la base -->
+  <g fill="#1e3a2a" opacity="0.85">
+    <polygon points="0,470 30,430 60,470"/>
+    <polygon points="40,470 75,420 110,470"/>
+    <polygon points="95,470 130,435 165,470"/>
+    <polygon points="150,470 185,428 220,470"/>
+    <polygon points="1330,470 1365,432 1400,470"/>
+    <polygon points="1390,470 1425,425 1460,470"/>
+    <polygon points="1450,470 1485,435 1520,470"/>
+    <polygon points="1510,470 1545,428 1580,470"/>
+    <polygon points="1565,470 1590,440 1600,470"/>
+  </g>
+
+  <!-- Lago -->
+  <rect x="0" y="470" width="1600" height="430" fill="url(#lago)"/>
+
+  <!-- Reflejo del sol -->
+  <g opacity="0.65">
+    <ellipse cx="800" cy="520" rx="90" ry="18" fill="#fff0a0" filter="url(#desenfoque)"/>
+    <ellipse cx="800" cy="580" rx="60" ry="14" fill="#ffd080" filter="url(#desenfoque)"/>
+    <ellipse cx="800" cy="660" rx="40" ry="12" fill="#e8a060" filter="url(#desenfoque)"/>
+  </g>
+
+  <!-- Ondas del lago -->
+  <g stroke="#ffffff" stroke-width="2" opacity="0.25" fill="none">
+    <path d="M300,560 q20,-8 40,0 q20,8 40,0"/>
+    <path d="M520,620 q20,-8 40,0 q20,8 40,0"/>
+    <path d="M900,540 q20,-8 40,0 q20,8 40,0"/>
+    <path d="M700,700 q20,-8 40,0 q20,8 40,0"/>
+    <path d="M1100,650 q20,-8 40,0 q20,8 40,0"/>
+    <path d="M400,760 q20,-8 40,0 q20,8 40,0"/>
+    <path d="M1250,720 q20,-8 40,0 q20,8 40,0"/>
+  </g>
+
+  <!-- Orilla de arena -->
+  <path d="M0,470 Q400,500 800,470 Q1200,440 1600,470 L1600,500 Q1200,470 800,500 Q400,530 0,500 Z" fill="#c8a878" opacity="0.5"/>
+</svg>
