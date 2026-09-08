@@ -67,7 +67,7 @@ unset($item);
     <title>Editar Venta | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=4')) ?>">
 </head>
 
 <body>
@@ -90,7 +90,7 @@ unset($item);
             </div>
 
             <div class="table-responsive">
-                <table class="table table-bordered" id="itemsTable">
+                <table class="table" id="itemsTable">
                     <thead>
                         <tr>
                             <th>Producto</th>

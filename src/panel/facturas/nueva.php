@@ -14,7 +14,7 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
     <title>Nueva Venta | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=4')) ?>">
 </head>
 
 <body>
@@ -35,7 +35,7 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
             </div>
 
             <div class="table-responsive">
-                <table class="table table-bordered" id="itemsTable">
+                <table class="table" id="itemsTable">
                     <thead>
                         <tr>
                             <th>Producto</th>

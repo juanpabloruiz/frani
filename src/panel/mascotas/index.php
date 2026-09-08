@@ -39,7 +39,7 @@ $consulta = $db->query(
     <title>Mascotas | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=4')) ?>">
 </head>
 
 <body>
@@ -93,7 +93,7 @@ $consulta = $db->query(
                     <div class="col-6">
                         <div class="card shadow-sm">
                             <div class="card-header text-center fw-bold">Talles por letra</div>
-                            <table class="table table-bordered table-sm mb-0 text-center">
+                            <table class="table table-sm mb-0 text-center">
                                 <thead>
                                     <tr class="table-secondary">
                                         <th>Talle</th>
@@ -115,7 +115,7 @@ $consulta = $db->query(
                     <div class="col-6">
                         <div class="card shadow-sm">
                             <div class="card-header text-center fw-bold">Talle largo</div>
-                            <table class="table table-bordered table-sm mb-0 text-center">
+                            <table class="table table-sm mb-0 text-center">
                                 <thead>
                                     <tr class="table-secondary">
                                         <th>Talle</th>
@@ -153,7 +153,7 @@ $consulta = $db->query(
                 </div>
 
                 <div id="contenedorTabla" class="card shadow-sm" style="max-height: calc(100vh - 180px); overflow-y: auto;">
-                    <table class="table table-hover table-bordered mb-0" id="tablaMascotas">
+                    <table class="table table-hover mb-0" id="tablaMascotas">
                     <thead class="text-center">
                         <tr class="align-middle">
                             <th scope="col" style="width: 50px;">#</th>

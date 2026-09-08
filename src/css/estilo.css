@@ -1,20 +1,17 @@
-@font-face {
-  font-family: 'Ubuntu';
-  src: url('../fonts/Ubuntu-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-}
-
-body {
-  font-family: 'Ubuntu', sans-serif;
-}
-
 .nav-link.active {
   font-weight: 700;
 }
 
 .table > :not(caption) > * > * {
   padding-block: 0.65rem;
+}
+
+.table thead th {
+  text-transform: uppercase;
+  background-color: #212529;
+  color: #fff;
+  white-space: nowrap;
+  border-color: #343a40;
 }
 
 .navbar-toggler {
