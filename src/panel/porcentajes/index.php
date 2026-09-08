@@ -18,6 +18,12 @@ unset($_SESSION['toast_exito']);
     <link rel="stylesheet" href="<?= e(base_path('../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../fontawesome/css/all.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../css/estilo.css')) ?>">
+    <style>
+        #calc_resultado::placeholder {
+            color: #ffffff;
+            opacity: 1;
+        }
+    </style>
 </head>
 
 <body>
