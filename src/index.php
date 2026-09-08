@@ -26,7 +26,7 @@ $resultado = $db->query(
 <body>
     <?php include __DIR__ . '/cabecera.php'; ?>
 
-    <div data-masonry='{"percentPosition": true }' class="row row-cols-1 row-cols-md-5 g-4">
+    <div class="masonry-grid row row-cols-1 row-cols-md-5 g-4">
         <?php while ($fila = $resultado->fetch_assoc()): ?>
             <div class="col">
                 <div class="card shadow h-100">

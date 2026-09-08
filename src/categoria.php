@@ -47,11 +47,11 @@ if ($id > 0) {
 
     <h1 class="h3 text-center text-primary fw-bolder mb-4"><?= $categoria ? e($categoria['nombre']) : 'Categoría no encontrada' ?></h1>
 
-    <div class="row row-cols-1 row-cols-md-5 g-4">
+    <div class="masonry-grid row row-cols-1 row-cols-md-5 g-4">
         <?php if ($resultado && $resultado->num_rows > 0): ?>
             <?php while ($fila = $resultado->fetch_assoc()): ?>
                 <div class="col">
-                    <div class="card shadow h-100">
+                    <div class="card shadow">
                         <?php if (!empty($fila['foto'])): ?>
                             <picture>
                                 <source srcset="<?= e(base_path('img/productos/' . $fila['foto'] . '.webp')) ?>" type="image/webp">
