@@ -18,12 +18,6 @@ unset($_SESSION['toast_exito']);
     <link rel="stylesheet" href="<?= e(base_path('../css/bootstrap.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../fontawesome/css/all.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../css/estilo.css?v=4')) ?>">
-    <style>
-        #calc_resultado::placeholder {
-            color: #ffffff;
-            opacity: 1;
-        }
-    </style>
 </head>
 
 <body>
@@ -59,17 +53,8 @@ unset($_SESSION['toast_exito']);
                         <div class="col-md-4">
                             <label for="calc_porcentaje" class="form-label">Porcentaje</label>
                             <div class="input-group">
-                                <input type="number" step="0.01" id="calc_porcentaje" class="form-control"
-                                    placeholder="Ej: -20">
+                                <input type="number" step="0.01" id="calc_porcentaje" class="form-control">
                                 <span class="input-group-text">%</span>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Diferencia</label>
-                            <div class="input-group">
-                                <span class="input-group-text">$</span>
-                                <input type="text" id="calc_diferencia" class="form-control bg-warning text-dark fw-bold"
-                                    readonly placeholder="0,00">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -77,12 +62,20 @@ unset($_SESSION['toast_exito']);
                             <div class="input-group">
                                 <span class="input-group-text">$</span>
                                 <input type="text" id="calc_resultado" class="form-control bg-success text-white fw-bold"
-                                    readonly placeholder="0,00">
+                                    readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Diferencia</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="text" id="calc_diferencia" class="form-control bg-warning text-dark fw-bold"
+                                    readonly>
                             </div>
                         </div>
                     </div>
                     <small class="text-muted mt-2 d-block">
-                        Ingresá el precio y el porcentaje (negativo para descuento). El resultado se calcula al instante.
+                        Ingresá el precio y el porcentaje de descuento. El resultado se calcula al instante.
                     </small>
                 </div>
             </div>
@@ -141,11 +134,11 @@ unset($_SESSION['toast_exito']);
 
         function calcularPorcentaje() {
             const precio = parseFloat(calcPrecio.value) || 0;
-            const porcentaje = parseFloat(calcPorcentaje.value) || 0;
+            const porcentaje = Math.abs(parseFloat(calcPorcentaje.value) || 0) * -1;
             const resultado = precio * (1 + porcentaje / 100);
             const diferencia = precio - resultado;
-            calcDiferencia.value = diferencia.toFixed(2);
             calcResultado.value = resultado.toFixed(2);
+            calcDiferencia.value = diferencia.toFixed(2);
         }
 
         calcPrecio.addEventListener('input', calcularPorcentaje);

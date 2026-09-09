@@ -16,6 +16,8 @@ $efectivo = $efectivoRaw !== '' ? (float) $efectivoRaw : null;
 $transferenciaRaw = $_POST['transferencia'] ?? '';
 $transferencia = $transferenciaRaw !== '' ? (float) $transferenciaRaw : null;
 $total = (float) ($_POST['total'] ?? '0');
+$descuentoRaw = $_POST['descuento'] ?? '';
+$descuento = $descuentoRaw !== '' ? (int) $descuentoRaw : null;
 $deudaRaw = $_POST['deuda'] ?? '';
 $deuda = $deudaRaw !== '' && $deudaRaw !== '0' ? (float) $deudaRaw : null;
 $detalleItems = [];
@@ -69,8 +71,8 @@ if ($nombre !== '') {
     $stmtCliente->close();
 }
 
-$stmt = $db->prepare("INSERT INTO facturas (nombre, total, efectivo, transferencia, deuda, detalle, observaciones) VALUES (?, ?, ?, ?, ?, ?, ?)");
-$stmt->bind_param('sddddss', $nombre, $total, $efectivo, $transferencia, $deuda, $detalle, $observacionesDB);
+$stmt = $db->prepare("INSERT INTO facturas (nombre, total, efectivo, transferencia, deuda, descuento, detalle, observaciones) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param('sddddiss', $nombre, $total, $efectivo, $transferencia, $deuda, $descuento, $detalle, $observacionesDB);
 $stmt->execute();
 $stmt->close();
 

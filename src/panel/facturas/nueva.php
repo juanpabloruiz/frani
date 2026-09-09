@@ -81,6 +81,14 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
             </div>
 
             <div class="mb-3">
+                <label class="form-label">Descuento</label>
+                <div class="input-group">
+                    <input type="number" id="descuento" name="descuento" class="form-control" min="0" max="100">
+                    <span class="input-group-text">%</span>
+                </div>
+            </div>
+
+            <div class="mb-3">
                 <label class="form-label">Total</label>
                 <input type="number" id="total" name="total" class="form-control" step="0.01" readonly>
             </div>
@@ -160,13 +168,15 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
             const deudaField = document.getElementById("deuda");
             const efectivoField = document.getElementById("efectivo");
             const transferenciaField = document.getElementById("transferencia");
+            const descuentoField = document.getElementById("descuento");
             let itemIndex = 0;
             let productosCache = null;
 
             function updateTotal() {
                 const subtotal = Array.from(document.querySelectorAll(".subtotal"))
                     .reduce((sum, input) => sum + parseFloat(input.value || 0), 0);
-                totalField.value = subtotal.toFixed(2);
+                const descuento = parseFloat(descuentoField.value) || 0;
+                totalField.value = (subtotal * (1 - descuento / 100)).toFixed(2);
                 updateDeuda();
             }
 
@@ -182,6 +192,7 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
             deudaField.addEventListener("input", updateDeuda);
             efectivoField.addEventListener("input", updateDeuda);
             transferenciaField.addEventListener("input", updateDeuda);
+            descuentoField.addEventListener("input", updateTotal);
 
             async function cargarProductos() {
                 if (!productosCache) {

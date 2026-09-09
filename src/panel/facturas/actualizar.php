@@ -19,6 +19,8 @@ $transf2 = ($_POST['transferencia2'] ?? '') !== '' ? (float) $_POST['transferenc
 $efectivo = $efectivo1 + $efectivo2;
 $transferencia = $transf1 + $transf2;
 $total = (float) ($_POST['total'] ?? '0');
+$descuentoRaw = $_POST['descuento'] ?? '';
+$descuento = $descuentoRaw !== '' ? (int) $descuentoRaw : null;
 $deuda = $total - $efectivo - $transferencia;
 if ($deuda <= 0) {
     $deuda = null;
@@ -63,10 +65,10 @@ $detalle = implode(', ', $detalleItems);
 
 $stmt = $db->prepare(
     "UPDATE facturas
-    SET nombre = ?, detalle = ?, total = ?, efectivo = ?, transferencia = ?, deuda = ?, observaciones = ?
+    SET nombre = ?, detalle = ?, total = ?, efectivo = ?, transferencia = ?, deuda = ?, descuento = ?, observaciones = ?
     WHERE id = ?"
 );
-$stmt->bind_param('ssddddss', $nombre, $detalle, $total, $efectivo, $transferencia, $deuda, $observacionesDB, $id);
+$stmt->bind_param('ssddddiss', $nombre, $detalle, $total, $efectivo, $transferencia, $deuda, $descuento, $observacionesDB, $id);
 $stmt->execute();
 $stmt->close();
 

@@ -10,7 +10,7 @@ if ($id <= 0) {
 
 $db = conexion();
 
-$stmt = $db->prepare("SELECT id, nombre, total, efectivo, transferencia, deuda, detalle, observaciones FROM facturas WHERE id = ?");
+$stmt = $db->prepare("SELECT id, nombre, total, efectivo, transferencia, deuda, descuento, detalle, observaciones FROM facturas WHERE id = ?");
 $stmt->bind_param('i', $id);
 $stmt->execute();
 $resultado = $stmt->get_result();
@@ -158,6 +158,15 @@ unset($item);
             </div>
 
             <div class="mb-3">
+                <label class="form-label">Descuento</label>
+                <div class="input-group">
+                    <input type="number" id="descuento" name="descuento" class="form-control" min="0" max="100"
+                        value="<?= e((string) ($factura['descuento'] ?? '')) ?>">
+                    <span class="input-group-text">%</span>
+                </div>
+            </div>
+
+            <div class="mb-3">
                 <label class="form-label">Total</label>
                 <input type="number" id="total" name="total" class="form-control" step="0.01" readonly>
             </div>
@@ -241,6 +250,7 @@ unset($item);
             const transferenciaField = document.getElementById("transferencia");
             const efectivo2Field = document.getElementById("efectivo2");
             const transferencia2Field = document.getElementById("transferencia2");
+            const descuentoField = document.getElementById("descuento");
             const filaPago2 = document.getElementById("filaPago2");
             let productos = <?= $productosJSON ?>;
             let itemIndex = 0;
@@ -248,7 +258,8 @@ unset($item);
             function updateTotal() {
                 const subtotal = Array.from(document.querySelectorAll(".subtotal"))
                     .reduce((sum, input) => sum + parseFloat(input.value || 0), 0);
-                totalField.value = subtotal.toFixed(2);
+                const descuento = parseFloat(descuentoField.value) || 0;
+                totalField.value = (subtotal * (1 - descuento / 100)).toFixed(2);
                 updateDeuda();
             }
 
@@ -274,6 +285,7 @@ unset($item);
             transferenciaField.addEventListener("input", updateDeuda);
             efectivo2Field.addEventListener("input", updateDeuda);
             transferencia2Field.addEventListener("input", updateDeuda);
+            descuentoField.addEventListener("input", updateTotal);
 
             function crearFila(selectId, cantidad, precio) {
                 const index = itemIndex;
