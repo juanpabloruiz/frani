@@ -7,8 +7,8 @@ $resultado = $db->query(
     "SELECT p.producto, p.foto, p.precio, p.stock, c.nombre AS categoria
     FROM productos p
     INNER JOIN categorias c ON c.id = p.id_categoria
-    ORDER BY p.precio ASC
-    LIMIT 15"
+    ORDER BY GREATEST(COALESCE(p.modificado, p.agregado), p.agregado) DESC
+    LIMIT 25"
 );
 ?>
 <!DOCTYPE html>

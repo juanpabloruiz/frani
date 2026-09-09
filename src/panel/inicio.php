@@ -112,16 +112,16 @@ $totalVentas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
                                 {
                                     label: 'Transferencia',
                                     data: transferencias,
-                                    backgroundColor: 'rgba(13, 110, 253, 0.7)',
-                                    borderColor: 'rgba(13, 110, 253, 1)',
+                                    backgroundColor: 'rgba(255, 193, 7, 0.85)',
+                                    borderColor: 'rgba(255, 193, 7, 1)',
                                     borderWidth: 1,
                                     borderRadius: 4
                                 },
                                 {
                                     label: 'Total',
                                     data: totales,
-                                    backgroundColor: 'rgba(0, 0, 0, 0.85)',
-                                    borderColor: 'rgba(0, 0, 0, 1)',
+                                    backgroundColor: 'rgba(13, 110, 253, 0.85)',
+                                    borderColor: 'rgba(13, 110, 253, 1)',
                                     borderWidth: 1,
                                     borderRadius: 4
                                 },
