@@ -2,3 +2,6 @@
 [2026-09-08 19:19:52] respaldo.sql -> /Users/pabloruiz/MEGA/frani/respaldo.sql (   41929 bytes)
 [2026-09-08 19:19:52] Imágenes sincronizadas en /Users/pabloruiz/MEGA/frani/productos/
 [2026-09-08 19:19:52] Respaldo completado.
+[2026-09-09 07:00:02] Inicio del respaldo
+/Users/pabloruiz/docker/frani/respaldo_mega.sh: line 22: docker: command not found
+[2026-09-09 07:00:02] ERROR en mariadb-dump
