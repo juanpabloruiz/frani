@@ -17,6 +17,16 @@ $consulta = $db->query(
     FROM facturas f
     ORDER BY f.id DESC"
 );
+
+$totalesPorDia = [];
+$consultaTotales = $db->query(
+    "SELECT DATE(agregado) AS dia, SUM(total) AS total_dia
+     FROM facturas
+     GROUP BY DATE(agregado)"
+);
+while ($f = $consultaTotales->fetch_assoc()) {
+    $totalesPorDia[$f['dia']] = (float) $f['total_dia'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -60,8 +70,26 @@ $consulta = $db->query(
                 </tr>
             </thead>
             <tbody>
+                <?php $diaActual = ''; ?>
                 <?php while ($campo = $consulta->fetch_assoc()): ?>
-                    <tr class="align-middle" style="cursor: pointer;" data-edit="<?= e(base_path('panel/facturas/editar?id=' . $campo['id'])) ?>">
+                    <?php $diaVenta = date('Y-m-d', strtotime($campo['agregado'])); ?>
+                    <?php if ($diaVenta !== $diaActual): ?>
+                        <?php if ($diaActual !== ''): ?>
+                            <tr class="separador-dia">
+                                <td colspan="9"></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php $diaActual = $diaVenta; ?>
+                        <tr class="separador-dia">
+                            <td colspan="9" class="text-white text-center fw-bold" style="background-color: #212529;">
+                                <?php $dias = [1 => 'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']; ?>
+                                <?= e($dias[(int) date('w', strtotime($campo['agregado'])) + 1]) ?>
+                                <?= e(date('d-m-Y', strtotime($campo['agregado']))) ?>
+                                | Total: $ <?= e(moneda($totalesPorDia[$diaVenta] ?? 0)) ?>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                    <tr class="align-middle fila-venta" style="cursor: pointer;" data-edit="<?= e(base_path('panel/facturas/editar?id=' . $campo['id'])) ?>">
                         <td class="text-center">
                             <form method="POST" action="<?= e(base_path('panel/facturas/eliminar')) ?>" class="d-inline" onsubmit="return confirm('¿Eliminar esta venta?');">
                                 <input type="hidden" name="csrf_token" value="<?= e(CSRF_token()) ?>">
@@ -93,7 +121,7 @@ $consulta = $db->query(
     <script src="<?= e(base_path('../../js/bootstrap.bundle.min.js')) ?>"></script>
     <script>
         const buscador = document.getElementById('buscadorFacturas');
-        const filas = document.querySelectorAll('#tablaFacturas tbody tr');
+        const filas = document.querySelectorAll('#tablaFacturas tbody tr.fila-venta');
 
         function normalizar(texto) {
             return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
