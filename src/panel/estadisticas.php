@@ -25,7 +25,7 @@ switch ($periodo) {
                     ' ',
                     DATE_FORMAT(agregado, '%d')
                 ) AS etiqueta,
-                COALESCE(SUM(total), 0) AS total,
+                COALESCE(SUM(efectivo), 0) + COALESCE(SUM(transferencia), 0) AS total,
                 COALESCE(SUM(efectivo), 0) AS efectivo,
                 COALESCE(SUM(transferencia), 0) AS transferencia,
                 COALESCE(SUM(deuda), 0) AS deuda
@@ -54,7 +54,7 @@ switch ($periodo) {
                     WHEN DAY(agregado) BETWEEN 22 AND 28 THEN 4
                     ELSE 5
                 END AS orden,
-                COALESCE(SUM(total), 0) AS total,
+                COALESCE(SUM(efectivo), 0) + COALESCE(SUM(transferencia), 0) AS total,
                 COALESCE(SUM(efectivo), 0) AS efectivo,
                 COALESCE(SUM(transferencia), 0) AS transferencia,
                 COALESCE(SUM(deuda), 0) AS deuda
@@ -77,7 +77,7 @@ switch ($periodo) {
         $resultado = $db->query(
             "SELECT
                 MONTH(agregado) AS mes,
-                COALESCE(SUM(total), 0) AS total,
+                COALESCE(SUM(efectivo), 0) + COALESCE(SUM(transferencia), 0) AS total,
                 COALESCE(SUM(efectivo), 0) AS efectivo,
                 COALESCE(SUM(transferencia), 0) AS transferencia,
                 COALESCE(SUM(deuda), 0) AS deuda
