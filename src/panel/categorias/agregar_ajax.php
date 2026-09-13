@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../conexion.php';
+requerir_login();
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
