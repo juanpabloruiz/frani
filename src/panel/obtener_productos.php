@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../conexion.php';
+requerir_login();
 
 $db = conexion();
 $resultado = $db->query("SELECT id, producto, precio, stock FROM productos ORDER BY producto ASC");
