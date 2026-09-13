@@ -17,6 +17,7 @@ $totalVentas = $db->query("SELECT COUNT(*) FROM facturas")->fetch_row()[0];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel | Frani</title>
     <link rel="stylesheet" href="<?= e(base_path('../css/bootstrap.min.css')) ?>">
+    <link rel="icon" type="image/svg+xml" href="<?= e(base_path('../img/favicon.svg')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../fontawesome/css/all.min.css')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('../css/estilo.css?v=4')) ?>">
     <script src="<?= e(base_path('../js/chart.js')) ?>"></script>

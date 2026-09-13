@@ -11,29 +11,16 @@ switch ($periodo) {
     case 'dia':
         $resultado = $db->query(
             "SELECT
-                DAY(agregado) AS dia,
-                CONCAT(
-                    CASE DAYOFWEEK(agregado)
-                        WHEN 1 THEN 'Dom'
-                        WHEN 2 THEN 'Lun'
-                        WHEN 3 THEN 'Mar'
-                        WHEN 4 THEN 'Mié'
-                        WHEN 5 THEN 'Jue'
-                        WHEN 6 THEN 'Vie'
-                        WHEN 7 THEN 'Sáb'
-                    END,
-                    ' ',
-                    DATE_FORMAT(agregado, '%d')
-                ) AS etiqueta,
+                WEEKDAY(agregado) AS indice,
                 COALESCE(SUM(efectivo), 0) + COALESCE(SUM(transferencia), 0) AS total,
                 COALESCE(SUM(efectivo), 0) AS efectivo,
                 COALESCE(SUM(transferencia), 0) AS transferencia,
                 COALESCE(SUM(deuda), 0) AS deuda
              FROM facturas
-             WHERE MONTH(agregado) = MONTH(CURDATE())
-               AND YEAR(agregado) = YEAR(CURDATE())
-             GROUP BY DAY(agregado), etiqueta
-             ORDER BY dia"
+             WHERE agregado >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)
+               AND agregado < DATE_ADD(DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY), INTERVAL 7 DAY)
+             GROUP BY indice
+             ORDER BY indice"
         );
         break;
 
@@ -90,21 +77,47 @@ switch ($periodo) {
 }
 
 $datos = [];
-while ($fila = $resultado->fetch_assoc()) {
-    if ($periodo === 'mes') {
-        $mesNum = (int) ($fila['mes'] ?? 0);
-        $etiqueta = $meses[$mesNum] ?? "Mes $mesNum";
-    } else {
-        $etiqueta = $fila['etiqueta'] ?? '';
+
+if ($periodo === 'dia') {
+    $fechaLunes = new DateTimeImmutable('monday this week');
+    $nombres = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+
+    foreach (range(0, 6) as $i) {
+        $datos[$i] = [
+            'etiqueta' => $nombres[$i] . ' ' . $fechaLunes->modify("+$i days")->format('d/m'),
+            'total' => 0.0,
+            'efectivo' => 0.0,
+            'transferencia' => 0.0,
+            'deuda' => 0.0,
+        ];
     }
 
-    $datos[] = [
-        'etiqueta' => $etiqueta,
-        'total' => (float) ($fila['total'] ?? 0),
-        'efectivo' => (float) ($fila['efectivo'] ?? 0),
-        'transferencia' => (float) ($fila['transferencia'] ?? 0),
-        'deuda' => (float) ($fila['deuda'] ?? 0),
-    ];
+    while ($fila = $resultado->fetch_assoc()) {
+        $i = (int) ($fila['indice'] ?? 0);
+        if (isset($datos[$i])) {
+            $datos[$i]['total'] = (float) ($fila['total'] ?? 0);
+            $datos[$i]['efectivo'] = (float) ($fila['efectivo'] ?? 0);
+            $datos[$i]['transferencia'] = (float) ($fila['transferencia'] ?? 0);
+            $datos[$i]['deuda'] = (float) ($fila['deuda'] ?? 0);
+        }
+    }
+} else {
+    while ($fila = $resultado->fetch_assoc()) {
+        if ($periodo === 'mes') {
+            $mesNum = (int) ($fila['mes'] ?? 0);
+            $etiqueta = $meses[$mesNum] ?? "Mes $mesNum";
+        } else {
+            $etiqueta = $fila['etiqueta'] ?? '';
+        }
+
+        $datos[] = [
+            'etiqueta' => $etiqueta,
+            'total' => (float) ($fila['total'] ?? 0),
+            'efectivo' => (float) ($fila['efectivo'] ?? 0),
+            'transferencia' => (float) ($fila['transferencia'] ?? 0),
+            'deuda' => (float) ($fila['deuda'] ?? 0),
+        ];
+    }
 }
 
 echo json_encode($datos);

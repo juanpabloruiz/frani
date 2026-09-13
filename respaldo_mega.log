@@ -5,3 +5,12 @@
 [2026-09-09 07:00:02] Inicio del respaldo
 /Users/pabloruiz/docker/frani/respaldo_mega.sh: line 22: docker: command not found
 [2026-09-09 07:00:02] ERROR en mariadb-dump
+[2026-09-10 07:00:05] Inicio del respaldo
+/Users/pabloruiz/docker/frani/respaldo_mega.sh: line 22: docker: command not found
+[2026-09-10 07:00:05] ERROR en mariadb-dump
+[2026-09-11 07:00:04] Inicio del respaldo
+/Users/pabloruiz/docker/frani/respaldo_mega.sh: line 22: docker: command not found
+[2026-09-11 07:00:04] ERROR en mariadb-dump
+[2026-09-12 07:00:01] Inicio del respaldo
+/Users/pabloruiz/docker/frani/respaldo_mega.sh: line 22: docker: command not found
+[2026-09-12 07:00:01] ERROR en mariadb-dump
