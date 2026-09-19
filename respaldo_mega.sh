@@ -2,12 +2,31 @@
 # Respaldos diarios de Frani hacia MEGA (versionado por MEGA)
 # BD -> respaldo.sql , imágenes -> productos/
 set -u
-export PATH="$HOME/.docker/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:$PATH"
 
 LOG="/Users/pabloruiz/docker/frani/respaldo_mega.log"
 MEGA="/Users/pabloruiz/MEGA/frani"
 PRODUCTOS="/Users/pabloruiz/docker/frani/src/img/productos"
 ENV="/Users/pabloruiz/docker/frani/.env"
+
+# Ubicación del binario de Docker según el sistema
+export PATH="/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/homebrew/bin:$PATH"
+DOCKER="$(command -v docker 2>/dev/null || true)"
+if [ -z "$DOCKER" ]; then
+    for d in "$HOME/.docker/bin/docker" "/usr/local/bin/docker" "/usr/bin/docker"; do
+        if [ -x "$d" ]; then
+            DOCKER="$d"
+            break
+        fi
+    done
+fi
+if [ -z "$DOCKER" ]; then
+    FECHA=$(date '+%Y-%m-%d %H:%M:%S')
+    echo "[$FECHA] ERROR: docker no encontrado en el PATH" >> "$LOG"
+    exit 1
+fi
+if ! command -v docker >/dev/null 2>&1; then
+    export PATH="$(dirname "$DOCKER"):$PATH"
+fi
 
 FECHA=$(date '+%Y-%m-%d %H:%M:%S')
 echo "[$FECHA] Inicio del respaldo" >> "$LOG"

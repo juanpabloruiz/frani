@@ -1,0 +1,8 @@
+[Unit]
+Description=Sincronizacion continua de Frani hacia MEGA
+After=network.target
+
+[Service]
+Type=oneshot
+User=@@USER@@
+ExecStart=/bin/bash @@DIR@@/sincro_mega.sh

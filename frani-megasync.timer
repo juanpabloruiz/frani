@@ -1,0 +1,10 @@
+[Unit]
+Description=Ejecuta la sincronizacion de Frani hacia MEGA cada 15 segundos
+
+[Timer]
+OnBootSec=15
+OnUnitActiveSec=15
+Persistent=true
+
+[Install]
+WantedBy=timers.target

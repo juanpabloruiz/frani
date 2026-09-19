@@ -70,6 +70,25 @@ services:
       db:
         condition: service_healthy
 
+  sincro:
+    image: mariadb:11.4
+    restart: unless-stopped
+    entrypoint: ["/bin/bash", "-c"]
+    command: ["/script.sh"]
+    env_file:
+      - .env
+    environment:
+      TZ: ${TZ:-America/Argentina/Cordoba}
+    volumes:
+      - .:/app/proyecto:ro
+      - ${HOME}/MEGA/frani:/mega:rw
+      - ./sincro_contenedor.sh:/script.sh:ro
+    networks:
+      - proxy
+    depends_on:
+      db:
+        condition: service_healthy
+
 networks:
   proxy:
     external: true
