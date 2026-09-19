@@ -1,5 +1,7 @@
 .env
 .DS_Store
 respaldo.sql
-respaldo_mega.log
+respaldo_mega*.log
+config.user.inc.php
+AGENTS.md
 src/img/productos/

@@ -69,8 +69,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    volumes:
-      - ./config.user.inc.php:/etc/phpmyadmin/config.user.inc.php:ro
 
 networks:
   proxy:
