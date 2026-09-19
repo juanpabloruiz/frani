@@ -2,6 +2,7 @@
 # Respaldos diarios de Frani hacia MEGA (versionado por MEGA)
 # BD -> respaldo.sql , imágenes -> productos/
 set -u
+export PATH="$HOME/.docker/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:$PATH"
 
 LOG="/Users/pabloruiz/docker/frani/respaldo_mega.log"
 MEGA="/Users/pabloruiz/MEGA/frani"
