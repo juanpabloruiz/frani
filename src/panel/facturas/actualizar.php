@@ -12,19 +12,15 @@ $id = (int) ($_POST['id'] ?? 0);
 $nombre = trim($_POST['nombre'] ?? '');
 $observaciones = trim($_POST['observaciones'] ?? '');
 $observacionesDB = $observaciones !== '' ? $observaciones : null;
-$efectivo1 = ($_POST['efectivo'] ?? '') !== '' ? (float) $_POST['efectivo'] : 0;
-$efectivo2 = ($_POST['efectivo2'] ?? '') !== '' ? (float) $_POST['efectivo2'] : 0;
-$transf1 = ($_POST['transferencia'] ?? '') !== '' ? (float) $_POST['transferencia'] : 0;
-$transf2 = ($_POST['transferencia2'] ?? '') !== '' ? (float) $_POST['transferencia2'] : 0;
-$efectivo = $efectivo1 + $efectivo2;
-$transferencia = $transf1 + $transf2;
+// Los campos de pago vacíos se guardan como NULL, nunca como 0.00.
+$efectivo = sumar_montos([$_POST['efectivo'] ?? '', $_POST['efectivo2'] ?? '']);
+$transferencia = sumar_montos([$_POST['transferencia'] ?? '', $_POST['transferencia2'] ?? '']);
 $total = (float) ($_POST['total'] ?? '0');
-$descuentoRaw = $_POST['descuento'] ?? '';
-$descuento = $descuentoRaw !== '' ? (int) $descuentoRaw : null;
-$deuda = $total - $efectivo - $transferencia;
-if ($deuda <= 0) {
-    $deuda = null;
-}
+$descuentoRaw = trim((string) ($_POST['descuento'] ?? ''));
+$descuento = (int) $descuentoRaw;
+$descuento = $descuento > 0 ? $descuento : null;
+$deuda = $total - (float) ($efectivo ?? 0) - (float) ($transferencia ?? 0);
+$deuda = $deuda > 0 ? round($deuda, 2) : null;
 $detalleItems = [];
 
 $db = conexion();

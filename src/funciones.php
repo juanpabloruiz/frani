@@ -158,6 +158,60 @@ function moneda($valor): string
     return number_format((float) $valor, 2, ',', '.');
 }
 
+/**
+ * Muestra un importe en la tabla. Si el campo está vacío (NULL) o vale 0,
+ * devuelve cadena vacía para que nunca aparezca un "0,00" engañoso.
+ */
+function mostrar_monto($valor): string
+{
+    if ($valor === null || $valor === '') {
+        return '';
+    }
+
+    $monto = (float) $valor;
+
+    return $monto == 0.0 ? '' : moneda($monto);
+}
+
+/**
+ * Convierte un monto/envío de formulario a float, o NULL si el campo quedó
+ * vacío (o vale 0). Así la base guarda el campo vacío en lugar de 0.00.
+ */
+function monto_post($valor): ?float
+{
+    if (!is_scalar($valor)) {
+        return null;
+    }
+
+    $valor = trim((string) $valor);
+
+    if ($valor === '') {
+        return null;
+    }
+
+    $monto = (float) $valor;
+
+    return $monto == 0.0 ? null : $monto;
+}
+
+/**
+ * Suma varios montos del mismo campo (por ejemplo las dos líneas de pago).
+ * Si ninguno tiene valor, o la suma da 0, devuelve NULL.
+ */
+function sumar_montos(array $valores): ?float
+{
+    $suma = 0.0;
+
+    foreach ($valores as $valor) {
+        $monto = monto_post($valor);
+        if ($monto !== null) {
+            $suma += $monto;
+        }
+    }
+
+    return $suma == 0.0 ? null : round($suma, 2);
+}
+
 function numero_limpio($valor): string
 {
     if ($valor === null || $valor === '') {

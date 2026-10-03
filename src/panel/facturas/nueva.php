@@ -62,7 +62,7 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
                     <div class="input-group">
                         <span class="input-group-text">$</span>
                         <input type="number" step="0.01" id="efectivo" name="efectivo" class="form-control"
-                            min="0">
+                            min="0" placeholder="Opcional">
                     </div>
                 </div>
                 <div class="col-md">
@@ -70,7 +70,7 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
                     <div class="input-group">
                         <span class="input-group-text">$</span>
                         <input type="number" step="0.01" id="transferencia" name="transferencia" class="form-control"
-                            min="0">
+                            min="0" placeholder="Opcional">
                     </div>
                 </div>
             </div>

@@ -100,10 +100,10 @@ while ($f = $consultaTotales->fetch_assoc()) {
                         </td>
                         <td><?= e($campo['nombre']) ?></td>
                         <td><?= e($campo['detalle']) ?></td>
-                        <td class="text-center" style="white-space: nowrap;"><?= $campo['efectivo'] ? e(moneda($campo['efectivo'])) : '' ?></td>
-                        <td class="text-center" style="white-space: nowrap;"><?= $campo['transferencia'] ? e(moneda($campo['transferencia'])) : '' ?></td>
-                        <td class="text-center bg-success text-white" style="white-space: nowrap;"><?= $campo['total'] ? e(moneda($campo['total'])) : '' ?></td>
-                        <td class="text-center text-danger fw-bold" style="white-space: nowrap;"><?= $campo['deuda'] ? e(moneda($campo['deuda'])) : '' ?></td>
+                        <td class="text-center" style="white-space: nowrap;"><?= e(mostrar_monto($campo['efectivo'])) ?></td>
+                        <td class="text-center" style="white-space: nowrap;"><?= e(mostrar_monto($campo['transferencia'])) ?></td>
+                        <td class="text-center bg-success text-white" style="white-space: nowrap;"><?= e(mostrar_monto($campo['total'])) ?></td>
+                        <td class="text-center text-danger fw-bold" style="white-space: nowrap;"><?= e(mostrar_monto($campo['deuda'])) ?></td>
                         <td class="text-center" style="white-space: nowrap;"><?= e(date('d-m | H:i', strtotime($campo['agregado']))) ?></td>
                         <td class="text-center" style="white-space: nowrap;"><?= $campo['modificado'] ? e(date('d-m | H:i', strtotime($campo['modificado']))) : '' ?></td>
                     </tr>

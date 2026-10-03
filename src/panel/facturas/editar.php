@@ -139,7 +139,7 @@ unset($item);
                     <div class="input-group">
                         <span class="input-group-text">$</span>
                         <input type="number" step="0.01" id="efectivo2" name="efectivo2" class="form-control"
-                            min="0" placeholder="0,00">
+                            min="0" placeholder="Opcional">
                     </div>
                 </div>
                 <div class="col-md">
@@ -147,7 +147,7 @@ unset($item);
                     <div class="input-group">
                         <span class="input-group-text">$</span>
                         <input type="number" step="0.01" id="transferencia2" name="transferencia2" class="form-control"
-                            min="0" placeholder="0,00">
+                            min="0" placeholder="Opcional">
                     </div>
                 </div>
             </div>
@@ -162,7 +162,7 @@ unset($item);
                 <label class="form-label">Descuento</label>
                 <div class="input-group">
                     <input type="number" id="descuento" name="descuento" class="form-control" min="0" max="100"
-                        value="<?= e((string) ($factura['descuento'] ?? '')) ?>">
+                        value="<?= e(numero_limpio($factura['descuento'] ?? null)) ?>">
                     <span class="input-group-text">%</span>
                 </div>
             </div>

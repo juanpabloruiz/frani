@@ -90,3 +90,9 @@ WHERE NOT EXISTS (
 
 INSERT IGNORE INTO `usuarios` (`nombre`, `correo`, `clave`)
 VALUES ('admin', 'pabloruiz1980@gmail.com', '$2y$12$emBPsJNMpsTuqm7ww9pUFuMFC5G/XwE3r/JmDndscLZ5WC8wsJGau');
+
+-- Normalización: los campos de pago sin valor se guardan como NULL, nunca como 0.00.
+UPDATE `facturas` SET `efectivo`     = NULL WHERE `efectivo`     = 0;
+UPDATE `facturas` SET `transferencia` = NULL WHERE `transferencia` = 0;
+UPDATE `facturas` SET `deuda`        = NULL WHERE `deuda`        = 0;
+UPDATE `facturas` SET `descuento`    = NULL WHERE `descuento`    = 0;
