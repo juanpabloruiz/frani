@@ -1,0 +1,569 @@
+/* ============================================================
+   Shell de panel estilo WordPress
+   Pantalla completa: menu lateral fijo + contenido a la derecha.
+   - >= 1200px  (xl)  : menu con icono + texto
+   - 768-1199px (md)  : menu solo con iconos
+   - <  768px        : menu hamburguesa (offcanvas de Bootstrap)
+   Todo el layout se apoya en clases de Bootstrap; el CSS solo
+   resuelve el ancho variable de la barra lateral.
+   ============================================================ */
+
+:root {
+  --sb-ancho: 240px;
+  --sb-ancho-iconos: 68px;
+  --sb-alto-topbar: 56px;
+
+  /* La barra lateral ya es oscura y se mantiene igual en los dos temas,
+     asi que estos cuatro colores no cambian con el modo. */
+  --sb-fondo: #1d2327;
+  --sb-fondo-hover: #2c3338;
+  --sb-fondo-activo: #2271b1;
+  --sb-texto: #c3c4c7;
+  --sb-texto-activo: #ffffff;
+
+  /* Colores que si cambian. Ver el bloque dark de mas abajo. */
+  --sb-fondo-app: #f0f0f1;
+  --sb-borde: #dcdcde;
+  --sb-card-bg: #ffffff;
+  --sb-scrollbar: #c3c4c7;
+  --sb-sombra: rgba(0, 0, 0, .12);
+  --sb-anillo: rgba(34, 113, 177, .25);
+}
+
+/* ---------- Modo oscuro ----------
+
+   Bootstrap 5.3 resuelve solo lo suyo (cards, formularios, modales, menus
+   desplegables y el color nativo de los scrollbars) a partir de
+   data-bs-theme, asi que aca solo van los colores propios del shell.
+
+   La app queda como una escalera de tres pasos, como en claro:
+   barra lateral < fondo de la pagina < cards. Por eso la barra se
+   oscurece un poco mas: si se dejara en #1d2327 se fundiria con el fondo.
+   Y como en oscuro las dos superficies quedan cerca en luminosidad, se
+   le pone una linea divisoria; en claro no hace falta porque la barra es
+   tan oscura que se separa sola.
+
+   Este bloque va despues de :root porque los dos tienen la misma
+   especificidad y gana el ultimo. */
+[data-bs-theme='dark'] {
+  --sb-fondo: #14171a;
+  --sb-fondo-hover: #23282d;
+  --sb-fondo-app: #23272c;
+  --sb-borde: #3f444a;
+  --sb-card-bg: #2b2f33;
+  --sb-scrollbar: #495057;
+  --sb-sombra: rgba(0, 0, 0, .5);
+  /* El anillo de la card que se esta editando necesita mas azul: sobre
+     un fondo oscuro el 25% no se ve. */
+  --sb-anillo: rgba(34, 113, 177, .45);
+}
+
+/* Con box-sizing: border-box la linea va por dentro del ancho, asi que
+   no corre el contenido. En la barra superior va abajo, porque en mobile
+   queda fija encima del contenido y sin ella no se ve que es una barra. */
+[data-bs-theme='dark'] .sb-sidebar {
+  border-right: 1px solid #2f3439;
+}
+
+[data-bs-theme='dark'] .sb-topbar {
+  border-bottom: 1px solid #2f3439;
+}
+
+body.sb-app {
+  background-color: var(--sb-fondo-app);
+  overflow-x: hidden;
+}
+
+/* ---------- Barra superior (solo mobile) ---------- */
+
+.sb-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--sb-alto-topbar);
+  z-index: 1040;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: 0 .75rem;
+  background-color: var(--sb-fondo);
+  color: #fff;
+}
+
+/* Sin fondo: las barras se ven blancas sobre la barra oscura, que es
+   la unica combinacion que no necesita inventar un color nuevo. */
+.sb-topbar .sb-btn-menu {
+  margin-left: auto;
+  border: 0;
+  background-color: transparent;
+  color: #fff;
+  font-size: 1.15rem;
+  padding: .45rem .7rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sb-topbar .sb-btn-menu i {
+  color: #fff;
+}
+
+.sb-topbar .sb-btn-menu:hover,
+.sb-topbar .sb-btn-menu:focus,
+.sb-topbar .sb-btn-menu:active,
+.sb-topbar .sb-btn-menu:focus-visible {
+  outline: none;
+  box-shadow: none;
+  background-color: transparent;
+  color: #fff;
+}
+
+.sb-topbar .sb-marca {
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-decoration: none;
+  color: #fff;
+}
+
+.sb-topbar .sb-usuario {
+  margin-left: auto;
+  font-size: 1.15rem;
+  color: var(--sb-texto);
+  text-decoration: none;
+}
+
+/* ---------- Menu lateral ---------- */
+
+.sb-sidebar {
+  display: none;
+}
+
+.sb-marca-lateral {
+  height: var(--sb-alto-topbar);
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: 0 1rem;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1px solid var(--sb-fondo-hover);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.sb-marca-lateral img {
+  max-height: 26px;
+  width: auto;
+  flex: 0 0 auto;
+}
+
+.sb-nav {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: .5rem 0;
+}
+
+.sb-nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sb-nav::-webkit-scrollbar-thumb {
+  background-color: #3c434a;
+  border-radius: 3px;
+}
+
+.sb-item {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .55rem 1rem;
+  color: var(--sb-texto);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sb-item i {
+  flex: 0 0 1.25rem;
+  width: 1.25rem;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.sb-item:hover {
+  background-color: var(--sb-fondo-hover);
+  color: #fff;
+}
+
+.sb-item.active {
+  background-color: var(--sb-fondo-activo);
+  border-left-color: #72aee6;
+  color: var(--sb-texto-activo);
+  font-weight: 600;
+}
+
+.sb-seccion {
+  padding: .9rem 1rem .35rem;
+  font-size: .7rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #6c7781;
+  white-space: nowrap;
+}
+
+.sb-pie {
+  border-top: 1px solid var(--sb-fondo-hover);
+  padding: .4rem 0;
+}
+
+/* El texto se oculta SOLO en la barra lateral fija cuando queda
+   en modo iconos. En el offcanvas de mobile nunca se oculta:
+   ahi el menu se muestra siempre como en pantalla completa. */
+.sb-sidebar .sb-label {
+  display: none;
+}
+
+/* ---------- Offcanvas del menu (mobile) ---------- */
+
+.sb-offcanvas {
+  --bs-offcanvas-width: 250px;
+  background-color: var(--sb-fondo);
+  color: var(--sb-texto);
+}
+
+/* En mobile el menu ocupa toda la pantalla, no una franja angosta.
+   Se usa la variable del propio componente de Bootstrap, asi que la
+   transicion de entrada y el backdrop siguen siendo los nativos. */
+@media (max-width: 767.98px) {
+  .sb-offcanvas {
+    --bs-offcanvas-width: 100%;
+  }
+}
+
+.sb-offcanvas .offcanvas-header {
+  border-bottom: 1px solid var(--sb-fondo-hover);
+}
+
+.sb-offcanvas .btn-close {
+  filter: invert(1);
+}
+
+/* ---------- Contenido ---------- */
+
+.sb-main {
+  min-width: 0;
+  padding-top: var(--sb-alto-topbar);
+}
+
+.sb-main > .sb-contenido {
+  padding: 1rem;
+}
+
+.sb-min0 {
+  min-width: 0;
+}
+
+/* Cabecera de seccion, estilo "titulo + acciones" de WordPress */
+
+.sb-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: 1rem;
+}
+
+.sb-cabecera h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.sb-cabecera .sb-cabecera-acciones {
+  margin-left: auto;
+  display: flex;
+  gap: .5rem;
+}
+
+/* Buscador fijo en el tope del contenido */
+
+.sb-buscador {
+  position: sticky;
+  top: var(--sb-alto-topbar);
+  z-index: 10;
+  background-color: var(--sb-fondo-app);
+  /* Sin padding arriba: el buscador tiene que arrancar en la misma
+     linea horizontal que el borde superior del formulario, que esta
+     en el tope de la columna. Con padding se caia 8px. */
+  padding: 0 0 1rem;
+  margin-bottom: 0;
+}
+
+/* ---------- Cards de registro (en lugar de tablas) ---------- */
+
+.sb-card {
+  border: 1px solid var(--sb-borde);
+  border-radius: .375rem;
+  background-color: var(--sb-card-bg);
+  cursor: pointer;
+  transition: box-shadow .15s ease-in-out, border-color .15s ease-in-out;
+}
+
+.sb-card:hover,
+.sb-card:focus-within {
+  border-color: var(--sb-fondo-activo);
+  box-shadow: 0 1px 6px var(--sb-sombra);
+}
+
+.sb-card.activo {
+  border-color: var(--sb-fondo-activo);
+  box-shadow: 0 0 0 2px var(--sb-anillo);
+}
+
+/* Los siguientes usan variables de Bootstrap para el fondo y los bordes,
+   asi que se adaptan solos al tema sin tocar nada mas aca. */
+.sb-thumb {
+  width: 56px;
+  height: 56px;
+  flex: 0 0 56px;
+  object-fit: cover;
+  border-radius: .25rem;
+  background-color: var(--bs-tertiary-bg);
+  border: 1px solid var(--sb-borde);
+}
+
+.sb-thumb-vacio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bs-secondary-color);
+  font-size: 1.25rem;
+}
+
+.sb-titulo {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 .35rem;
+  word-break: break-word;
+}
+
+.sb-meta {
+  font-size: .8rem;
+  color: var(--bs-secondary-color);
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem .75rem;
+  margin-bottom: .4rem;
+}
+
+.sb-chip {
+  display: inline-block;
+  background-color: var(--bs-tertiary-bg);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 1rem;
+  padding: 0 .5rem;
+  font-size: .75rem;
+  color: var(--bs-secondary-color);
+}
+
+.sb-datos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem .9rem;
+  font-size: .85rem;
+}
+
+.sb-datos .sb-valor {
+  font-weight: 600;
+}
+
+.sb-accion {
+  flex: 0 0 auto;
+}
+
+.sb-vacio {
+  text-align: center;
+  color: var(--bs-secondary-color);
+  padding: 3rem 1rem;
+}
+
+/* ---------- Escritorio: la pagina no scrollea, scrollea la lista ----------
+
+   A partir de md la pantalla se comporta como una app de escritorio: el
+   menu, el buscador y el formulario quedan quietos y el unico elemento
+   que se desplaza es el grupo de cards. Si scrollea el documento, el
+   buscador se va al tope de la pagina y queda desalineado. */
+@media (min-width: 768px) {
+
+  body.sb-app {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .sb-main {
+    margin-left: var(--sb-ancho-iconos);
+    padding-top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sb-contenido {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sb-contenido > .row {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  /* Las dos columnas son contenedores flex para poder repartir alto.
+     El height:100% es imprescindible: con solo min-height:0 el alto de
+     .row lo decide el flex del padre, no un alto declarado, asi que el
+     align-items:stretch de Bootstrap no alcanza y las columnas se van al
+     alto del contenido. Con height:100% quedan topadas a la fila. */
+  .sb-contenido .col-md-4,
+  .sb-contenido .col-md-8 {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%;
+  }
+
+  /* El buscador ya no necesita pegarse: su columna no scrollea */
+  .sb-buscador {
+    position: static;
+    flex: 0 0 auto;
+  }
+
+  /* El unico scroll de la pagina */
+  .sb-lista {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* Reserva el hueco del scrollbar para que no pise la ultima card.
+       Con padding desplazaria la grilla, porque .row ya tiene margenes
+       negativos que compensan el gutter. */
+    scrollbar-gutter: stable;
+  }
+
+  .sb-lista::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .sb-lista::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .sb-lista::-webkit-scrollbar-thumb {
+    background-color: var(--sb-scrollbar);
+    border-radius: 4px;
+  }
+
+  /* Si el formulario es mas alto que la ventana, scrollea el, no la pagina */
+  .sb-contenido .col-md-4 {
+    overflow-y: auto;
+  }
+}
+
+/* ---------- Adaptación a pantallas medianas: solo iconos ---------- */
+
+@media (min-width: 768px) {
+  .sb-topbar {
+    display: none;
+  }
+
+  .sb-sidebar {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: var(--sb-ancho-iconos);
+    background-color: var(--sb-fondo);
+    z-index: 1030;
+    overflow: hidden;
+  }
+
+  .sb-marca-lateral {
+    justify-content: center;
+    padding: 0;
+  }
+
+  /* Solo la barra lateral pasa a modo iconos. El offcanvas mantiene
+     el formato completo (icono + texto) en cualquier momento. */
+  .sb-sidebar .sb-item {
+    justify-content: center;
+    padding: .6rem .25rem;
+    border-left-width: 0;
+    border-bottom: 3px solid transparent;
+  }
+
+  .sb-sidebar .sb-item.active {
+    border-bottom-color: #72aee6;
+  }
+
+  .sb-sidebar .sb-item i {
+    flex: 0 0 auto;
+    font-size: 1.15rem;
+  }
+
+  .sb-sidebar .sb-seccion {
+    padding: .75rem 0 .25rem;
+    text-align: center;
+    font-size: .6rem;
+    overflow: hidden;
+  }
+}
+
+/* ---------- Pantallas anchas: icono + texto ---------- */
+
+@media (min-width: 1200px) {
+  .sb-sidebar {
+    width: var(--sb-ancho);
+  }
+
+  .sb-main {
+    margin-left: var(--sb-ancho);
+  }
+
+  .sb-sidebar .sb-label {
+    display: inline;
+  }
+
+  .sb-marca-lateral {
+    justify-content: flex-start;
+    padding: 0 1rem;
+  }
+
+  .sb-sidebar .sb-item {
+    justify-content: flex-start;
+    padding: .55rem 1rem;
+    border-left-width: 3px;
+    border-bottom-width: 0;
+  }
+
+  .sb-sidebar .sb-item.active {
+    border-bottom-color: transparent;
+    border-left-color: #72aee6;
+  }
+
+  .sb-sidebar .sb-item i {
+    font-size: 1rem;
+  }
+
+  .sb-sidebar .sb-seccion {
+    text-align: left;
+    padding: .9rem 1rem .35rem;
+    font-size: .7rem;
+  }
+}

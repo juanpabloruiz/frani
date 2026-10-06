@@ -6,6 +6,7 @@ $esProductos = $carpetaActual === 'productos';
 $esCategorias = $carpetaActual === 'categorias';
 $esFacturas = $carpetaActual === 'facturas';
 $esPorcentajes = $carpetaActual === 'porcentajes';
+$esTest = $carpetaActual === 'test';
 $esClientes = $carpetaActual === 'clientes';
 $esMascotas = $carpetaActual === 'mascotas';
 ?>
@@ -41,6 +42,9 @@ $esMascotas = $carpetaActual === 'mascotas';
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white <?= $esPorcentajes ? 'active' : '' ?>" <?= $esPorcentajes ? 'aria-current="page"' : '' ?> href="<?= e(base_path('panel/porcentajes')) ?>">Porcentajes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white <?= $esTest ? 'active' : '' ?>" <?= $esTest ? 'aria-current="page"' : '' ?> href="<?= e(base_path('panel/test')) ?>">Test</a>
                 </li>
             </ul>
             <ul class="navbar-nav">
