@@ -415,13 +415,19 @@ body.sb-app {
   .sb-contenido {
     flex: 1 1 auto;
     min-height: 0;
-    display: flex;
-    flex-direction: column;
+    overflow-y: auto;
   }
 
-  .sb-contenido > .row {
+  .sb-workspace {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .sb-workspace > .row {
     flex: 1 1 auto;
     min-height: 0;
+    margin-top: 0;
   }
 
   /* Las dos columnas son contenedores flex para poder repartir alto.
@@ -429,12 +435,13 @@ body.sb-app {
      .row lo decide el flex del padre, no un alto declarado, asi que el
      align-items:stretch de Bootstrap no alcanza y las columnas se van al
      alto del contenido. Con height:100% quedan topadas a la fila. */
-  .sb-contenido .col-md-4,
-  .sb-contenido .col-md-8 {
+  .sb-workspace > .row > .col-md-4,
+  .sb-workspace > .row > .col-md-8 {
     display: flex;
     flex-direction: column;
     min-height: 0;
     height: 100%;
+    margin-top: 0;
   }
 
   /* El buscador ya no necesita pegarse: su columna no scrollea */
@@ -469,8 +476,25 @@ body.sb-app {
   }
 
   /* Si el formulario es mas alto que la ventana, scrollea el, no la pagina */
-  .sb-contenido .col-md-4 {
+  .sb-workspace > .row > .col-md-4 {
     overflow-y: auto;
+  }
+}
+
+/* Los formularios de venta crecen con sus productos y desplazan la página. */
+@media (min-width: 768px) {
+  body.sb-app.sb-page-scroll {
+    height: auto;
+    overflow-y: auto;
+  }
+
+  .sb-page-scroll .sb-main {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .sb-page-scroll .sb-contenido {
+    overflow: visible;
   }
 }
 
@@ -565,5 +589,93 @@ body.sb-app {
     text-align: left;
     padding: .9rem 1rem .35rem;
     font-size: .7rem;
+  }
+}
+
+/* Las grillas mantienen las cards juntas aunque haya pocos registros. */
+.sb-lista {
+  align-content: flex-start;
+}
+
+.sb-lista > .row,
+.sb-lista > section > .row {
+  margin-top: 0;
+}
+
+.sb-lista [hidden] {
+  display: none !important;
+}
+
+.sb-app .card {
+  --bs-card-bg: var(--sb-card-bg);
+  --bs-card-border-color: var(--sb-borde);
+}
+
+.sb-app .text-success {
+  color: var(--bs-success-text-emphasis) !important;
+}
+
+.sb-app .text-danger {
+  color: var(--bs-danger-text-emphasis) !important;
+}
+
+.sb-main form label {
+  overflow-wrap: anywhere;
+}
+
+@media print {
+  body.sb-app { height: auto; overflow: visible; }
+  .sb-sidebar, .sb-topbar, .sb-offcanvas { display: none !important; }
+  .sb-main { margin-left: 0; height: auto; padding-top: 0; }
+  .sb-contenido, .sb-workspace, .sb-lista { overflow: visible; height: auto; }
+  .venta-item { break-inside: avoid; }
+  .venta-item button { display: none; }
+}
+
+.row.sb-lista {
+  margin-top: 0;
+  row-gap: var(--bs-gutter-y);
+}
+
+.row.sb-lista > [data-card-item] {
+  margin-top: 0;
+}
+
+/* Resumen diario de lo cobrado: gris suave en claro y más claro en oscuro. */
+.sb-resumen-dia {
+  background-color: var(--bs-secondary-bg);
+}
+
+/* Las deudas mantienen el borde rojo mientras la sombra pulsa suavemente. */
+.sb-card.sb-deuda-pendiente {
+  border: 3px solid var(--bs-danger);
+  box-shadow: 0 0 4px 2px rgba(220, 53, 69, .22);
+  animation: sb-deuda-pulso 2s ease-in-out infinite;
+}
+
+@keyframes sb-deuda-pulso {
+  0%, 38%, 100% {
+    box-shadow: 0 0 4px 2px rgba(220, 53, 69, .22);
+  }
+  22%, 72% {
+    box-shadow: 0 0 14px 3px rgba(220, 53, 69, .55);
+  }
+}
+
+.sb-card.sb-deuda-pendiente:hover,
+.sb-card.sb-deuda-pendiente:focus-within {
+  animation: none;
+  box-shadow: 0 0 14px 3px rgba(220, 53, 69, .55);
+}
+
+.sb-card.sb-deuda-pendiente:focus-visible {
+  outline: 2px solid var(--sb-fondo-activo);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce), print {
+  .sb-card.sb-deuda-pendiente {
+    animation: none;
+    box-shadow: none;
   }
 }

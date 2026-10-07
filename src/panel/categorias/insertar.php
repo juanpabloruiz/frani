@@ -11,7 +11,7 @@ verificar_CSRF();
 $nombre = trim($_POST['nombre'] ?? '');
 
 if ($nombre === '') {
-    redireccionar('panel/categorias/nuevo');
+    redireccionar('panel/categorias');
 }
 
 $db = conexion();

@@ -24,4 +24,4 @@ $stmt->close();
 
 respaldar_bd();
 
-redireccionar('panel/categorias');
+redireccionar('panel/categorias#categoria-' . $id);

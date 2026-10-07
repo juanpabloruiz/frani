@@ -13,11 +13,8 @@ $observaciones = trim($_POST['observaciones'] ?? '');
 $observacionesDB = $observaciones !== '' ? $observaciones : null;
 $efectivo = monto_post($_POST['efectivo'] ?? '');
 $transferencia = monto_post($_POST['transferencia'] ?? '');
-$total = (float) ($_POST['total'] ?? '0');
-$descuentoRaw = trim((string) ($_POST['descuento'] ?? ''));
-$descuento = (int) $descuentoRaw;
-$descuento = $descuento > 0 ? $descuento : null;
-$deuda = monto_post($_POST['deuda'] ?? '');
+$descuentoSolicitado = max(0, round((float) (monto_post($_POST['descuento'] ?? '') ?? 0), 2));
+$subtotal = 0.0;
 $detalleItems = [];
 $productosVendidos = [];
 
@@ -43,6 +40,8 @@ foreach ($_POST as $key => $value) {
     $stmtProducto->bind_result($nombreProducto);
 
     if ($stmtProducto->fetch()) {
+        $precio = max(0, round($precio, 2));
+        $subtotal += $cantidad * $precio;
         $detalleItems[] = sprintf('%s (%d x %.2f)', $nombreProducto, $cantidad, $precio);
         $productosVendidos[] = ['id' => $idProducto, 'cantidad' => $cantidad];
     }
@@ -55,6 +54,14 @@ $stmtProducto->close();
 if ($detalleItems === []) {
     redireccionar('panel/facturas/nueva');
 }
+
+// Recalcular en el servidor para guardar el mismo importe que muestra el formulario.
+$subtotal = round($subtotal, 2);
+$descuento = min($subtotal, $descuentoSolicitado);
+$total = round(max(0, $subtotal - $descuento), 2);
+$descuento = $descuento > 0 ? $descuento : null;
+$deuda = round(max(0, $total - (float) $efectivo - (float) $transferencia), 2);
+$deuda = $deuda > 0 ? $deuda : null;
 
 $detalle = implode(', ', $detalleItems);
 
@@ -69,8 +76,8 @@ if ($nombre !== '') {
     $stmtCliente->close();
 }
 
-$stmt = $db->prepare("INSERT INTO facturas (nombre, total, efectivo, transferencia, deuda, descuento, detalle, observaciones) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-$stmt->bind_param('sddddiss', $nombre, $total, $efectivo, $transferencia, $deuda, $descuento, $detalle, $observacionesDB);
+$stmt = $db->prepare("INSERT INTO facturas (nombre, total, efectivo, transferencia, deuda, descuento_importe, detalle, observaciones) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param('sdddddss', $nombre, $total, $efectivo, $transferencia, $deuda, $descuento, $detalle, $observacionesDB);
 $stmt->execute();
 $stmt->close();
 

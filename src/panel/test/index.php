@@ -43,28 +43,20 @@ $token = CSRF_token();
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test | Frani</title>
-    <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
-    <script src="<?= e(base_path('../../js/tema.js')) ?>"></script>
-    <link rel="icon" type="image/svg+xml" href="<?= e(base_path('../../img/favicon.svg')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=4')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/admin-sidebar.css?v=14')) ?>">
+    <?php $tituloPagina = 'Test'; require __DIR__ . '/../_head.php'; ?>
 </head>
 
 <body class="sb-app">
 
     <?php require __DIR__ . '/menu.php'; ?>
 
-    <div class="sb-contenido">
+    <div class="sb-contenido sb-workspace">
 
         <div class="row g-3">
 
             <!-- Columna izquierda: Formulario -->
             <div class="col-md-4 col-xl-3">
-                <div class="card shadow-sm" style="position: sticky; top: 1rem;">
+                <div class="card shadow-sm">
                     <div class="card-body">
                         <form method="POST"
                             action="<?= e(base_path('panel/test/' . ($editando ? 'actualizar' : 'insertar') . ($editando ? '#producto-' . $producto['id'] : ''))) ?>"
@@ -165,17 +157,17 @@ $token = CSRF_token();
                 <div class="sb-buscador">
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa-solid fa-search"></i></span>
-                        <input type="text" id="buscadorProductos" class="form-control" placeholder="Buscar producto...">
+                        <input type="text" id="buscadorProductos" class="form-control" placeholder="Buscar producto..." aria-label="Buscar producto">
                     </div>
                 </div>
 
-                <div class="row g-3 sb-lista" id="listaProductos">
+                <div class="row g-3 sb-lista" id="listaProductos" data-search-input="buscadorProductos">
                     <?php while ($fila = $consulta->fetch_assoc()): ?>
                         <?php $activo = $editando && (int) $fila['id'] === (int) $producto['id']; ?>
-                        <div class="col-12 col-lg-6 col-xxl-4">
+                        <div class="col-12 col-lg-6 col-xxl-4" data-card-item>
                             <div class="card sb-card h-100<?= $activo ? ' activo' : '' ?>"
                                 id="producto-<?= e((string) $fila['id']) ?>"
-                                tabindex="0"
+                                tabindex="0" role="link" aria-label="Editar <?= e($fila['producto']) ?>"
                                 data-edit="<?= e(base_path('panel/test?id=' . $fila['id'])) ?>">
 
                                 <div class="card-body d-flex gap-3">
@@ -260,34 +252,8 @@ $token = CSRF_token();
         </div>
     </div>
 
-    <script src="<?= e(base_path('../../js/bootstrap.bundle.min.js')) ?>"></script>
+    <script src="<?= e(base_path('js/bootstrap.bundle.min.js')) ?>"></script>
     <script>
-        const buscador = document.getElementById('buscadorProductos');
-        const cards = document.querySelectorAll('#listaProductos .sb-card');
-
-        function normalizar(texto) {
-            return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-        }
-
-        buscador.addEventListener('input', function () {
-            const termino = normalizar(this.value);
-            cards.forEach(card => {
-                card.parentElement.style.display = termino === '' || normalizar(card.textContent).includes(termino) ? '' : 'none';
-            });
-        });
-
-        cards.forEach(card => {
-            card.addEventListener('click', function (e) {
-                if (e.target.closest('form') || e.target.closest('a')) return;
-                window.location.href = this.dataset.edit;
-            });
-            card.addEventListener('keydown', function (e) {
-                if (e.key !== 'Enter' && e.key !== ' ') return;
-                e.preventDefault();
-                window.location.href = this.dataset.edit;
-            });
-        });
-
         document.getElementById('btnGuardarCategoria').addEventListener('click', function () {
             const nombre = document.getElementById('nombreCategoria').value.trim();
             if (!nombre) return;

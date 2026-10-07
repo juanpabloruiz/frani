@@ -15,12 +15,8 @@ $observacionesDB = $observaciones !== '' ? $observaciones : null;
 // Los campos de pago vacíos se guardan como NULL, nunca como 0.00.
 $efectivo = sumar_montos([$_POST['efectivo'] ?? '', $_POST['efectivo2'] ?? '']);
 $transferencia = sumar_montos([$_POST['transferencia'] ?? '', $_POST['transferencia2'] ?? '']);
-$total = (float) ($_POST['total'] ?? '0');
-$descuentoRaw = trim((string) ($_POST['descuento'] ?? ''));
-$descuento = (int) $descuentoRaw;
-$descuento = $descuento > 0 ? $descuento : null;
-$deuda = $total - (float) ($efectivo ?? 0) - (float) ($transferencia ?? 0);
-$deuda = $deuda > 0 ? round($deuda, 2) : null;
+$descuentoSolicitado = max(0, round((float) (monto_post($_POST['descuento'] ?? '') ?? 0), 2));
+$subtotal = 0.0;
 $detalleItems = [];
 
 $db = conexion();
@@ -45,6 +41,8 @@ foreach ($_POST as $key => $value) {
     $stmtProducto->bind_result($nombreProducto);
 
     if ($stmtProducto->fetch()) {
+        $precio = max(0, round($precio, 2));
+        $subtotal += $cantidad * $precio;
         $detalleItems[] = sprintf('%s (%d x %.2f)', $nombreProducto, $cantidad, $precio);
     }
 
@@ -57,14 +55,22 @@ if ($id <= 0 || $detalleItems === []) {
     redireccionar('panel/facturas');
 }
 
+// Recalcular en el servidor para guardar el mismo importe que muestra el formulario.
+$subtotal = round($subtotal, 2);
+$descuento = min($subtotal, $descuentoSolicitado);
+$total = round(max(0, $subtotal - $descuento), 2);
+$descuento = $descuento > 0 ? $descuento : null;
+$deuda = round(max(0, $total - (float) $efectivo - (float) $transferencia), 2);
+$deuda = $deuda > 0 ? $deuda : null;
+
 $detalle = implode(', ', $detalleItems);
 
 $stmt = $db->prepare(
     "UPDATE facturas
-    SET nombre = ?, detalle = ?, total = ?, efectivo = ?, transferencia = ?, deuda = ?, descuento = ?, observaciones = ?
+    SET nombre = ?, detalle = ?, total = ?, efectivo = ?, transferencia = ?, deuda = ?, descuento = NULL, descuento_importe = ?, observaciones = ?
     WHERE id = ?"
 );
-$stmt->bind_param('ssddddiss', $nombre, $detalle, $total, $efectivo, $transferencia, $deuda, $descuento, $observacionesDB, $id);
+$stmt->bind_param('ssdddddsi', $nombre, $detalle, $total, $efectivo, $transferencia, $deuda, $descuento, $observacionesDB, $id);
 $stmt->execute();
 $stmt->close();
 

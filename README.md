@@ -33,3 +33,13 @@ docker compose up --build
 
 - App: `http://localhost:${NGINX_PORT}`
 - phpMyAdmin: `http://localhost:${PHPMYADMIN_PORT}`
+
+## Actualización de descuentos
+
+Antes de actualizar una instalación existente, agregar el campo de descuento en pesos:
+
+```bash
+docker compose exec -T db sh -c 'mariadb -uroot -p"$MARIADB_ROOT_PASSWORD" "$MARIADB_DATABASE"' < migrations/20261006_descuento_importe.sql
+```
+
+La migración se puede repetir. Conserva los descuentos anteriores en porcentaje; al editar esas ventas se muestra su importe equivalente. Las ventas nuevas guardan el descuento en pesos, con centavos.

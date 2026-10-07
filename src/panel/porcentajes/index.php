@@ -12,19 +12,13 @@ unset($_SESSION['toast_exito']);
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Porcentajes | Frani</title>
-    <link rel="stylesheet" href="<?= e(base_path('../css/bootstrap.min.css')) ?>">
-    <link rel="icon" type="image/svg+xml" href="<?= e(base_path('../img/favicon.svg')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../css/estilo.css?v=4')) ?>">
+    <?php $tituloPagina = 'Porcentajes'; require __DIR__ . '/../_head.php'; ?>
 </head>
 
-<body>
+<body class="sb-app">
     <?php require __DIR__ . '/../menu.php'; ?>
 
-    <div class="container">
+    <div class="sb-contenido">
         <div class="row g-4">
 
         <?php if ($toastExito): ?>
@@ -126,7 +120,9 @@ unset($_SESSION['toast_exito']);
         </div>
     </div>
 
-    <script src="<?= e(base_path('../js/bootstrap.bundle.min.js')) ?>"></script>
+    </main>
+
+    <script src="<?= e(base_path('js/bootstrap.bundle.min.js')) ?>"></script>
     <script>
         const calcPrecio = document.getElementById('calc_precio');
         const calcPorcentaje = document.getElementById('calc_porcentaje');

@@ -10,7 +10,7 @@ if ($id <= 0) {
 
 $db = conexion();
 
-$stmt = $db->prepare("SELECT id, nombre, total, efectivo, transferencia, deuda, descuento, detalle, observaciones FROM facturas WHERE id = ?");
+$stmt = $db->prepare("SELECT id, nombre, total, efectivo, transferencia, deuda, descuento, descuento_importe, detalle, observaciones FROM facturas WHERE id = ?");
 $stmt->bind_param('i', $id);
 $stmt->execute();
 $resultado = $stmt->get_result();
@@ -32,6 +32,17 @@ if (!empty($factura['detalle'])) {
             ];
         }
     }
+}
+
+// Las ventas anteriores almacenaban un porcentaje. Al editarlas se muestra
+// su importe equivalente, calculado sobre los precios originales del detalle.
+$descuentoImporte = $factura['descuento_importe'];
+if ($descuentoImporte === null && (float) $factura['descuento'] > 0) {
+    $subtotalOriginal = array_sum(array_map(
+        static fn(array $item): float => $item['cantidad'] * $item['precio'],
+        $items
+    ));
+    $descuentoImporte = round($subtotalOriginal * (float) $factura['descuento'] / 100, 2);
 }
 
 $productos = [];
@@ -62,127 +73,112 @@ unset($item);
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Venta | Frani</title>
-    <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
-    <link rel="icon" type="image/svg+xml" href="<?= e(base_path('../../img/favicon.svg')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=4')) ?>">
+    <?php $tituloPagina = 'Editar Venta'; require __DIR__ . '/../_head.php'; ?>
 </head>
 
-<body>
+<body class="sb-app sb-page-scroll">
     <?php require __DIR__ . '/../menu.php'; ?>
 
-    <div class="container">
+    <div class="sb-contenido">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h3 mb-0">Editar venta</h1>
             <a href="<?= e(base_path('panel/facturas')) ?>" class="btn btn-outline-secondary">Volver</a>
         </div>
 
-        <form id="facturaForm" method="POST" action="<?= e(base_path('panel/facturas/actualizar')) ?>">
-            <?= CSRF_field() ?>
-            <input type="hidden" name="id" value="<?= e((string) $factura['id']) ?>">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form id="facturaForm" method="POST" action="<?= e(base_path('panel/facturas/actualizar')) ?>">
+                    <?= CSRF_field() ?>
+                    <input type="hidden" name="id" value="<?= e((string) $factura['id']) ?>">
 
-            <div class="mb-3">
-                <label class="form-label">Nombre del cliente</label>
-                <input type="text" id="nombre" name="nombre" class="form-control"
-                    value="<?= e($factura['nombre']) ?>">
-            </div>
-
-            <div class="table-responsive">
-                <table class="table" id="itemsTable">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Cantidad</th>
-                            <th>Precio</th>
-                            <th>Subtotal</th>
-                            <th class="text-center">Quitar</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-
-            <div class="mb-3">
-                <select id="selectAgregarProducto" class="form-select mb-2" style="max-width: 400px;">
-                    <option value="">Seleccione un producto</option>
-                </select>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalProducto">
-                    <i class="fa-solid fa-box-open me-1"></i>Agregar producto nuevo
-                </button>
-            </div>
-
-            <div class="row g-3 mb-2">
-                <div class="col-md">
-                    <label class="form-label">Efectivo</label>
-                    <div class="input-group">
-                        <span class="input-group-text">$</span>
-                        <input type="number" step="0.01" id="efectivo" name="efectivo" class="form-control"
-                            min="0" value="<?= e(numero_limpio($factura['efectivo'])) ?>">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre del cliente</label>
+                        <input type="text" id="nombre" name="nombre" class="form-control"
+                            value="<?= e($factura['nombre']) ?>">
                     </div>
-                </div>
-                <div class="col-md">
-                    <label class="form-label">Transferencia</label>
-                    <div class="input-group">
-                        <span class="input-group-text">$</span>
-                        <input type="number" step="0.01" id="transferencia" name="transferencia" class="form-control"
-                            min="0" value="<?= e(numero_limpio($factura['transferencia'])) ?>">
+
+                    <div id="itemsCards" class="d-grid gap-3 mb-3" aria-label="Productos de la venta"></div>
+
+                    <div class="mb-3">
+                        <select id="selectAgregarProducto" class="form-select mb-2" style="max-width: 400px;">
+                            <option value="">Seleccione un producto</option>
+                        </select>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalProducto">
+                            <i class="fa-solid fa-box-open me-1"></i>Agregar producto nuevo
+                        </button>
                     </div>
-                </div>
-            </div>
 
-            <div id="filaPago2" class="row g-3 mb-2 <?= ((float) $factura['deuda'] > 0) ? '' : 'd-none' ?>">
-                <div class="col-md">
-                    <label class="form-label text-muted">Efectivo (Línea 2)</label>
-                    <div class="input-group">
-                        <span class="input-group-text">$</span>
-                        <input type="number" step="0.01" id="efectivo2" name="efectivo2" class="form-control"
-                            min="0" placeholder="Opcional">
+                    <div class="row g-3 mb-2">
+                        <div class="col-md">
+                            <label class="form-label">Efectivo</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" step="0.01" id="efectivo" name="efectivo" class="form-control"
+                                    min="0" value="<?= e(numero_limpio($factura['efectivo'])) ?>">
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <label class="form-label">Transferencia</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" step="0.01" id="transferencia" name="transferencia" class="form-control"
+                                    min="0" value="<?= e(numero_limpio($factura['transferencia'])) ?>">
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md">
-                    <label class="form-label text-muted">Transferencia (Línea 2)</label>
-                    <div class="input-group">
-                        <span class="input-group-text">$</span>
-                        <input type="number" step="0.01" id="transferencia2" name="transferencia2" class="form-control"
-                            min="0" placeholder="Opcional">
+
+                    <div id="filaPago2" class="row g-3 mb-2 <?= ((float) $factura['deuda'] > 0) ? '' : 'd-none' ?>">
+                        <div class="col-md">
+                            <label class="form-label text-muted">Efectivo (Línea 2)</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" step="0.01" id="efectivo2" name="efectivo2" class="form-control"
+                                    min="0" placeholder="Opcional">
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <label class="form-label text-muted">Transferencia (Línea 2)</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" step="0.01" id="transferencia2" name="transferencia2" class="form-control"
+                                    min="0" placeholder="Opcional">
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="mb-3 <?= ((float) $factura['deuda'] > 0) ? '' : 'd-none' ?>" id="deudaRow">
-                <label class="form-label fw-bold text-danger">Deuda</label>
-                <input type="number" id="deuda" name="deuda" class="form-control border-danger text-danger"
-                    step="0.01" min="0" readonly>
-            </div>
+                    <div class="mb-3 <?= ((float) $factura['deuda'] > 0) ? '' : 'd-none' ?>" id="deudaRow">
+                        <label class="form-label fw-bold text-danger">Deuda</label>
+                        <input type="number" id="deuda" name="deuda" class="form-control border-danger text-danger"
+                            step="0.01" min="0" readonly>
+                    </div>
 
-            <div class="mb-3">
-                <label class="form-label">Descuento</label>
-                <div class="input-group">
-                    <input type="number" id="descuento" name="descuento" class="form-control" min="0" max="100"
-                        value="<?= e(numero_limpio($factura['descuento'] ?? null)) ?>">
-                    <span class="input-group-text">%</span>
-                </div>
-            </div>
+                    <div class="mb-3">
+                        <label for="descuento" class="form-label">Descuento</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" id="descuento" name="descuento" class="form-control" min="0" step="0.01"
+                                value="<?= e(numero_limpio($descuentoImporte)) ?>">
+                        </div>
+                    </div>
 
-            <div class="mb-3">
-                <label class="form-label">Total</label>
-                <input type="number" id="total" name="total" class="form-control" step="0.01" readonly>
-            </div>
+                    <div class="mb-3">
+                        <label class="form-label">Total</label>
+                        <input type="number" id="total" name="total" class="form-control" step="0.01" readonly>
+                    </div>
 
-            <div class="mb-3">
-                <label class="form-label">Observaciones</label>
-                <input type="text" name="observaciones" class="form-control"
-                    value="<?= e($factura['observaciones'] ?? '') ?>"
-                    placeholder="Ej: Se le hizo un descuento por falla de $ 1000">
-            </div>
+                    <div class="mb-3">
+                        <label class="form-label">Observaciones</label>
+                        <input type="text" name="observaciones" class="form-control"
+                            value="<?= e($factura['observaciones'] ?? '') ?>"
+                            placeholder="Ej: Se le hizo un descuento por falla de $ 1000">
+                    </div>
 
-            <div class="d-grid d-md-block">
-                <button type="submit" class="btn btn-primary btn-lg">Actualizar venta</button>
+                    <div class="d-grid d-md-block">
+                        <button type="submit" class="btn btn-primary btn-lg">Actualizar venta</button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
         </div>
     </main>
 
@@ -239,10 +235,10 @@ unset($item);
         </div>
     </div>
 
-    <script src="<?= e(base_path('../../js/bootstrap.bundle.min.js')) ?>"></script>
+    <script src="<?= e(base_path('js/bootstrap.bundle.min.js')) ?>"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const itemsTable = document.getElementById("itemsTable").querySelector("tbody");
+            const itemsCards = document.getElementById("itemsCards");
             const addItemBtn = document.getElementById("addItemBtn");
             const totalField = document.getElementById("total");
             const deudaField = document.getElementById("deuda");
@@ -259,8 +255,9 @@ unset($item);
             function updateTotal() {
                 const subtotal = Array.from(document.querySelectorAll(".subtotal"))
                     .reduce((sum, input) => sum + parseFloat(input.value || 0), 0);
-                const descuento = parseFloat(descuentoField.value) || 0;
-                totalField.value = (subtotal * (1 - descuento / 100)).toFixed(2);
+                const descuento = Math.max(0, parseFloat(descuentoField.value) || 0);
+                descuentoField.max = subtotal.toFixed(2);
+                totalField.value = Math.max(0, subtotal - descuento).toFixed(2);
                 updateDeuda();
             }
 
@@ -290,7 +287,8 @@ unset($item);
 
             function crearFila(selectId, cantidad, precio) {
                 const index = itemIndex;
-                const row = document.createElement("tr");
+                const row = document.createElement("div");
+                row.className = "card venta-item";
 
                 const select = document.createElement("select");
                 select.className = "form-select select-producto";
@@ -320,7 +318,7 @@ unset($item);
                 precioInput.name = `precio_${index}`;
                 precioInput.step = "0.01";
                 precioInput.readOnly = true;
-                precioInput.value = precio;
+                precioInput.value = precio || select.selectedOptions[0]?.dataset.precio || '';
 
                 const subtotalInput = document.createElement("input");
                 subtotalInput.type = "number";
@@ -340,7 +338,7 @@ unset($item);
                     precioInput.value = precioSeleccionado !== undefined ? precioSeleccionado : '';
                     recalcular();
 
-                    const filas = itemsTable.querySelectorAll("tr");
+                    const filas = itemsCards.querySelectorAll(".venta-item");
                     const ultimaFila = filas[filas.length - 1];
                     if (row === ultimaFila && select.value !== '') {
                         crearFila(null, 1, 0);
@@ -360,28 +358,29 @@ unset($item);
                         updateTotal();
                     });
 
-                const tdProducto = document.createElement("td");
-                tdProducto.appendChild(select);
-                const tdCantidad = document.createElement("td");
-                tdCantidad.appendChild(cantidadInput);
-                const tdPrecio = document.createElement("td");
-                tdPrecio.className = "text-end";
-                tdPrecio.appendChild(precioInput);
-                const tdSubtotal = document.createElement("td");
-                tdSubtotal.className = "text-end";
-                tdSubtotal.appendChild(subtotalInput);
-                const tdQuitar = document.createElement("td");
-                tdQuitar.className = "text-center";
-                tdQuitar.appendChild(btnQuitar);
+                const body = document.createElement('div');
+                body.className = 'card-body row g-3 align-items-end m-0';
+                [['Producto', select, 'col-12 col-xl-4'], ['Cantidad', cantidadInput, 'col-6 col-xl-2'],
+                 ['Precio', precioInput, 'col-6 col-xl-2'], ['Subtotal', subtotalInput, 'col-9 col-xl-3']].forEach(([texto, input, clase]) => {
+                    const campo = document.createElement('div');
+                    campo.className = clase;
+                    const label = document.createElement('label');
+                    label.className = 'form-label';
+                    label.textContent = texto;
+                    input.id = input.name;
+                    label.htmlFor = input.id;
+                    campo.append(label, input);
+                    body.append(campo);
+                });
+                const acciones = document.createElement('div');
+                acciones.className = 'col-3 col-xl-1 text-end';
+                btnQuitar.setAttribute('aria-label', 'Quitar producto');
+                acciones.append(btnQuitar);
+                body.append(acciones);
+                row.append(body);
+                itemsCards.appendChild(row);
 
-                row.appendChild(tdProducto);
-                row.appendChild(tdCantidad);
-                row.appendChild(tdPrecio);
-                row.appendChild(tdSubtotal);
-                row.appendChild(tdQuitar);
-                itemsTable.appendChild(row);
-
-                if (precio > 0) recalcular();
+                recalcular();
             }
 
             <?php foreach ($items as $item): ?>
@@ -396,7 +395,7 @@ unset($item);
                     const opt = document.createElement('option');
                     opt.value = p.id;
                     opt.dataset.precio = p.precio;
-                    opt.textContent = p.nombre + (p.stock !== null ? ' (Stock: ' + p.stock + ')' : '');
+                    opt.textContent = p.nombre + (p.stock != null ? ' (Stock: ' + p.stock + ')' : '');
                     selectAgregar.appendChild(opt);
                 });
             }
@@ -439,7 +438,7 @@ unset($item);
 
                         cargarSelectAgregar();
 
-                        const filas = itemsTable.querySelectorAll("tr");
+                        const filas = itemsCards.querySelectorAll(".venta-item");
                         const ultimaFila = filas[filas.length - 1];
                         const ultimoSelect = ultimaFila ? ultimaFila.querySelector('.select-producto') : null;
                         if (ultimoSelect && ultimoSelect.value === '') {

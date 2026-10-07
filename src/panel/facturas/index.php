@@ -20,7 +20,8 @@ $consulta = $db->query(
 
 $totalesPorDia = [];
 $consultaTotales = $db->query(
-    "SELECT DATE(agregado) AS dia, SUM(total) AS total_dia
+    "SELECT DATE(agregado) AS dia,
+            SUM(COALESCE(efectivo, 0) + COALESCE(transferencia, 0)) AS total_dia
      FROM facturas
      GROUP BY DATE(agregado)"
 );
@@ -30,119 +31,67 @@ while ($f = $consultaTotales->fetch_assoc()) {
 ?>
 <!DOCTYPE html>
 <html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ventas | Frani</title>
-    <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
-    <link rel="icon" type="image/svg+xml" href="<?= e(base_path('../../img/favicon.svg')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=4')) ?>">
-</head>
-
-<body>
+<head><?php $tituloPagina = 'Ventas'; require __DIR__ . '/../_head.php'; ?></head>
+<body class="sb-app">
     <?php require __DIR__ . '/../menu.php'; ?>
-
-    <div class="container">
-        <div class="mb-4">
-            <a href="<?= e(base_path('panel/facturas/nueva')) ?>" class="btn btn-primary btn-lg">Nueva venta</a>
-        </div>
-
-        <div class="mb-3">
-            <div class="input-group">
-                <span class="input-group-text"><i class="fa-solid fa-search"></i></span>
-                <input type="text" id="buscadorFacturas" class="form-control" placeholder="Buscar venta...">
+    <div class="sb-contenido sb-workspace">
+        <div class="sb-cabecera"><h1>Ventas</h1><div class="sb-cabecera-acciones"><a href="<?= e(base_path('panel/facturas/nueva')) ?>" class="btn btn-primary">Nueva venta</a></div></div>
+        <div class="sb-buscador"><div class="input-group"><span class="input-group-text"><i class="fa-solid fa-search"></i></span><input type="search" id="buscadorFacturas" class="form-control" placeholder="Buscar..." aria-label="Buscar ventas"></div></div>
+        <div class="sb-lista" id="listaFacturas" data-search-input="buscadorFacturas">
+<?php $diaActual = ''; $dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']; ?>
+        <?php while ($campo = $consulta->fetch_assoc()): ?>
+            <?php
+            $diaVenta = date('Y-m-d', strtotime($campo['agregado']));
+            $tieneDeuda = (float) ($campo['deuda'] ?? 0) > 0;
+            ?>
+            <?php if ($diaVenta !== $diaActual): ?>
+                <?php if ($diaActual !== ''): ?></div></section><?php endif; ?>
+                <?php $diaActual = $diaVenta; ?>
+                <section class="mb-4" data-card-group>
+                    <div class="card sb-resumen-dia mb-3">
+                        <div class="card-body py-2">
+                            <h2 class="h6 mb-0">
+                                <?= e($dias[(int) date('w', strtotime($campo['agregado']))]) ?>
+                                <?= e(date('d-m', strtotime($campo['agregado']))) ?> |
+                                <strong>$ <?= e(moneda($totalesPorDia[$diaVenta] ?? 0)) ?></strong>
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="row g-3">
+            <?php endif; ?>
+<div class="col-12 col-lg-6 col-xxl-4" data-card-item>
+    <div class="card sb-card h-100<?= $tieneDeuda ? ' sb-deuda-pendiente' : '' ?>" id="venta-<?= (int) $campo['id'] ?>" tabindex="0" role="link" aria-label="Editar <?= e($campo['nombre']) ?><?= $tieneDeuda ? ' — deuda pendiente de $ ' . e(moneda($campo['deuda'])) : '' ?>" data-edit="<?= e(base_path('panel/facturas/editar?id=' . $campo['id'])) ?>">
+        <div class="card-body d-flex gap-3">
+            <div class="sb-thumb sb-thumb-vacio"><i class="fa-solid fa-receipt"></i></div>
+            <div class="flex-grow-1 sb-min0">
+                <h2 class="sb-titulo"><?= e($campo['nombre']) ?></h2>
+                <?php if ($tieneDeuda): ?>
+                    <span class="badge text-wrap text-danger-emphasis bg-danger-subtle border border-danger-subtle mb-2">
+                        <i class="fa-solid fa-circle-exclamation me-1" aria-hidden="true"></i>Deuda pendiente
+                    </span>
+                <?php endif; ?>
+                <p class="small text-body-secondary mb-2"><?= e($campo['detalle']) ?></p><div class="sb-datos">
+<?php foreach (['efectivo' => 'Efectivo', 'transferencia' => 'Transferencia', 'total' => 'Total', 'deuda' => 'Deuda'] as $clave => $etiqueta): ?>
+<?php if (mostrar_monto($campo[$clave]) !== ''): ?><span><?= e($etiqueta) ?> <strong class="<?= $clave === 'deuda' ? 'text-danger' : ($clave === 'total' ? 'text-success' : '') ?>">$ <?= e(mostrar_monto($campo[$clave])) ?></strong></span><?php endif; ?>
+<?php endforeach; ?></div>
+                <div class="sb-meta mt-2">
+                    <span><i class="fa-regular fa-clock me-1"></i><?= e(date('d-m | H:i', strtotime($campo['agregado']))) ?></span>
+                    <?php if ($campo['modificado']): ?><span><i class="fa-solid fa-pen me-1"></i><?= e(date('d-m | H:i', strtotime($campo['modificado']))) ?></span><?php endif; ?>
+                </div>
+            </div>
+            <div class="sb-accion">
+                <form method="POST" action="<?= e(base_path('panel/facturas/eliminar')) ?>" onsubmit="return confirm('¿Eliminar esta venta?');">
+                    <?= CSRF_field() ?>
+                    <input type="hidden" name="id" value="<?= (int) $campo['id'] ?>">
+                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar" aria-label="Eliminar <?= e($campo['nombre']) ?>"><i class="fa-solid fa-trash"></i></button>
+                </form>
             </div>
         </div>
-
-        <table class="table table-hover" id="tablaFacturas">
-            <thead class="text-center">
-                <tr class="align-middle">
-                    <th scope="col" style="width: 50px;">#</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Detalle</th>
-                    <th scope="col" style="white-space: nowrap; width: 120px;">Efectivo</th>
-                    <th scope="col" style="white-space: nowrap; width: 120px;">Transferencia</th>
-                    <th scope="col" style="white-space: nowrap; width: 120px;">Total</th>
-                    <th scope="col" style="white-space: nowrap; width: 120px;">Deuda</th>
-                    <th scope="col" style="white-space: nowrap;">Agregado</th>
-                    <th scope="col" style="white-space: nowrap;">Modificado</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php $diaActual = ''; ?>
-                <?php while ($campo = $consulta->fetch_assoc()): ?>
-                    <?php $diaVenta = date('Y-m-d', strtotime($campo['agregado'])); ?>
-                    <?php if ($diaVenta !== $diaActual): ?>
-                        <?php if ($diaActual !== ''): ?>
-                            <tr class="separador-dia">
-                                <td colspan="9"></td>
-                            </tr>
-                        <?php endif; ?>
-                        <?php $diaActual = $diaVenta; ?>
-                        <tr class="separador-dia">
-                            <td colspan="9" class="text-white text-center fw-bold" style="background-color: #212529;">
-                                <?php $dias = [1 => 'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']; ?>
-                                <?= e($dias[(int) date('w', strtotime($campo['agregado'])) + 1]) ?>
-                                <?= e(date('d-m-Y', strtotime($campo['agregado']))) ?>
-                                | Total: $ <?= e(moneda($totalesPorDia[$diaVenta] ?? 0)) ?>
-                            </td>
-                        </tr>
-                    <?php endif; ?>
-                    <tr class="align-middle fila-venta" style="cursor: pointer;" data-edit="<?= e(base_path('panel/facturas/editar?id=' . $campo['id'])) ?>">
-                        <td class="text-center">
-                            <form method="POST" action="<?= e(base_path('panel/facturas/eliminar')) ?>" class="d-inline" onsubmit="return confirm('¿Eliminar esta venta?');">
-                                <input type="hidden" name="csrf_token" value="<?= e(CSRF_token()) ?>">
-                                <input type="hidden" name="id" value="<?= e((string) $campo['id']) ?>">
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="event.stopPropagation();"><i class="fa-solid fa-trash"></i></button>
-                            </form>
-                        </td>
-                        <td><?= e($campo['nombre']) ?></td>
-                        <td><?= e($campo['detalle']) ?></td>
-                        <td class="text-center" style="white-space: nowrap;"><?= e(mostrar_monto($campo['efectivo'])) ?></td>
-                        <td class="text-center" style="white-space: nowrap;"><?= e(mostrar_monto($campo['transferencia'])) ?></td>
-                        <td class="text-center bg-success text-white" style="white-space: nowrap;"><?= e(mostrar_monto($campo['total'])) ?></td>
-                        <td class="text-center text-danger fw-bold" style="white-space: nowrap;"><?= e(mostrar_monto($campo['deuda'])) ?></td>
-                        <td class="text-center" style="white-space: nowrap;"><?= e(date('d-m | H:i', strtotime($campo['agregado']))) ?></td>
-                        <td class="text-center" style="white-space: nowrap;"><?= $campo['modificado'] ? e(date('d-m | H:i', strtotime($campo['modificado']))) : '' ?></td>
-                    </tr>
-                <?php endwhile; ?>
-
-                <?php if ($consulta->num_rows === 0): ?>
-                    <tr>
-                        <td colspan="9" class="text-center text-secondary">No hay ventas registradas.</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+    </div>
+</div><?php endwhile; ?><?php if ($diaActual !== ''): ?></div></section><?php endif; ?><?php if ($consulta->num_rows === 0): ?><div class="sb-vacio">No hay ventas cargadas.</div><?php endif; ?>
         </div>
+    </div>
     </main>
-
-    <script src="<?= e(base_path('../../js/bootstrap.bundle.min.js')) ?>"></script>
-    <script>
-        const buscador = document.getElementById('buscadorFacturas');
-        const filas = document.querySelectorAll('#tablaFacturas tbody tr.fila-venta');
-
-        function normalizar(texto) {
-            return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-        }
-
-        buscador.addEventListener('input', function () {
-            const termino = normalizar(this.value);
-            filas.forEach(fila => {
-                const texto = normalizar(fila.textContent);
-                fila.style.display = texto.includes(termino) ? '' : 'none';
-            });
-        });
-
-        filas.forEach(fila => {
-            fila.addEventListener('click', function (e) {
-                if (e.target.closest('form')) return;
-                window.location.href = this.dataset.edit;
-            });
-        });
-    </script>
+    <script src="<?= e(base_path('js/bootstrap.bundle.min.js')) ?>"></script>
 </body>
-
 </html>

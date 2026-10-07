@@ -34,23 +34,17 @@ $consulta = $db->query(
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mascotas | Frani</title>
-    <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
-    <link rel="icon" type="image/svg+xml" href="<?= e(base_path('../../img/favicon.svg')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=4')) ?>">
+    <?php $tituloPagina = 'Mascotas'; require __DIR__ . '/../_head.php'; ?>
 </head>
 
-<body>
+<body class="sb-app">
     <?php require __DIR__ . '/../menu.php'; ?>
 
-    <div class="container-fluid">
-        <div class="row g-4">
+    <div class="sb-contenido sb-workspace">
+        <div class="row g-3">
 
             <!-- Columna izquierda: Formulario -->
-            <div class="col-md-4" style="position: sticky; top: 84px; align-self: flex-start;">
+            <div class="col-md-4 col-xl-3">
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <form method="POST" action="<?= e(base_path('panel/mascotas/' . ($editando ? 'actualizar' : 'insertar') . ($editando ? '#mascota-' . $mascota['id'] : ''))) ?>">
@@ -86,6 +80,7 @@ $consulta = $db->query(
                                     <?= $editando ? 'Actualizar mascota' : 'Guardar mascota' ?>
                                 </button>
                             </div>
+                            <?php if ($editando): ?><a class="btn btn-outline-secondary w-100 mt-2" href="<?= e(base_path('panel/mascotas')) ?>">Cancelar</a><?php endif; ?>
                         </form>
                     </div>
                 </div>
@@ -94,146 +89,63 @@ $consulta = $db->query(
                     <div class="col-6">
                         <div class="card shadow-sm">
                             <div class="card-header text-center fw-bold">Talles por letra</div>
-                            <table class="table table-sm mb-0 text-center">
-                                <thead>
-                                    <tr class="table-secondary">
-                                        <th>Talle</th>
-                                        <th>Largo</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td style="color: #dc3545; font-weight: 600;">XXS</td><td>27</td></tr>
-                                    <tr><td style="color: #dc3545; font-weight: 600;">XS</td><td>32</td></tr>
-                                    <tr><td style="color: #dc3545; font-weight: 600;">S</td><td>35</td></tr>
-                                    <tr><td style="color: #dc3545; font-weight: 600;">M</td><td>41</td></tr>
-                                    <tr><td style="color: #dc3545; font-weight: 600;">L</td><td>43</td></tr>
-                                    <tr><td style="color: #dc3545; font-weight: 600;">XL</td><td>48</td></tr>
-                                    <tr><td style="color: #dc3545; font-weight: 600;">XXL</td><td>51</td></tr>
-                                </tbody>
-                            </table>
+                            <div class="card-body"><div class="d-flex justify-content-between small text-body-secondary mb-1"><span>Talle</span><span>Largo</span></div><dl class="mb-0"><div class="d-flex justify-content-between border-bottom py-2"><dt class="text-danger">XXS</dt><dd class="mb-0">27</dd></div><div class="d-flex justify-content-between border-bottom py-2"><dt class="text-danger">XS</dt><dd class="mb-0">32</dd></div><div class="d-flex justify-content-between border-bottom py-2"><dt class="text-danger">S</dt><dd class="mb-0">35</dd></div><div class="d-flex justify-content-between border-bottom py-2"><dt class="text-danger">M</dt><dd class="mb-0">41</dd></div><div class="d-flex justify-content-between border-bottom py-2"><dt class="text-danger">L</dt><dd class="mb-0">43</dd></div><div class="d-flex justify-content-between border-bottom py-2"><dt class="text-danger">XL</dt><dd class="mb-0">48</dd></div><div class="d-flex justify-content-between border-bottom py-2"><dt class="text-danger">XXL</dt><dd class="mb-0">51</dd></div></dl></div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="card shadow-sm">
                             <div class="card-header text-center fw-bold">Talle largo</div>
-                            <table class="table table-sm mb-0 text-center">
-                                <thead>
-                                    <tr class="table-secondary">
-                                        <th>Talle</th>
-                                        <th>Largo</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td style="color: #dc3545; font-weight: 600;">0</td><td>26</td></tr>
-                                    <tr><td style="color: #dc3545; font-weight: 600;">1</td><td>30</td></tr>
-                                    <tr><td style="color: #dc3545; font-weight: 600;">2</td><td>34</td></tr>
-                                    <tr><td style="color: #dc3545; font-weight: 600;">3</td><td>37</td></tr>
-                                    <tr><td style="color: #dc3545; font-weight: 600;">4</td><td>43</td></tr>
-                                    <tr><td style="color: #dc3545; font-weight: 600;">5</td><td>47</td></tr>
-                                    <tr><td style="color: #dc3545; font-weight: 600;">6</td><td>50</td></tr>
-                                    <tr><td style="color: #dc3545; font-weight: 600;">7</td><td>53</td></tr>
-                                    <tr><td style="color: #dc3545; font-weight: 600;">8</td><td>56</td></tr>
-                                    <tr><td style="color: #dc3545; font-weight: 600;">9</td><td>62</td></tr>
-                                    <tr><td style="color: #dc3545; font-weight: 600;">10</td><td>69</td></tr>
-                                    <tr><td style="color: #dc3545; font-weight: 600;">11</td><td>77</td></tr>
-                                    <tr><td style="color: #dc3545; font-weight: 600;">12</td><td>81</td></tr>
-                                </tbody>
-                            </table>
+                            <div class="card-body"><div class="d-flex justify-content-between small text-body-secondary mb-1"><span>Talle</span><span>Largo</span></div><dl class="mb-0"><div class="d-flex justify-content-between border-bottom py-2"><dt class="text-danger">0</dt><dd class="mb-0">26</dd></div><div class="d-flex justify-content-between border-bottom py-2"><dt class="text-danger">1</dt><dd class="mb-0">30</dd></div><div class="d-flex justify-content-between border-bottom py-2"><dt class="text-danger">2</dt><dd class="mb-0">34</dd></div><div class="d-flex justify-content-between border-bottom py-2"><dt class="text-danger">3</dt><dd class="mb-0">37</dd></div><div class="d-flex justify-content-between border-bottom py-2"><dt class="text-danger">4</dt><dd class="mb-0">43</dd></div><div class="d-flex justify-content-between border-bottom py-2"><dt class="text-danger">5</dt><dd class="mb-0">47</dd></div><div class="d-flex justify-content-between border-bottom py-2"><dt class="text-danger">6</dt><dd class="mb-0">50</dd></div><div class="d-flex justify-content-between border-bottom py-2"><dt class="text-danger">7</dt><dd class="mb-0">53</dd></div><div class="d-flex justify-content-between border-bottom py-2"><dt class="text-danger">8</dt><dd class="mb-0">56</dd></div><div class="d-flex justify-content-between border-bottom py-2"><dt class="text-danger">9</dt><dd class="mb-0">62</dd></div><div class="d-flex justify-content-between border-bottom py-2"><dt class="text-danger">10</dt><dd class="mb-0">69</dd></div><div class="d-flex justify-content-between border-bottom py-2"><dt class="text-danger">11</dt><dd class="mb-0">77</dd></div><div class="d-flex justify-content-between border-bottom py-2"><dt class="text-danger">12</dt><dd class="mb-0">81</dd></div></dl></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Columna derecha: Tabla -->
-            <div class="col-md-8">
-                <div style="position: sticky; top: 76px; z-index: 10; background: white; padding: 16px; border-bottom: 1px solid #dee2e6; margin-bottom: 16px;">
+            <!-- Columna derecha: listado en cards -->
+            <div class="col-md-8 col-xl-9">
+                <div class="sb-buscador">
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa-solid fa-search"></i></span>
-                        <input type="text" id="buscadorMascotas" class="form-control" placeholder="Buscar mascota...">
+                        <input type="text" id="buscadorMascotas" class="form-control" placeholder="Buscar mascota..." aria-label="Buscar mascotas">
                     </div>
                 </div>
 
-                <div id="contenedorTabla" class="card shadow-sm" style="max-height: calc(100vh - 180px); overflow-y: auto;">
-                    <table class="table table-hover mb-0" id="tablaMascotas">
-                    <thead class="text-center">
-                        <tr class="align-middle">
-                            <th scope="col" style="width: 50px;">#</th>
-                            <th scope="col">Tipo</th>
-                            <th scope="col">Talle</th>
-                            <th scope="col" style="white-space: nowrap; width: 120px;">Precio</th>
-                            <th scope="col" style="white-space: nowrap;">Creado</th>
-                            <th scope="col" style="white-space: nowrap;">Modificado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php $token = CSRF_token(); ?>
-                        <?php while ($fila = $consulta->fetch_assoc()): ?>
-                            <tr id="mascota-<?= e((string) $fila['id']) ?>" class="align-middle <?= $editando && (int) $fila['id'] === (int) $mascota['id'] ? 'table-active' : '' ?>"
-                                style="cursor: pointer;"
-                                data-edit="<?= e(base_path('panel/mascotas?id=' . $fila['id'])) ?>">
-                                <td class="text-center">
-                                    <form method="POST" action="<?= e(base_path('panel/mascotas/eliminar')) ?>" class="d-inline" onsubmit="return confirm('¿Eliminar esta mascota?');">
-                                        <input type="hidden" name="csrf_token" value="<?= e($token) ?>">
-                                        <input type="hidden" name="id" value="<?= e((string) $fila['id']) ?>">
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="event.stopPropagation();"><i class="fa-solid fa-trash"></i></button>
+                <div class="row g-3 sb-lista" id="listaMascotas" data-search-input="buscadorMascotas">
+                    <?php while ($fila = $consulta->fetch_assoc()): ?>
+                    <div class="col-12 col-lg-6 col-xxl-4" data-card-item>
+                        <div class="card sb-card h-100<?= $editando && (int) $fila['id'] === (int) $mascota['id'] ? ' activo' : '' ?>" id="mascota-<?= (int) $fila['id'] ?>" tabindex="0" role="link" aria-label="Editar <?= e($fila['tipo']) ?>" data-edit="<?= e(base_path('panel/mascotas?id=' . $fila['id'])) ?>">
+                            <div class="card-body d-flex gap-3">
+                                <div class="sb-thumb sb-thumb-vacio"><i class="fa-solid fa-paw"></i></div>
+                                <div class="flex-grow-1 sb-min0">
+                                    <h2 class="sb-titulo"><?= e($fila['tipo']) ?></h2>
+                                    <div class="sb-meta"><span class="sb-chip">Talle: <?= e($fila['talle'] ?: 'Sin talle') ?></span></div><div class="sb-datos"><span>Precio <strong class="text-success">$ <?= e(moneda($fila['precio'])) ?></strong></span></div>
+                                    <div class="sb-meta mt-2">
+                                        <span><i class="fa-regular fa-clock me-1"></i><?= e(date('d-m | H:i', strtotime($fila['creado']))) ?></span>
+                                        <?php if ($fila['modificado']): ?><span><i class="fa-solid fa-pen me-1"></i><?= e(date('d-m | H:i', strtotime($fila['modificado']))) ?></span><?php endif; ?>
+                                    </div>
+                                </div>
+                                <div class="sb-accion">
+                                    <form method="POST" action="<?= e(base_path('panel/mascotas/eliminar')) ?>" onsubmit="return confirm('¿Eliminar esta mascota?');">
+                                        <?= CSRF_field() ?>
+                                        <input type="hidden" name="id" value="<?= (int) $fila['id'] ?>">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar" aria-label="Eliminar <?= e($fila['tipo']) ?>"><i class="fa-solid fa-trash"></i></button>
                                     </form>
-                                </td>
-                                <td class="bg-success text-white"><?= e($fila['tipo']) ?></td>
-                                <td class="text-center"><?= e($fila['talle'] ?? '') ?></td>
-                                <td class="text-center bg-success text-white" style="white-space: nowrap;"><?= e(moneda($fila['precio'])) ?></td>
-                                <td class="text-center" style="white-space: nowrap;"><?= e(date('d-m | H:i', strtotime($fila['creado']))) ?></td>
-                                <td class="text-center" style="white-space: nowrap;"><?= $fila['modificado'] ? e(date('d-m | H:i', strtotime($fila['modificado']))) : '' ?></td>
-                            </tr>
-                        <?php endwhile; ?>
-
-                        <?php if ($consulta->num_rows === 0): ?>
-                            <tr>
-                                <td colspan="6" class="text-center text-secondary">No hay mascotas cargadas.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endwhile; ?>
+                    <?php if ($consulta->num_rows === 0): ?><div class="sb-vacio col-12">No hay mascotas cargados.</div><?php endif; ?>
                 </div>
             </div>
 
         </div>
     </div>
 
-    <script src="<?= e(base_path('../../js/bootstrap.bundle.min.js')) ?>"></script>
-    <script>
-        const buscador = document.getElementById('buscadorMascotas');
-        const filas = document.querySelectorAll('#tablaMascotas tbody tr');
+    </main>
 
-        function normalizar(texto) {
-            return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-        }
+    <script src="<?= e(base_path('js/bootstrap.bundle.min.js')) ?>"></script>
 
-        buscador.addEventListener('input', function () {
-            const termino = normalizar(this.value);
-            filas.forEach(fila => {
-                const texto = normalizar(fila.textContent);
-                fila.style.display = texto.includes(termino) ? '' : 'none';
-            });
-        });
-
-        filas.forEach(fila => {
-            fila.addEventListener('click', function (e) {
-                if (e.target.closest('form')) return;
-                window.location.href = this.dataset.edit;
-            });
-        });
-
-        <?php if ($editando): ?>
-        window.addEventListener('load', () => {
-            const fila = document.getElementById('mascota-<?= e((string) $mascota['id']) ?>');
-            const contenedor = document.getElementById('contenedorTabla');
-            if (fila && contenedor) {
-                contenedor.scrollTop = fila.offsetTop;
-            }
-        });
-        <?php endif; ?>
-
-    </script>
 </body>
 
 </html>

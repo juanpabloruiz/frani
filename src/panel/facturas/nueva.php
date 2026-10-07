@@ -9,101 +9,86 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nueva Venta | Frani</title>
-    <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
-    <link rel="icon" type="image/svg+xml" href="<?= e(base_path('../../img/favicon.svg')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=4')) ?>">
+    <?php $tituloPagina = 'Nueva Venta'; require __DIR__ . '/../_head.php'; ?>
 </head>
 
-<body>
+<body class="sb-app sb-page-scroll">
     <?php require __DIR__ . '/../menu.php'; ?>
 
-    <div class="container">
+    <div class="sb-contenido">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h3 mb-0">Nueva venta</h1>
             <a href="<?= e(base_path('panel/facturas')) ?>" class="btn btn-outline-secondary">Volver</a>
         </div>
 
-        <form id="facturaForm" method="POST" action="<?= e(base_path('panel/facturas/insertar')) ?>">
-            <?= CSRF_field() ?>
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form id="facturaForm" method="POST" action="<?= e(base_path('panel/facturas/insertar')) ?>">
+                    <?= CSRF_field() ?>
 
-            <div class="mb-3">
-                <label class="form-label">Nombre del cliente</label>
-                <input type="text" id="nombre" name="nombre" class="form-control">
-            </div>
-
-            <div class="table-responsive">
-                <table class="table" id="itemsTable">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Cantidad</th>
-                            <th>Precio</th>
-                            <th>Subtotal</th>
-                            <th class="text-center">Quitar</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-
-            <div class="mb-3" id="contenedorBtnProducto" style="display: none;">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalProducto">
-                    <i class="fa-solid fa-box-open me-1"></i>Agregar producto nuevo
-                </button>
-            </div>
-
-            <div class="row g-3 mb-3">
-                <div class="col-md">
-                    <label class="form-label">Efectivo</label>
-                    <div class="input-group">
-                        <span class="input-group-text">$</span>
-                        <input type="number" step="0.01" id="efectivo" name="efectivo" class="form-control"
-                            min="0" placeholder="Opcional">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre del cliente</label>
+                        <input type="text" id="nombre" name="nombre" class="form-control">
                     </div>
-                </div>
-                <div class="col-md">
-                    <label class="form-label">Transferencia</label>
-                    <div class="input-group">
-                        <span class="input-group-text">$</span>
-                        <input type="number" step="0.01" id="transferencia" name="transferencia" class="form-control"
-                            min="0" placeholder="Opcional">
+
+                    <div id="itemsCards" class="d-grid gap-3 mb-3" aria-label="Productos de la venta"></div>
+
+                    <div class="mb-3" id="contenedorBtnProducto" style="display: none;">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalProducto">
+                            <i class="fa-solid fa-box-open me-1"></i>Agregar producto nuevo
+                        </button>
                     </div>
-                </div>
-            </div>
 
-            <div class="mb-3">
-                <label class="form-label fw-bold text-danger">Deuda</label>
-                <input type="number" id="deuda" name="deuda" class="form-control border-danger text-danger"
-                    step="0.01" min="0">
-            </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md">
+                            <label class="form-label">Efectivo</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" step="0.01" id="efectivo" name="efectivo" class="form-control"
+                                    min="0" placeholder="Opcional">
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <label class="form-label">Transferencia</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" step="0.01" id="transferencia" name="transferencia" class="form-control"
+                                    min="0" placeholder="Opcional">
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="mb-3">
-                <label class="form-label">Descuento</label>
-                <div class="input-group">
-                    <input type="number" id="descuento" name="descuento" class="form-control" min="0" max="100">
-                    <span class="input-group-text">%</span>
-                </div>
-            </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-danger">Deuda</label>
+                        <input type="number" id="deuda" name="deuda" class="form-control border-danger text-danger"
+                            step="0.01" min="0">
+                    </div>
 
-            <div class="mb-3">
-                <label class="form-label">Total</label>
-                <input type="number" id="total" name="total" class="form-control" step="0.01" readonly>
-            </div>
+                    <div class="mb-3">
+                        <label for="descuento" class="form-label">Descuento</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" id="descuento" name="descuento" class="form-control" min="0" step="0.01">
+                        </div>
+                    </div>
 
-            <div class="mb-3">
-                <label class="form-label">Observaciones</label>
-                <input type="text" name="observaciones" class="form-control"
-                    placeholder="Ej: Se le hizo un descuento por falla de $ 1000">
-            </div>
+                    <div class="mb-3">
+                        <label class="form-label">Total</label>
+                        <input type="number" id="total" name="total" class="form-control" step="0.01" readonly>
+                    </div>
 
-            <div class="d-grid d-md-block">
-                <button type="submit" class="btn btn-primary btn-lg">Guardar venta</button>
+                    <div class="mb-3">
+                        <label class="form-label">Observaciones</label>
+                        <input type="text" name="observaciones" class="form-control"
+                            placeholder="Ej: Se le hizo un descuento por falla de $ 1000">
+                    </div>
+
+                    <div class="d-grid d-md-block">
+                        <button type="submit" class="btn btn-primary btn-lg">Guardar venta</button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
         </div>
     </main>
 
@@ -160,10 +145,10 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
         </div>
     </div>
 
-    <script src="<?= e(base_path('../../js/bootstrap.bundle.min.js')) ?>"></script>
+    <script src="<?= e(base_path('js/bootstrap.bundle.min.js')) ?>"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const itemsTable = document.getElementById("itemsTable").querySelector("tbody");
+            const itemsCards = document.getElementById("itemsCards");
             const contenedorBtn = document.getElementById("contenedorBtnProducto");
             const totalField = document.getElementById("total");
             const deudaField = document.getElementById("deuda");
@@ -176,8 +161,9 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
             function updateTotal() {
                 const subtotal = Array.from(document.querySelectorAll(".subtotal"))
                     .reduce((sum, input) => sum + parseFloat(input.value || 0), 0);
-                const descuento = parseFloat(descuentoField.value) || 0;
-                totalField.value = (subtotal * (1 - descuento / 100)).toFixed(2);
+                const descuento = Math.max(0, parseFloat(descuentoField.value) || 0);
+                descuentoField.max = subtotal.toFixed(2);
+                totalField.value = Math.max(0, subtotal - descuento).toFixed(2);
                 updateDeuda();
             }
 
@@ -205,15 +191,20 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
 
             function agregarFilaVacia() {
                 return new Promise(resolve => {
-                const row = document.createElement("tr");
+                const row = document.createElement("div");
+                row.className = "card venta-item";
                 cargarProductos().then(productos => {
                     const select = document.createElement("select");
                     select.className = "form-select select-producto";
                     select.name = `producto_${itemIndex}`;
                     select.innerHTML = '<option value="">Seleccione un producto</option>';
                     productos.forEach(producto => {
-                        const stockAttr = producto.stock !== null ? `data-stock="${producto.stock}"` : '';
-                        select.innerHTML += `<option value="${producto.id}" data-precio="${producto.precio}" ${stockAttr}>${producto.producto}${producto.stock !== null ? ' (Stock: ' + producto.stock + ')' : ''}</option>`;
+                        const option = document.createElement('option');
+                        option.value = producto.id;
+                        option.dataset.precio = producto.precio;
+                        if (producto.stock !== null) option.dataset.stock = producto.stock;
+                        option.textContent = producto.producto + (producto.stock !== null ? ' (Stock: ' + producto.stock + ')' : '');
+                        select.append(option);
                     });
 
                     const cantidadInput = document.createElement("input");
@@ -244,7 +235,7 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
                         subtotalInput.value = precioSeleccionado !== undefined ? (precio * cantidadInput.value).toFixed(2) : '';
                         updateTotal();
 
-                        const filas = itemsTable.querySelectorAll("tr");
+                        const filas = itemsCards.querySelectorAll(".venta-item");
                         const ultimaFila = filas[filas.length - 1];
                         if (row === ultimaFila && select.value !== '') {
                             agregarFilaVacia();
@@ -265,29 +256,31 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
                         if (!confirm('¿Está seguro de quitar este ítem?')) return;
                         row.remove();
                         updateTotal();
-                        contenedorBtn.style.display = itemsTable.children.length > 0 ? '' : 'none';
+                        contenedorBtn.style.display = itemsCards.children.length > 0 ? '' : 'none';
                     });
 
-                    const tdProducto = document.createElement("td");
-                    tdProducto.appendChild(select);
-                    const tdCantidad = document.createElement("td");
-                    tdCantidad.appendChild(cantidadInput);
-                    const tdPrecio = document.createElement("td");
-                    tdPrecio.className = "text-center";
-                    tdPrecio.appendChild(precioInput);
-                    const tdSubtotal = document.createElement("td");
-                    tdSubtotal.className = "text-center";
-                    tdSubtotal.appendChild(subtotalInput);
-                    const tdQuitar = document.createElement("td");
-                    tdQuitar.className = "text-center";
-                    tdQuitar.appendChild(btnQuitar);
+                    const body = document.createElement('div');
+                    body.className = 'card-body row g-3 align-items-end m-0';
+                    [['Producto', select, 'col-12 col-xl-4'], ['Cantidad', cantidadInput, 'col-6 col-xl-2'],
+                     ['Precio', precioInput, 'col-6 col-xl-2'], ['Subtotal', subtotalInput, 'col-9 col-xl-3']].forEach(([texto, input, clase]) => {
+                        const campo = document.createElement('div');
+                        campo.className = clase;
+                        const label = document.createElement('label');
+                        label.className = 'form-label';
+                        label.textContent = texto;
+                        input.id = input.name;
+                        label.htmlFor = input.id;
+                        campo.append(label, input);
+                        body.append(campo);
+                    });
+                    const acciones = document.createElement('div');
+                    acciones.className = 'col-3 col-xl-1 text-end';
+                    btnQuitar.setAttribute('aria-label', 'Quitar producto');
+                    acciones.append(btnQuitar);
+                    body.append(acciones);
+                    row.append(body);
+                    itemsCards.appendChild(row);
 
-                    row.appendChild(tdProducto);
-                    row.appendChild(tdCantidad);
-                    row.appendChild(tdPrecio);
-                    row.appendChild(tdSubtotal);
-                    row.appendChild(tdQuitar);
-                    itemsTable.appendChild(row);
 
                     itemIndex++;
                     contenedorBtn.style.display = '';
@@ -316,7 +309,7 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
                     if (datos.ok) {
                         productosCache = null;
 
-                        const selects = itemsTable.querySelectorAll('.select-producto');
+                        const selects = itemsCards.querySelectorAll('.select-producto');
                         let selectVacio = null;
                         selects.forEach(sel => {
                             if (sel.value === '') selectVacio = sel;
@@ -334,7 +327,7 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
                             });
                         } else {
                             agregarFilaVacia().then(() => {
-                                const selects2 = itemsTable.querySelectorAll('.select-producto');
+                                const selects2 = itemsCards.querySelectorAll('.select-producto');
                                 const ultimo = selects2[selects2.length - 1];
                                 cargarProductos().then(productos => {
                                     const opt = document.createElement('option');

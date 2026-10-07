@@ -31,36 +31,36 @@ $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nom
 $consulta = $db->query(
     "SELECT
         p.id, p.producto, p.descripcion, p.costo, p.precio,
-        p.stock, p.agregado, p.modificado, c.nombre AS categoria
+        p.stock, p.agregado, p.modificado, p.foto, c.nombre AS categoria
     FROM productos p
     INNER JOIN categorias c ON c.id = p.id_categoria
     ORDER BY p.producto ASC"
 );
+
+$token = CSRF_token();
 ?>
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Productos | Frani</title>
-    <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
-    <link rel="icon" type="image/svg+xml" href="<?= e(base_path('../../img/favicon.svg')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=4')) ?>">
+    <?php $tituloPagina = 'Productos'; require __DIR__ . '/../_head.php'; ?>
 </head>
 
-<body>
+<body class="sb-app">
+
     <?php require __DIR__ . '/../menu.php'; ?>
 
-    <div class="container-fluid">
-        <div class="row g-4">
+    <div class="sb-contenido sb-workspace">
+
+        <div class="row g-3">
 
             <!-- Columna izquierda: Formulario -->
-            <div class="col-md-4" style="position: sticky; top: 84px; align-self: flex-start;">
+            <div class="col-md-4 col-xl-3">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <form method="POST" action="<?= e(base_path('panel/productos/' . ($editando ? 'actualizar' : 'insertar') . ($editando ? '#producto-' . $producto['id'] : ''))) ?>" enctype="multipart/form-data">
+                        <form method="POST"
+                            action="<?= e(base_path('panel/productos/' . ($editando ? 'actualizar' : 'insertar') . ($editando ? '#producto-' . $producto['id'] : ''))) ?>"
+                            enctype="multipart/form-data" id="formProducto">
                             <?= CSRF_field() ?>
                             <?php if ($editando): ?>
                                 <input type="hidden" name="id" value="<?= e((string) $producto['id']) ?>">
@@ -73,7 +73,7 @@ $consulta = $db->query(
                             </div>
 
                             <div class="row g-3 mb-3">
-                                <div class="col-md-6">
+                                <div class="col-6">
                                     <label class="form-label">Costo</label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>
@@ -81,7 +81,7 @@ $consulta = $db->query(
                                             value="<?= e(numero_limpio($producto['costo'])) ?>">
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-6">
                                     <label class="form-label">Precio</label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>
@@ -98,7 +98,7 @@ $consulta = $db->query(
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Categoría</label>
+                                <label class="form-label">Categoria</label>
                                 <div class="input-group">
                                     <select name="id_categoria" id="selectCategoria" class="form-select" required>
                                         <option value="">Seleccionar</option>
@@ -109,14 +109,15 @@ $consulta = $db->query(
                                             </option>
                                         <?php endwhile; ?>
                                     </select>
-                                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalCategoria">
+                                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                                        data-bs-target="#modalCategoria" title="Nueva categoria">
                                         <i class="fa-solid fa-plus"></i>
                                     </button>
                                 </div>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Descripción</label>
+                                <label class="form-label">Descripcion</label>
                                 <textarea name="descripcion" class="form-control" rows="4"><?= e($producto['descripcion'] ?? '') ?></textarea>
                             </div>
 
@@ -137,81 +138,107 @@ $consulta = $db->query(
                                 </div>
                             </div>
 
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">
-                                    <?= $editando ? 'Actualizar producto' : 'Guardar producto' ?>
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary flex-grow-1">
+                                    <?= $editando ? 'Actualizar' : 'Guardar' ?>
                                 </button>
+                                <?php if ($editando): ?>
+                                    <a class="btn btn-outline-secondary" href="<?= e(base_path('panel/productos')) ?>">Cancelar</a>
+                                <?php endif; ?>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
 
-            <!-- Columna derecha: Tabla -->
-            <div class="col-md-8">
-                <div style="position: sticky; top: 76px; z-index: 10; background: white; padding: 16px; border-bottom: 1px solid #dee2e6; margin-bottom: 16px;">
+            <!-- Columna derecha: listado en cards -->
+            <div class="col-md-8 col-xl-9">
+
+                <div class="sb-buscador">
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa-solid fa-search"></i></span>
-                        <input type="text" id="buscadorProductos" class="form-control" placeholder="Buscar producto...">
+                        <input type="text" id="buscadorProductos" class="form-control" placeholder="Buscar producto..." aria-label="Buscar producto">
                     </div>
                 </div>
 
-                <div id="contenedorTabla" class="card shadow-sm" style="max-height: calc(100vh - 180px); overflow-y: auto;">
-                    <table class="table table-hover mb-0" id="tablaProductos">
-                    <thead class="text-center">
-                        <tr class="align-middle">
-                            <th scope="col" style="width: 50px;">#</th>
-                            <th scope="col">Producto</th>
-                            <th scope="col" style="white-space: nowrap; width: 120px;">Costo</th>
-                            <th scope="col" style="white-space: nowrap; width: 120px;">Precio</th>
-                            <th scope="col">Stock</th>
-                            <th scope="col">Categoría</th>
-                            <th scope="col" style="white-space: nowrap;">Agregado</th>
-                            <th scope="col" style="white-space: nowrap;">Modificado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php $token = CSRF_token(); ?>
-                        <?php while ($fila = $consulta->fetch_assoc()): ?>
-                            <tr id="producto-<?= e((string) $fila['id']) ?>" class="align-middle <?= $editando && (int) $fila['id'] === (int) $producto['id'] ? 'table-active' : '' ?>"
-                                style="cursor: pointer;"
+                <div class="row g-3 sb-lista" id="listaProductos" data-search-input="buscadorProductos">
+                    <?php while ($fila = $consulta->fetch_assoc()): ?>
+                        <?php $activo = $editando && (int) $fila['id'] === (int) $producto['id']; ?>
+                        <div class="col-12 col-lg-6 col-xxl-4" data-card-item>
+                            <div class="card sb-card h-100<?= $activo ? ' activo' : '' ?>"
+                                id="producto-<?= e((string) $fila['id']) ?>"
+                                tabindex="0" role="link" aria-label="Editar <?= e($fila['producto']) ?>"
                                 data-edit="<?= e(base_path('panel/productos?id=' . $fila['id'])) ?>">
-                                <td class="text-center">
-                                    <form method="POST" action="<?= e(base_path('panel/productos/eliminar')) ?>" class="d-inline" onsubmit="return confirm('¿Eliminar este producto?');">
-                                        <input type="hidden" name="csrf_token" value="<?= e($token) ?>">
-                                        <input type="hidden" name="id" value="<?= e((string) $fila['id']) ?>">
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="event.stopPropagation();"><i class="fa-solid fa-trash"></i></button>
-                                    </form>
-                                </td>
-                                <td class="bg-success text-white"><?= e($fila['producto']) ?></td>
-                                <td class="text-center" style="white-space: nowrap;"><?= $fila['costo'] ? e(moneda($fila['costo'])) : '' ?></td>
-                                <td class="text-center bg-success text-white" style="white-space: nowrap;"><?= $fila['precio'] ? e(moneda($fila['precio'])) : '' ?></td>
-                                <td class="text-center"><?= e((string) $fila['stock']) ?></td>
-                                <td class="text-center"><?= e($fila['categoria']) ?></td>
-                                <td class="text-center" style="white-space: nowrap;"><?= e(date('d-m | H:i', strtotime($fila['agregado']))) ?></td>
-                                <td class="text-center" style="white-space: nowrap;"><?= $fila['modificado'] ? e(date('d-m | H:i', strtotime($fila['modificado']))) : '' ?></td>
-                            </tr>
-                        <?php endwhile; ?>
 
-                        <?php if ($consulta->num_rows === 0): ?>
-                            <tr>
-                                <td colspan="8" class="text-center text-secondary">No hay productos cargados.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                                <div class="card-body d-flex gap-3">
+                                    <?php if (!empty($fila['foto'])): ?>
+                                        <img class="sb-thumb" src="<?= e(base_path('img/productos/' . $fila['foto'] . '.jpg')) ?>"
+                                            alt="<?= e($fila['producto']) ?>">
+                                    <?php else: ?>
+                                        <div class="sb-thumb sb-thumb-vacio"><i class="fa-solid fa-image"></i></div>
+                                    <?php endif; ?>
+
+                                    <div class="flex-grow-1 sb-min0">
+                                        <h2 class="sb-titulo"><?= e($fila['producto']) ?></h2>
+
+                                        <div class="sb-meta">
+                                            <span class="sb-chip"><?= e($fila['categoria']) ?></span>
+                                            <?php if ($fila['stock'] !== null): ?>
+                                                <span>Stock: <strong><?= e((string) $fila['stock']) ?></strong></span>
+                                            <?php endif; ?>
+                                        </div>
+
+                                        <div class="sb-datos">
+                                            <?php if ($fila['costo'] > 0): ?>
+                                                <span>Costo <span class="sb-valor">$ <?= e(moneda($fila['costo'])) ?></span></span>
+                                            <?php endif; ?>
+                                            <?php if ($fila['precio'] > 0): ?>
+                                                <span>Precio <span class="sb-valor text-success">$ <?= e(moneda($fila['precio'])) ?></span></span>
+                                            <?php endif; ?>
+                                        </div>
+
+                                        <div class="sb-meta mt-2">
+                                            <span><i class="fa-regular fa-clock me-1"></i><?= e(date('d-m | H:i', strtotime($fila['agregado']))) ?></span>
+                                            <?php if ($fila['modificado']): ?>
+                                                <span><i class="fa-solid fa-pen me-1"></i><?= e(date('d-m | H:i', strtotime($fila['modificado']))) ?></span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+
+                                    <div class="sb-accion">
+                                        <form method="POST" action="<?= e(base_path('panel/productos/eliminar')) ?>"
+                                            onsubmit="return confirm('¿Eliminar este producto?');">
+                                            <input type="hidden" name="csrf_token" value="<?= e($token) ?>">
+                                            <input type="hidden" name="id" value="<?= e((string) $fila['id']) ?>">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar"
+                                                onclick="event.stopPropagation();">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endwhile; ?>
                 </div>
+
+                <?php if ($consulta->num_rows === 0): ?>
+                    <div class="sb-vacio">No hay productos cargados.</div>
+                <?php endif; ?>
+
             </div>
 
         </div>
     </div>
 
-    <!-- Modal Nueva Categoría -->
+    </main>
+
+    <!-- Modal Nueva Categoria -->
     <div class="modal fade" id="modalCategoria" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-sm modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-success text-white py-2">
-                    <h6 class="modal-title mb-0"><i class="fa-solid fa-tags me-1"></i>Nueva categoría</h6>
+                    <h6 class="modal-title mb-0"><i class="fa-solid fa-tags me-1"></i>Nueva categoria</h6>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -225,30 +252,8 @@ $consulta = $db->query(
         </div>
     </div>
 
-    <script src="<?= e(base_path('../../js/bootstrap.bundle.min.js')) ?>"></script>
+    <script src="<?= e(base_path('js/bootstrap.bundle.min.js')) ?>"></script>
     <script>
-        const buscador = document.getElementById('buscadorProductos');
-        const filas = document.querySelectorAll('#tablaProductos tbody tr');
-
-        function normalizar(texto) {
-            return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-        }
-
-        buscador.addEventListener('input', function () {
-            const termino = normalizar(this.value);
-            filas.forEach(fila => {
-                const texto = normalizar(fila.textContent);
-                fila.style.display = texto.includes(termino) ? '' : 'none';
-            });
-        });
-
-        filas.forEach(fila => {
-            fila.addEventListener('click', function (e) {
-                if (e.target.closest('form')) return;
-                window.location.href = this.dataset.edit;
-            });
-        });
-
         document.getElementById('btnGuardarCategoria').addEventListener('click', function () {
             const nombre = document.getElementById('nombreCategoria').value.trim();
             if (!nombre) return;
@@ -261,19 +266,19 @@ $consulta = $db->query(
                 method: 'POST',
                 body: formData
             })
-            .then(r => r.json())
-            .then(datos => {
-                if (datos.ok) {
-                    const select = document.getElementById('selectCategoria');
-                    const option = new Option(datos.nombre, datos.id, true, true);
-                    select.appendChild(option);
+                .then(r => r.json())
+                .then(datos => {
+                    if (!datos.ok) return;
+                    ['selectCategoria'].forEach(id => {
+                        const select = document.getElementById(id);
+                        if (select) select.add(new Option(datos.nombre, datos.id, true, true));
+                    });
                     document.getElementById('nombreCategoria').value = '';
                     bootstrap.Modal.getInstance(document.getElementById('modalCategoria')).hide();
-                }
-            });
+                });
         });
 
-        document.getElementById('fotoInput').addEventListener('change', function (e) {
+        document.getElementById('fotoInput')?.addEventListener('change', function (e) {
             const archivo = e.target.files[0];
             const imgPreview = document.getElementById('imgPreview');
             const placeholder = document.getElementById('placeholderPreview');
@@ -289,16 +294,33 @@ $consulta = $db->query(
         });
 
         <?php if ($editando): ?>
-        window.addEventListener('load', () => {
-            const fila = document.getElementById('producto-<?= e((string) $producto['id']) ?>');
-            const contenedor = document.getElementById('contenedorTabla');
-            if (fila && contenedor) {
-                contenedor.scrollTop = fila.offsetTop;
-            }
-        });
-        <?php endif; ?>
+        // En movil el formulario queda arriba de todo, asi que hay que llevar
+        // la vista hasta el. En pantallas anchas se mantiene el comportamiento
+        // de centrar la card que se esta editando.
+        (function irAlFormulario() {
+            const card = document.getElementById('producto-<?= e((string) $producto['id']) ?>');
+            const esPantallaAncha = window.matchMedia('(min-width: 768px)').matches;
 
+            if (esPantallaAncha) {
+                card?.scrollIntoView({ block: 'center' });
+                return;
+            }
+
+            const topbar = document.querySelector('.sb-topbar');
+            const altoTopbar = topbar && getComputedStyle(topbar).display !== 'none'
+                ? topbar.offsetHeight
+                : 0;
+            const destino = document.querySelector('.sb-contenido') || document.getElementById('formProducto');
+            if (!destino) return;
+
+            window.scrollTo({
+                top: Math.max(0, destino.getBoundingClientRect().top + window.scrollY - altoTopbar - 8),
+                behavior: 'auto'
+            });
+        })();
+        <?php endif; ?>
     </script>
+
 </body>
 
 </html>

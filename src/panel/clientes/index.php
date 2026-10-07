@@ -34,23 +34,17 @@ $consulta = $db->query(
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clientes | Frani</title>
-    <link rel="stylesheet" href="<?= e(base_path('../../css/bootstrap.min.css')) ?>">
-    <link rel="icon" type="image/svg+xml" href="<?= e(base_path('../../img/favicon.svg')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('../../css/estilo.css?v=4')) ?>">
+    <?php $tituloPagina = 'Clientes'; require __DIR__ . '/../_head.php'; ?>
 </head>
 
-<body>
+<body class="sb-app">
     <?php require __DIR__ . '/../menu.php'; ?>
 
-    <div class="container-fluid">
-        <div class="row g-4">
+    <div class="sb-contenido sb-workspace">
+        <div class="row g-3">
 
             <!-- Columna izquierda: Formulario -->
-            <div class="col-md-4" style="position: sticky; top: 84px; align-self: flex-start;">
+            <div class="col-md-4 col-xl-3">
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <form method="POST" action="<?= e(base_path('panel/clientes/' . ($editando ? 'actualizar' : 'insertar') . ($editando ? '#cliente-' . $cliente['id'] : ''))) ?>" enctype="multipart/form-data">
@@ -84,99 +78,57 @@ $consulta = $db->query(
                                     <?= $editando ? 'Actualizar cliente' : 'Guardar cliente' ?>
                                 </button>
                             </div>
+                            <?php if ($editando): ?><a class="btn btn-outline-secondary w-100 mt-2" href="<?= e(base_path('panel/clientes')) ?>">Cancelar</a><?php endif; ?>
                         </form>
                     </div>
                 </div>
             </div>
 
-            <!-- Columna derecha: Tabla -->
-            <div class="col-md-8">
-                <div style="position: sticky; top: 76px; z-index: 10; background: white; padding: 16px; border-bottom: 1px solid #dee2e6; margin-bottom: 16px;">
+            <!-- Columna derecha: listado en cards -->
+            <div class="col-md-8 col-xl-9">
+                <div class="sb-buscador">
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa-solid fa-search"></i></span>
-                        <input type="text" id="buscadorClientes" class="form-control" placeholder="Buscar cliente...">
+                        <input type="text" id="buscadorClientes" class="form-control" placeholder="Buscar cliente..." aria-label="Buscar clientes">
                     </div>
                 </div>
 
-                <div id="contenedorTabla" class="card shadow-sm" style="max-height: calc(100vh - 180px); overflow-y: auto;">
-                    <table class="table table-hover mb-0" id="tablaClientes">
-                    <thead class="text-center">
-                        <tr class="align-middle">
-                            <th scope="col" style="width: 50px;">#</th>
-                            <th scope="col">Cliente</th>
-                            <th scope="col" style="white-space: nowrap;">Teléfono</th>
-                            <th scope="col" style="white-space: nowrap;">Agregado</th>
-                            <th scope="col" style="white-space: nowrap;">Modificado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php $token = CSRF_token(); ?>
-                        <?php while ($fila = $consulta->fetch_assoc()): ?>
-                            <tr id="cliente-<?= e((string) $fila['id']) ?>" class="align-middle <?= $editando && (int) $fila['id'] === (int) $cliente['id'] ? 'table-active' : '' ?>"
-                                style="cursor: pointer;"
-                                data-edit="<?= e(base_path('panel/clientes?id=' . $fila['id'])) ?>">
-                                <td class="text-center">
-                                    <form method="POST" action="<?= e(base_path('panel/clientes/eliminar')) ?>" class="d-inline" onsubmit="return confirm('¿Eliminar este cliente?');">
-                                        <input type="hidden" name="csrf_token" value="<?= e($token) ?>">
-                                        <input type="hidden" name="id" value="<?= e((string) $fila['id']) ?>">
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="event.stopPropagation();"><i class="fa-solid fa-trash"></i></button>
+                <div class="row g-3 sb-lista" id="listaClientes" data-search-input="buscadorClientes">
+                    <?php while ($fila = $consulta->fetch_assoc()): ?>
+                    <div class="col-12 col-lg-6 col-xxl-4" data-card-item>
+                        <div class="card sb-card h-100<?= $editando && (int) $fila['id'] === (int) $cliente['id'] ? ' activo' : '' ?>" id="cliente-<?= (int) $fila['id'] ?>" tabindex="0" role="link" aria-label="Editar <?= e($fila['nombre']) ?>" data-edit="<?= e(base_path('panel/clientes?id=' . $fila['id'])) ?>">
+                            <div class="card-body d-flex gap-3">
+                                <?php if (!empty($fila['foto'])): ?><img class="sb-thumb" src="<?= e(base_path('img/clientes/' . $fila['foto'] . '.jpg')) ?>" alt="<?= e($fila['nombre']) ?>"><?php else: ?><div class="sb-thumb sb-thumb-vacio"><i class="fa-solid fa-user"></i></div><?php endif; ?>
+                                <div class="flex-grow-1 sb-min0">
+                                    <h2 class="sb-titulo"><?= e($fila['nombre']) ?></h2>
+                                    <div class="sb-datos"><span>Teléfono: <strong><?= e($fila['telefono'] ?: 'Sin teléfono') ?></strong></span></div>
+                                    <div class="sb-meta mt-2">
+                                        <span><i class="fa-regular fa-clock me-1"></i><?= e(date('d-m | H:i', strtotime($fila['agregado']))) ?></span>
+                                        <?php if ($fila['modificado']): ?><span><i class="fa-solid fa-pen me-1"></i><?= e(date('d-m | H:i', strtotime($fila['modificado']))) ?></span><?php endif; ?>
+                                    </div>
+                                </div>
+                                <div class="sb-accion">
+                                    <form method="POST" action="<?= e(base_path('panel/clientes/eliminar')) ?>" onsubmit="return confirm('¿Eliminar este cliente?');">
+                                        <?= CSRF_field() ?>
+                                        <input type="hidden" name="id" value="<?= (int) $fila['id'] ?>">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar" aria-label="Eliminar <?= e($fila['nombre']) ?>"><i class="fa-solid fa-trash"></i></button>
                                     </form>
-                                </td>
-                                <td class="bg-success text-white"><?= e($fila['nombre']) ?></td>
-                                <td class="text-center" style="white-space: nowrap;"><?= $fila['telefono'] ? e($fila['telefono']) : '' ?></td>
-                                <td class="text-center" style="white-space: nowrap;"><?= e(date('d-m | H:i', strtotime($fila['agregado']))) ?></td>
-                                <td class="text-center" style="white-space: nowrap;"><?= $fila['modificado'] ? e(date('d-m | H:i', strtotime($fila['modificado']))) : '' ?></td>
-                            </tr>
-                        <?php endwhile; ?>
-
-                        <?php if ($consulta->num_rows === 0): ?>
-                            <tr>
-                                <td colspan="5" class="text-center text-secondary">No hay clientes cargados.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endwhile; ?>
+                    <?php if ($consulta->num_rows === 0): ?><div class="sb-vacio col-12">No hay clientes cargados.</div><?php endif; ?>
                 </div>
             </div>
 
         </div>
     </div>
 
-    <script src="<?= e(base_path('../../js/bootstrap.bundle.min.js')) ?>"></script>
-    <script>
-        const buscador = document.getElementById('buscadorClientes');
-        const filas = document.querySelectorAll('#tablaClientes tbody tr');
+    </main>
 
-        function normalizar(texto) {
-            return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-        }
+    <script src="<?= e(base_path('js/bootstrap.bundle.min.js')) ?>"></script>
 
-        buscador.addEventListener('input', function () {
-            const termino = normalizar(this.value);
-            filas.forEach(fila => {
-                const texto = normalizar(fila.textContent);
-                fila.style.display = texto.includes(termino) ? '' : 'none';
-            });
-        });
-
-        filas.forEach(fila => {
-            fila.addEventListener('click', function (e) {
-                if (e.target.closest('form')) return;
-                window.location.href = this.dataset.edit;
-            });
-        });
-
-        <?php if ($editando): ?>
-        window.addEventListener('load', () => {
-            const fila = document.getElementById('cliente-<?= e((string) $cliente['id']) ?>');
-            const contenedor = document.getElementById('contenedorTabla');
-            if (fila && contenedor) {
-                contenedor.scrollTop = fila.offsetTop;
-            }
-        });
-        <?php endif; ?>
-
-    </script>
 </body>
 
 </html>
