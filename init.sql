@@ -7,15 +7,18 @@ USE `frani`;
 CREATE TABLE IF NOT EXISTS `categorias` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(150) NOT NULL,
+  `uri` VARCHAR(200) DEFAULT NULL,
   `agregado` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modificado` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_categorias_nombre` (`nombre`)
+  UNIQUE KEY `uk_categorias_nombre` (`nombre`),
+  UNIQUE KEY `uk_categorias_uri` (`uri`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `productos` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `producto` VARCHAR(200) NOT NULL,
+  `uri` VARCHAR(200) DEFAULT NULL,
   `foto` VARCHAR(255) DEFAULT NULL,
   `descripcion` TEXT DEFAULT NULL,
   `costo` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
@@ -25,6 +28,7 @@ CREATE TABLE IF NOT EXISTS `productos` (
   `agregado` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modificado` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_productos_uri` (`uri`),
   KEY `idx_productos_id_categoria` (`id_categoria`),
   CONSTRAINT `fk_productos_categorias`
     FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id`)
@@ -81,8 +85,8 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   UNIQUE KEY `uk_usuarios_correo` (`correo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
-INSERT INTO `categorias` (`nombre`)
-SELECT 'General'
+INSERT INTO `categorias` (`nombre`, `uri`)
+SELECT 'General', 'general'
 WHERE NOT EXISTS (
   SELECT 1
   FROM `categorias`

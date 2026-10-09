@@ -17,10 +17,18 @@ if ($id <= 0 || $nombre === '') {
 
 $db = conexion();
 
-$stmt = $db->prepare("UPDATE categorias SET nombre = ? WHERE id = ?");
-$stmt->bind_param('si', $nombre, $id);
-$stmt->execute();
-$stmt->close();
+$db->begin_transaction();
+try {
+    $stmt = $db->prepare("UPDATE categorias SET nombre = ? WHERE id = ?");
+    $stmt->bind_param('si', $nombre, $id);
+    $stmt->execute();
+    $stmt->close();
+    asignar_uri_categoria($db, $id);
+    $db->commit();
+} catch (Throwable $error) {
+    $db->rollback();
+    throw $error;
+}
 
 respaldar_bd();
 

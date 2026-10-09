@@ -1,8 +1,8 @@
 <?php
-$categoriasMenu = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre");
+$categoriasMenu = $db->query("SELECT id, nombre, uri FROM categorias ORDER BY nombre");
 $usuarioMenu = usuario_actual();
 $paginaActual = basename($_SERVER['SCRIPT_NAME']);
-$categoriaSeleccionada = (int) ($_GET['id'] ?? 0);
+$categoriaSeleccionada = (int) ($categoria['id'] ?? $producto['categoria_id'] ?? 0);
 ?>
 <header class="bg-primary p-4 text-white d-none d-md-block">
     <a href="<?= e(base_path()) ?>">
@@ -29,7 +29,7 @@ $categoriaSeleccionada = (int) ($_GET['id'] ?? 0);
                 <?php if ($categoriasMenu && $categoriasMenu->num_rows > 0): ?>
                     <?php while ($catMenu = $categoriasMenu->fetch_assoc()): ?>
                         <li class="nav-item">
-                            <a class="nav-link px-3 <?= ($paginaActual === 'categoria.php' && (int) $catMenu['id'] === $categoriaSeleccionada) ? 'active' : '' ?>" <?= ($paginaActual === 'categoria.php' && (int) $catMenu['id'] === $categoriaSeleccionada) ? 'aria-current="page"' : '' ?> href="<?= e(base_path('categoria.php?id=' . (int) $catMenu['id'])) ?>"><?= e($catMenu['nombre']) ?></a>
+                            <a class="nav-link px-3 <?= (int) $catMenu['id'] === $categoriaSeleccionada ? 'active' : '' ?>" <?= (int) $catMenu['id'] === $categoriaSeleccionada ? 'aria-current="page"' : '' ?> href="<?= e(categoria_path($catMenu['uri'])) ?>"><?= e($catMenu['nombre']) ?></a>
                         </li>
                     <?php endwhile; ?>
                 <?php endif; ?>

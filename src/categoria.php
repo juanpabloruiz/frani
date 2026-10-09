@@ -4,30 +4,53 @@ require_once __DIR__ . '/funciones.php';
 
 $db = conexion();
 
-$id = (int) ($_GET['id'] ?? 0);
-
 $categoria = null;
 $resultado = null;
+$uri = $_GET['uri'] ?? null;
 
-if ($id > 0) {
-    $stmtCat = $db->prepare("SELECT id, nombre FROM categorias WHERE id = ?");
-    $stmtCat->bind_param('i', $id);
+if (array_key_exists('uri', $_GET)) {
+    if (is_string($uri) && strlen($uri) <= 200 && preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/D', $uri)) {
+        $stmtCat = $db->prepare("SELECT id, nombre, uri FROM categorias WHERE uri = ?");
+        $stmtCat->bind_param('s', $uri);
+    }
+} else {
+    $id = filter_var($_GET['id'] ?? 0, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+
+    if ($id !== false) {
+        $stmtCat = $db->prepare("SELECT id, nombre, uri FROM categorias WHERE id = ?");
+        $stmtCat->bind_param('i', $id);
+    }
+}
+
+if (isset($stmtCat)) {
     $stmtCat->execute();
     $categoria = $stmtCat->get_result()->fetch_assoc();
     $stmtCat->close();
+}
 
-    if ($categoria) {
-        $stmt = $db->prepare(
-            "SELECT p.producto, p.foto, p.precio, p.stock, c.nombre AS categoria
-             FROM productos p
-             INNER JOIN categorias c ON c.id = p.id_categoria
-             WHERE p.id_categoria = ?
-             ORDER BY p.precio ASC"
-        );
-        $stmt->bind_param('i', $id);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
+if ($categoria) {
+    $rutaCanonica = categoria_path($categoria['uri']);
+    $rutaSolicitada = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+
+    if ($rutaSolicitada !== $rutaCanonica) {
+        header('Location: ' . $rutaCanonica, true, 301);
+        exit;
     }
+
+    $urlCanonica = sitio_url(ltrim($rutaCanonica, '/'));
+    $stmt = $db->prepare(
+        "SELECT p.producto, p.uri, p.foto, p.precio, p.stock, c.nombre AS categoria, c.uri AS categoria_uri
+         FROM productos p
+         INNER JOIN categorias c ON c.id = p.id_categoria
+         WHERE p.id_categoria = ?
+         ORDER BY p.precio ASC"
+    );
+    $stmt->bind_param('i', $categoria['id']);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+    $stmt->close();
+} else {
+    http_response_code(404);
 }
 ?>
 <!DOCTYPE html>
@@ -36,23 +59,30 @@ if ($id > 0) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frani - <?= $categoria ? e($categoria['nombre']) : 'Categoría' ?></title>
+    <title><?= $categoria ? e($categoria['nombre']) . ' | Frani' : 'Categoría no encontrada | Frani' ?></title>
+    <?php if ($categoria): ?>
+        <meta name="description" content="<?= e('Encontrá productos de ' . $categoria['nombre'] . ' en Frani. Consultá precios y disponibilidad.') ?>">
+        <link rel="canonical" href="<?= e($urlCanonica) ?>">
+    <?php else: ?>
+        <meta name="robots" content="noindex, follow">
+    <?php endif; ?>
     <link rel="stylesheet" href="<?= e(base_path('css/bootstrap.min.css')) ?>">
     <link rel="icon" type="image/svg+xml" href="<?= e(base_path('img/favicon.svg')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=4')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=11')) ?>">
 </head>
 
 <body>
     <?php include __DIR__ . '/cabecera.php'; ?>
 
-    <h1 class="h3 text-center text-primary fw-bolder mb-4"><?= $categoria ? e($categoria['nombre']) : 'Categoría no encontrada' ?></h1>
+    <?php if ($categoria): ?>
+    <h1 class="h3 text-center text-primary fw-bolder mb-4"><?= e($categoria['nombre']) ?></h1>
 
     <div class="masonry-grid row row-cols-1 row-cols-md-5 g-4">
         <?php if ($resultado && $resultado->num_rows > 0): ?>
             <?php while ($fila = $resultado->fetch_assoc()): ?>
                 <div class="col">
-                    <div class="card shadow">
+                    <a class="card product-card-link" href="<?= e(producto_path($fila['uri'], $fila['categoria_uri'])) ?>">
                         <?php if (!empty($fila['foto'])): ?>
                             <picture>
                                 <source srcset="<?= e(base_path('img/productos/' . $fila['foto'] . '.webp')) ?>" type="image/webp">
@@ -70,7 +100,7 @@ if ($id > 0) {
                             <p class="card-text h4 text-primary fw-bolder mb-2">$ <?= e(moneda($fila['precio'])) ?></p>
                             <p class="card-text text-secondary mb-0">Stock disponible: <?= e((string) $fila['stock']) ?></p>
                         </div>
-                    </div>
+                    </a>
                 </div>
             <?php endwhile; ?>
         <?php else: ?>
@@ -81,5 +111,12 @@ if ($id > 0) {
             </div>
         <?php endif; ?>
     </div>
+    <?php else: ?>
+        <div class="text-center py-5">
+            <h1 class="h2">Categoría no encontrada</h1>
+            <p class="text-secondary">La categoría que buscás no está disponible.</p>
+            <a class="btn btn-primary" href="<?= e(base_path()) ?>">Volver al catálogo</a>
+        </div>
+    <?php endif; ?>
 
     <?php include __DIR__ . '/pie.php'; ?>

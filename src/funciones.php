@@ -29,6 +29,188 @@ function base_path(string $ruta = ''): string
     return $path === '' ? $base . '/' : $base . '/' . $path;
 }
 
+function producto_path(string $uri, string $categoriaUri): string
+{
+    return base_path(rawurlencode($categoriaUri) . '/' . rawurlencode($uri));
+}
+
+function categoria_path(string $uri): string
+{
+    return base_path(rawurlencode($uri));
+}
+
+function sitio_url(string $ruta = ''): string
+{
+    $dominio = getenv('APP_DOMAIN') ?: 'frani.ar';
+    return 'https://' . $dominio . base_path($ruta);
+}
+
+/** Convierte un título en un segmento de URL ASCII, de hasta 200 caracteres. */
+function generar_uri(string $titulo, string $fallback = 'producto'): string
+{
+    $titulo = strtr($titulo, [
+        'Á' => 'A', 'À' => 'A', 'Â' => 'A', 'Ä' => 'A', 'Ã' => 'A', 'Å' => 'A',
+        'á' => 'a', 'à' => 'a', 'â' => 'a', 'ä' => 'a', 'ã' => 'a', 'å' => 'a',
+        'É' => 'E', 'È' => 'E', 'Ê' => 'E', 'Ë' => 'E',
+        'é' => 'e', 'è' => 'e', 'ê' => 'e', 'ë' => 'e',
+        'Í' => 'I', 'Ì' => 'I', 'Î' => 'I', 'Ï' => 'I',
+        'í' => 'i', 'ì' => 'i', 'î' => 'i', 'ï' => 'i',
+        'Ó' => 'O', 'Ò' => 'O', 'Ô' => 'O', 'Ö' => 'O', 'Õ' => 'O',
+        'ó' => 'o', 'ò' => 'o', 'ô' => 'o', 'ö' => 'o', 'õ' => 'o',
+        'Ú' => 'U', 'Ù' => 'U', 'Û' => 'U', 'Ü' => 'U',
+        'ú' => 'u', 'ù' => 'u', 'û' => 'u', 'ü' => 'u',
+        'Ñ' => 'N', 'ñ' => 'n', 'Ç' => 'C', 'ç' => 'c',
+        'Æ' => 'AE', 'æ' => 'ae', 'Œ' => 'OE', 'œ' => 'oe', 'ß' => 'ss',
+    ]);
+    // También admite acentos escritos como caracteres Unicode combinados.
+    $titulo = preg_replace('/\p{Mn}+/u', '', $titulo) ?? $titulo;
+    // Evita transliteraciones de emoji como «😀» a «:D» que inventan letras.
+    $titulo = preg_replace('/[^\p{L}\p{N}]+/u', ' ', $titulo) ?? $titulo;
+    $ascii = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $titulo);
+    if ($ascii !== false) {
+        $titulo = $ascii;
+    }
+
+    $uri = preg_replace('/[^a-z0-9]+/', '-', strtolower($titulo));
+    $uri = trim($uri, '-');
+    $uri = rtrim(substr($uri, 0, 200), '-');
+
+    return $uri !== '' ? $uri : $fallback;
+}
+
+/**
+ * Asigna una URI solamente si falta; el índice UNIQUE resuelve incluso altas
+ * simultáneas con el mismo título. No altera la fecha ni las URI ya publicadas.
+ */
+function asignar_uri_producto(mysqli $db, int $idProducto): string
+{
+    return asignar_uri_registro($db, 'productos', $idProducto);
+}
+
+function uri_categoria_reservada(string $uri): bool
+{
+    return in_array($uri, [
+        'panel', 'productos', 'producto', 'categoria', 'test', 'img', 'css', 'js',
+        'fontawesome', 'index', 'api', 'admin', 'robots', 'sitemap', 'migrations',
+        'assets', 'cabecera', 'conexion', 'funciones', 'menu', 'pie',
+    ], true);
+}
+
+function asignar_uri_categoria(mysqli $db, int $idCategoria): string
+{
+    return asignar_uri_registro($db, 'categorias', $idCategoria);
+}
+
+/** Comparte la asignación entre las dos tablas permitidas. */
+function asignar_uri_registro(mysqli $db, string $tabla, int $id): string
+{
+    $campoTitulo = match ($tabla) {
+        'productos' => 'producto',
+        'categorias' => 'nombre',
+        default => throw new InvalidArgumentException('Tabla de URI inválida.'),
+    };
+    $consulta = $db->prepare("SELECT {$campoTitulo} AS titulo, uri FROM {$tabla} WHERE id = ?");
+    $consulta->bind_param('i', $id);
+    $consulta->execute();
+    $registro = $consulta->get_result()->fetch_assoc();
+    $consulta->close();
+
+    if ($registro === null) {
+        throw new RuntimeException('Registro no encontrado al generar su URI.');
+    }
+    if ($registro['uri'] !== null && $registro['uri'] !== '') {
+        return $registro['uri'];
+    }
+
+    $base = generar_uri($registro['titulo'], $tabla === 'categorias' ? 'categoria' : 'producto');
+    $stmt = $db->prepare(
+        "UPDATE {$tabla} SET uri = ?, modificado = modificado
+         WHERE id = ? AND (uri IS NULL OR uri = '')"
+    );
+    $uri = $base;
+    $stmt->bind_param('si', $uri, $id);
+
+    try {
+        for ($numero = 1; ; $numero++) {
+            $sufijo = $numero === 1 ? '' : '-' . $numero;
+            $uri = rtrim(substr($base, 0, 200 - strlen($sufijo)), '-') . $sufijo;
+            if ($tabla === 'categorias' && uri_categoria_reservada($uri)) {
+                continue;
+            }
+            try {
+                $stmt->execute();
+            } catch (mysqli_sql_exception $error) {
+                if ($error->getCode() === 1062) {
+                    continue;
+                }
+                throw $error;
+            }
+
+            if ($stmt->affected_rows > 0) {
+                return $uri;
+            }
+            // Otra petición pudo completar el mismo producto mientras tanto.
+            // Lectura actual: REPEATABLE READ puede conservar un snapshot con NULL.
+            $consulta = $db->prepare("SELECT uri FROM {$tabla} WHERE id = ? FOR UPDATE");
+            $consulta->bind_param('i', $id);
+            $consulta->execute();
+            $actual = $consulta->get_result()->fetch_assoc();
+            $consulta->close();
+            if ($actual === null || empty($actual['uri'])) {
+                throw new RuntimeException('No se pudo asignar la URI del registro.');
+            }
+            return $actual['uri'];
+        }
+    } finally {
+        $stmt->close();
+    }
+}
+
+/** Completa todos los títulos existentes sin cambiar sus fechas o enlaces. */
+function completar_uri_productos(mysqli $db): int
+{
+    $pendientes = $db->query("SELECT id FROM productos WHERE uri IS NULL OR uri = '' ORDER BY id");
+    $cantidad = 0;
+    while ($producto = $pendientes->fetch_assoc()) {
+        asignar_uri_producto($db, (int) $producto['id']);
+        $cantidad++;
+    }
+    $pendientes->free();
+    return $cantidad;
+}
+
+function completar_uri_categorias(mysqli $db): int
+{
+    $pendientes = $db->query("SELECT id FROM categorias WHERE uri IS NULL OR uri = '' ORDER BY id");
+    $cantidad = 0;
+    while ($categoria = $pendientes->fetch_assoc()) {
+        asignar_uri_categoria($db, (int) $categoria['id']);
+        $cantidad++;
+    }
+    $pendientes->free();
+    return $cantidad;
+}
+
+/** Prioriza la misma categoría y completa hasta tres sugerencias disponibles. */
+function productos_relacionados(mysqli $db, int $idProducto, int $idCategoria): array
+{
+    $stmt = $db->prepare(
+        "SELECT p.id, p.producto, p.uri, p.foto, p.precio, c.uri AS categoria_uri
+         FROM productos p
+         INNER JOIN categorias c ON c.id = p.id_categoria
+         WHERE p.id <> ? AND p.uri IS NOT NULL AND p.uri <> ''
+             AND c.uri IS NOT NULL AND c.uri <> ''
+         ORDER BY (p.id_categoria = ?) DESC,
+             GREATEST(COALESCE(p.modificado, p.agregado), p.agregado) DESC, p.id DESC
+         LIMIT 3"
+    );
+    $stmt->bind_param('ii', $idProducto, $idCategoria);
+    $stmt->execute();
+    $relacionados = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+    return $relacionados;
+}
+
 function redireccionar(string $ruta = ''): void
 {
     header('Location: ' . base_path($ruta));

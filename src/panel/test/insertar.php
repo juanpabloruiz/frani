@@ -28,14 +28,22 @@ if (!empty($_FILES['foto']['name'])) {
     $foto = subir_foto($_FILES['foto'], $directorio);
 }
 
-$stmt = $db->prepare(
-    "INSERT INTO productos (producto, foto, descripcion, costo, precio, stock, id_categoria)
-    VALUES (?, ?, ?, ?, ?, ?, ?)"
-);
-$stmt->bind_param('sssddii', $producto, $foto, $descripcionDB, $costo, $precio, $stock, $idCategoria);
-$stmt->execute();
-$idNuevo = $stmt->insert_id;
-$stmt->close();
+$db->begin_transaction();
+try {
+    $stmt = $db->prepare(
+        "INSERT INTO productos (producto, foto, descripcion, costo, precio, stock, id_categoria)
+        VALUES (?, ?, ?, ?, ?, ?, ?)"
+    );
+    $stmt->bind_param('sssddii', $producto, $foto, $descripcionDB, $costo, $precio, $stock, $idCategoria);
+    $stmt->execute();
+    $idNuevo = $stmt->insert_id;
+    $stmt->close();
+    asignar_uri_producto($db, (int) $idNuevo);
+    $db->commit();
+} catch (Throwable $error) {
+    $db->rollback();
+    throw $error;
+}
 
 respaldar_bd();
 

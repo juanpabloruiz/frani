@@ -4,7 +4,7 @@ require_once __DIR__ . '/funciones.php';
 
 $db = conexion();
 $resultado = $db->query(
-    "SELECT p.producto, p.foto, p.precio, p.stock, c.nombre AS categoria
+    "SELECT p.producto, p.uri, p.foto, p.precio, p.stock, c.nombre AS categoria, c.uri AS categoria_uri
     FROM productos p
     INNER JOIN categorias c ON c.id = p.id_categoria
     ORDER BY GREATEST(COALESCE(p.modificado, p.agregado), p.agregado) DESC
@@ -21,7 +21,7 @@ $resultado = $db->query(
     <link rel="stylesheet" href="<?= e(base_path('css/bootstrap.min.css')) ?>">
     <link rel="icon" type="image/svg+xml" href="<?= e(base_path('img/favicon.svg')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=4')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=11')) ?>">
 </head>
 
 <body>
@@ -30,7 +30,7 @@ $resultado = $db->query(
     <div class="masonry-grid row row-cols-1 row-cols-md-5 g-4">
         <?php while ($fila = $resultado->fetch_assoc()): ?>
             <div class="col">
-                <div class="card shadow h-100">
+                <a class="card h-100 product-card-link" href="<?= e(producto_path($fila['uri'], $fila['categoria_uri'])) ?>">
                     <?php if (!empty($fila['foto'])): ?>
                         <picture>
                             <source srcset="<?= e(base_path('img/productos/' . $fila['foto'] . '.webp')) ?>" type="image/webp">
@@ -48,7 +48,7 @@ $resultado = $db->query(
                         <p class="card-text h4 text-primary fw-bolder mb-2">$ <?= e(moneda($fila['precio'])) ?></p>
                         <p class="card-text text-secondary mb-0">Stock disponible: <?= e((string) $fila['stock']) ?></p>
                     </div>
-                </div>
+                </a>
             </div>
         <?php endwhile; ?>
 

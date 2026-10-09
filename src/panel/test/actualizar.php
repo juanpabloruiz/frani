@@ -44,14 +44,22 @@ if (!empty($_FILES['foto']['name'])) {
     }
 }
 
-$stmt = $db->prepare(
-    "UPDATE productos
-    SET producto = ?, foto = ?, descripcion = ?, costo = ?, precio = ?, stock = ?, id_categoria = ?
-    WHERE id = ?"
-);
-$stmt->bind_param('sssddiii', $producto, $fotoNueva, $descripcionDB, $costo, $precio, $stock, $idCategoria, $id);
-$stmt->execute();
-$stmt->close();
+$db->begin_transaction();
+try {
+    $stmt = $db->prepare(
+        "UPDATE productos
+        SET producto = ?, foto = ?, descripcion = ?, costo = ?, precio = ?, stock = ?, id_categoria = ?
+        WHERE id = ?"
+    );
+    $stmt->bind_param('sssddiii', $producto, $fotoNueva, $descripcionDB, $costo, $precio, $stock, $idCategoria, $id);
+    $stmt->execute();
+    $stmt->close();
+    asignar_uri_producto($db, $id);
+    $db->commit();
+} catch (Throwable $error) {
+    $db->rollback();
+    throw $error;
+}
 
 respaldar_bd();
 
