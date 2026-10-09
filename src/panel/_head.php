@@ -1,5 +1,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
 <title><?= isset($tituloPagina) ? e($tituloPagina) . ' | Frani' : 'Panel | Frani' ?></title>
 <script src="<?= e(base_path('js/tema.js')) ?>"></script>
 <link rel="stylesheet" href="<?= e(base_path('css/bootstrap.min.css')) ?>">

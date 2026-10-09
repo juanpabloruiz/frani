@@ -71,3 +71,41 @@ Pruebas de normalización, colisiones, estabilidad y migración (usan una tabla 
 docker compose exec -T web php /var/www/backup/tests/productos_uri.php
 docker compose exec -T web php /var/www/backup/tests/categorias_uri.php
 ```
+
+## SEO y vistas previas al compartir
+
+La portada, las categorías y las fichas sirven los metadatos directamente en el HTML, sin depender de JavaScript. `src/seo.php` prepara la información y `src/_seo.php` genera la descripción, la URL canónica, Open Graph para Facebook y las tarjetas de X.
+
+Cada producto publica su título, descripción y foto. La descripción social comienza con el precio vigente en pesos argentinos (`ARS`) y también se incluyen `product:price:amount` y `product:price:currency`. Facebook y X deciden qué campos muestran en sus vistas previas; el precio y la descripción pueden no aparecer en todos los formatos. Los productos sin descripción usan un texto de consulta y los productos sin foto usan el logo de Frani al compartir.
+
+`/imagen-social.php?producto={id}` genera un JPEG de 1200 × 630 con la foto completa y un bloque legible de título, descripción breve y precio actual en ARS. El texto forma parte de la imagen para seguir visible cuando una red omita la descripción de su tarjeta. Los datos se consultan en la base; el visitante no puede reemplazar el precio desde la URL. Las URLs incluyen una versión para renovar la caché cuando cambian la foto, el título, la descripción, la categoría, el precio o el generador. Las tarjetas de X usan `summary_large_image`. La tipografía Lato se distribuye con su licencia OFL en `src/fonts/`.
+
+El modo `/imagen-social.php?foto={nombre}` conserva la vista de foto sola; la portada y las categorías usan el logo. El endpoint es público, no requiere iniciar sesión, admite GET/HEAD y valida la ruta del archivo. Un ID de producto inválido o inexistente responde 404 y los errores de consulta responden 503 sin caché.
+
+Para Google, cada ficha incluye datos estructurados `Product`, `Offer` y `BreadcrumbList`, con el mismo precio y disponibilidad visibles en la página. Un stock nulo omite la disponibilidad; un stock positivo indica disponible y cero o negativo indica agotado. Solo se declara una imagen de producto si existe una foto real. La portada incluye `WebSite` y `Organization`, y las categorías incluyen `CollectionPage` y su ruta de navegación. Los resultados enriquecidos dependen de Google.
+
+- `/sitemap.xml` lista automáticamente la portada, las categorías y todos los productos con URI válida, aunque no aparezcan entre los 25 productos de la portada. Las fechas de productos usan UTC e incluyen cambios de categoría. No se inventan fechas de modificación de los listados.
+- `/robots.txt` permite el catálogo y las fotos, excluye el panel y anuncia el sitemap. El panel y los endpoints de prueba también envían `noindex`.
+- Las páginas inexistentes responden 404 y no publican datos estructurados de productos.
+
+Este cambio no requiere migraciones adicionales. Al desplegar `src/` y `nginx.conf`, comprobar y recargar Nginx:
+
+```bash
+docker compose exec -T web nginx -t
+docker compose exec -T web nginx -s reload
+```
+
+Registrar `https://{APP_DOMAIN}/sitemap.xml` en [Google Search Console](https://search.google.com/search-console) y comprobar una ficha con [Rich Results Test](https://search.google.com/test/rich-results). Para un enlace que Facebook ya tenga guardado, usar [Sharing Debugger](https://developers.facebook.com/tools/debug/) y volver a extraer la información. Las modificaciones de precio o descripción se reflejan al siguiente rastreo de cada plataforma; la caché social puede conservar los datos anteriores.
+
+Para publicar `fb:app_id`, configurar `FACEBOOK_APP_ID` en `.env` con el identificador numérico real de una aplicación propia en [Meta for Developers](https://developers.facebook.com/apps/), disponible en Configuración → Básica. Es un identificador público: no es el ID de la página de Facebook ni el App Secret. El metadato se omite si falta o no es numérico; no se utiliza un ID ficticio para ocultar la advertencia del depurador. Después de cambiar `.env`, aplicar las variables al servicio con `docker compose up -d --no-deps web` y volver a extraer el enlace en Sharing Debugger.
+
+El dominio canónico es el configurado por `APP_DOMAIN`, con HTTPS. En el proxy o Cloudflare conviene redirigir el acceso por HTTP y `www` a ese dominio; Nginx interno conserva HTTP para funcionar detrás del proxy y en desarrollo.
+
+Pruebas de metadatos, precio, disponibilidad, escaping, imágenes y acceso de los rastreadores:
+
+```bash
+docker compose exec -T web php /var/www/backup/tests/seo.php
+docker compose exec -T web php /var/www/backup/tests/imagen_social.php
+# Comprobar también el dominio público, si sirve este mismo catálogo:
+docker compose exec -T -e SEO_TEST_BASE_URL=https://frani.ar web php /var/www/backup/tests/seo.php
+```

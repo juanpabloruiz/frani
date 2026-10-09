@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/conexion.php';
 require_once __DIR__ . '/funciones.php';
+require_once __DIR__ . '/seo.php';
 
 $db = conexion();
 
@@ -38,6 +39,24 @@ if ($categoria) {
     }
 
     $urlCanonica = sitio_url(ltrim($rutaCanonica, '/'));
+    $descripcionMeta = 'Encontrá productos de ' . $categoria['nombre'] . ' en Frani. Consultá precios y disponibilidad.';
+    $seo = [
+        'titulo' => $categoria['nombre'] . ' | Frani',
+        'descripcion' => seo_texto($descripcionMeta, 160),
+        'url' => $urlCanonica,
+        'imagen' => seo_imagen_social(),
+        'datos' => [
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                ['@type' => 'CollectionPage', 'name' => $categoria['nombre'], 'url' => $urlCanonica,
+                    'description' => $descripcionMeta, 'inLanguage' => 'es-AR'],
+                ['@type' => 'BreadcrumbList', 'itemListElement' => [
+                    ['@type' => 'ListItem', 'position' => 1, 'name' => 'Inicio', 'item' => sitio_url()],
+                    ['@type' => 'ListItem', 'position' => 2, 'name' => $categoria['nombre'], 'item' => $urlCanonica],
+                ]],
+            ],
+        ],
+    ];
     $stmt = $db->prepare(
         "SELECT p.producto, p.uri, p.foto, p.precio, p.stock, c.nombre AS categoria, c.uri AS categoria_uri
          FROM productos p
@@ -51,6 +70,11 @@ if ($categoria) {
     $stmt->close();
 } else {
     http_response_code(404);
+    $seo = [
+        'titulo' => 'Categoría no encontrada | Frani',
+        'descripcion' => 'La categoría que buscás no está disponible. Visitá el catálogo de Frani.',
+        'noindex' => true,
+    ];
 }
 ?>
 <!DOCTYPE html>
@@ -59,13 +83,7 @@ if ($categoria) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $categoria ? e($categoria['nombre']) . ' | Frani' : 'Categoría no encontrada | Frani' ?></title>
-    <?php if ($categoria): ?>
-        <meta name="description" content="<?= e('Encontrá productos de ' . $categoria['nombre'] . ' en Frani. Consultá precios y disponibilidad.') ?>">
-        <link rel="canonical" href="<?= e($urlCanonica) ?>">
-    <?php else: ?>
-        <meta name="robots" content="noindex, follow">
-    <?php endif; ?>
+    <?php include __DIR__ . '/_seo.php'; ?>
     <link rel="stylesheet" href="<?= e(base_path('css/bootstrap.min.css')) ?>">
     <link rel="icon" type="image/svg+xml" href="<?= e(base_path('img/favicon.svg')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('fontawesome/css/all.min.css')) ?>">
@@ -76,6 +94,12 @@ if ($categoria) {
     <?php include __DIR__ . '/cabecera.php'; ?>
 
     <?php if ($categoria): ?>
+    <nav aria-label="Ruta de navegación" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="<?= e(base_path()) ?>">Inicio</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><?= e($categoria['nombre']) ?></li>
+        </ol>
+    </nav>
     <h1 class="h3 text-center text-primary fw-bolder mb-4"><?= e($categoria['nombre']) ?></h1>
 
     <div class="masonry-grid row row-cols-1 row-cols-md-5 g-4">

@@ -92,7 +92,7 @@ function uri_categoria_reservada(string $uri): bool
     return in_array($uri, [
         'panel', 'productos', 'producto', 'categoria', 'test', 'img', 'css', 'js',
         'fontawesome', 'index', 'api', 'admin', 'robots', 'sitemap', 'migrations',
-        'assets', 'cabecera', 'conexion', 'funciones', 'menu', 'pie',
+        'assets', 'cabecera', 'conexion', 'funciones', 'menu', 'pie', 'seo', 'imagen-social',
     ], true);
 }
 

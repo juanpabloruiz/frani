@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/conexion.php';
 require_once __DIR__ . '/funciones.php';
+require_once __DIR__ . '/seo.php';
 
 $db = conexion();
 $uri = $_GET['uri'] ?? '';
@@ -33,24 +34,19 @@ if ($producto) {
         exit;
     }
 
-    $tituloPagina = $producto['producto'] . ' | Frani';
     $descripcion = trim((string) ($producto['descripcion'] ?? ''));
-    $descripcionMeta = $descripcion !== ''
-        ? preg_replace('/\s+/u', ' ', $descripcion)
-        : $producto['producto'] . ' en Frani. Consultá su precio y disponibilidad.';
-
-    if (preg_match('/^(.{157}).{4,}$/us', $descripcionMeta, $coincidencias)) {
-        $descripcionMeta = $coincidencias[1] . '…';
-    }
-
-    $urlCanonica = sitio_url(ltrim($rutaCanonica, '/'));
-    $imagenJpg = !empty($producto['foto']) ? 'img/productos/' . $producto['foto'] . '.jpg' : 'img/Ejemplo..jpg';
-    $imagenWebp = !empty($producto['foto']) ? 'img/productos/' . $producto['foto'] . '.webp' : 'img/Ejemplo.webp';
+    $seo = seo_producto($producto);
+    $foto = seo_foto_producto($producto['foto']);
+    $imagenJpg = $foto !== null ? 'img/productos/' . $foto . '.jpg' : 'img/Ejemplo..jpg';
+    $imagenWebp = $foto !== null ? 'img/productos/' . $foto . '.webp' : 'img/Ejemplo.webp';
     $relacionados = productos_relacionados($db, (int) $producto['id'], (int) $producto['categoria_id']);
 } else {
     http_response_code(404);
-    $tituloPagina = 'Producto no encontrado | Frani';
-    $descripcionMeta = 'El producto que buscás no está disponible. Visitá el catálogo de Frani.';
+    $seo = [
+        'titulo' => 'Producto no encontrado | Frani',
+        'descripcion' => 'El producto que buscás no está disponible. Visitá el catálogo de Frani.',
+        'noindex' => true,
+    ];
 }
 ?>
 <!DOCTYPE html>
@@ -59,21 +55,7 @@ if ($producto) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= e($tituloPagina) ?></title>
-    <meta name="description" content="<?= e($descripcionMeta) ?>">
-    <?php if ($producto): ?>
-        <link rel="canonical" href="<?= e($urlCanonica) ?>">
-        <meta property="og:locale" content="es_AR">
-        <meta property="og:type" content="website">
-        <meta property="og:site_name" content="Frani">
-        <meta property="og:title" content="<?= e($tituloPagina) ?>">
-        <meta property="og:description" content="<?= e($descripcionMeta) ?>">
-        <meta property="og:url" content="<?= e($urlCanonica) ?>">
-        <meta property="og:image" content="<?= e(sitio_url($imagenJpg)) ?>">
-        <meta property="og:image:alt" content="<?= e($producto['producto']) ?>">
-    <?php else: ?>
-        <meta name="robots" content="noindex, follow">
-    <?php endif; ?>
+    <?php include __DIR__ . '/_seo.php'; ?>
     <link rel="stylesheet" href="<?= e(base_path('css/bootstrap.min.css')) ?>">
     <link rel="icon" type="image/svg+xml" href="<?= e(base_path('img/favicon.svg')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('fontawesome/css/all.min.css')) ?>">
