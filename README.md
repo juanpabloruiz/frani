@@ -46,6 +46,16 @@ La migración se puede repetir. Conserva los descuentos anteriores en porcentaje
 
 ## Páginas de productos y URLs amigables
 
+La portada, cada categoría y las fichas de producto tienen un buscador al comienzo del contenido. Filtra al escribir por palabras del nombre, la descripción o la categoría, sin distinguir mayúsculas ni acentos. La portada busca en todos los productos, incluso los que no aparecen entre las últimas 25 novedades; cada categoría busca solo en sus propios productos. En las fichas busca dentro de la categoría del producto y muestra las mismas tarjetas del catálogo; al limpiar el campo se recupera la ficha original. En los listados, limpiar restaura el listado inicial. No requiere migraciones.
+
+Los títulos H1 de portada y categorías usan `visually-hidden` de Bootstrap: forman parte del HTML y son accesibles para lectores de pantalla, sin ocupar espacio en la interfaz. El menú indica la sección activa. Las fichas conservan visible el nombre del producto. Las rutas de navegación se publican en los datos estructurados `BreadcrumbList`, sin mostrar breadcrumbs adicionales en la página.
+
+Pruebas de alcance, palabras, acentos y respuestas del buscador:
+
+```bash
+docker compose exec -T web php /var/www/backup/tests/catalogo_busqueda.php
+```
+
 Cada card de la portada y las categorías enlaza a una ficha servida por `src/producto.php`, por ejemplo `/juguetes/masa-magica-por-12`. La ficha muestra foto, descripción, categoría, precio y disponibilidad, con título, descripción y URL canónica para buscadores. Debajo aparecen hasta tres productos relacionados con miniaturas y enlaces: primero los de la misma categoría y luego otros del catálogo si hace falta completar tres sugerencias. Nunca se incluye el producto actual.
 
 Antes de usar los nuevos archivos PHP en una instalación existente, ejecutar la migración:
@@ -73,6 +83,8 @@ docker compose exec -T web php /var/www/backup/tests/categorias_uri.php
 ```
 
 ## SEO y vistas previas al compartir
+
+Las fichas incluyen botones con los iconos de FontAwesome locales para compartir en Facebook, X, WhatsApp y Telegram. Comparten la URL canónica pública del producto, sin parámetros de seguimiento. “Copiar enlace” permite pegarlo en Instagram u otras aplicaciones; si el navegador no permite usar el portapapeles, muestra el enlace seleccionado para copiarlo manualmente. “Más opciones para compartir” abre el menú del dispositivo cuando el navegador admite Web Share (los destinos dependen de las aplicaciones instaladas). Los enlaces a redes sociales funcionan sin JavaScript y solo se abren cuando el usuario los pulsa.
 
 La portada, las categorías y las fichas sirven los metadatos directamente en el HTML, sin depender de JavaScript. `src/seo.php` prepara la información y `src/_seo.php` genera la descripción, la URL canónica, Open Graph para Facebook y las tarjetas de X.
 

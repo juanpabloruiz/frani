@@ -93,6 +93,7 @@ function uri_categoria_reservada(string $uri): bool
         'panel', 'productos', 'producto', 'categoria', 'test', 'img', 'css', 'js',
         'fontawesome', 'index', 'api', 'admin', 'robots', 'sitemap', 'migrations',
         'assets', 'cabecera', 'conexion', 'funciones', 'menu', 'pie', 'seo', 'imagen-social',
+        'catalogo', 'buscar-productos',
     ], true);
 }
 

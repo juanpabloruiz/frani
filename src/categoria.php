@@ -2,6 +2,7 @@
 require_once __DIR__ . '/conexion.php';
 require_once __DIR__ . '/funciones.php';
 require_once __DIR__ . '/seo.php';
+require_once __DIR__ . '/catalogo.php';
 
 $db = conexion();
 
@@ -57,17 +58,9 @@ if ($categoria) {
             ],
         ],
     ];
-    $stmt = $db->prepare(
-        "SELECT p.producto, p.uri, p.foto, p.precio, p.stock, c.nombre AS categoria, c.uri AS categoria_uri
-         FROM productos p
-         INNER JOIN categorias c ON c.id = p.id_categoria
-         WHERE p.id_categoria = ?
-         ORDER BY p.precio ASC"
-    );
-    $stmt->bind_param('i', $categoria['id']);
-    $stmt->execute();
-    $resultado = $stmt->get_result();
-    $stmt->close();
+    $busquedaCatalogo = '';
+    $categoriaCatalogo = (int) $categoria['id'];
+    $resultado = catalogo_productos($db, '', $categoriaCatalogo);
 } else {
     http_response_code(404);
     $seo = [
@@ -87,53 +80,18 @@ if ($categoria) {
     <link rel="stylesheet" href="<?= e(base_path('css/bootstrap.min.css')) ?>">
     <link rel="icon" type="image/svg+xml" href="<?= e(base_path('img/favicon.svg')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=11')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=19')) ?>">
 </head>
 
 <body>
     <?php include __DIR__ . '/cabecera.php'; ?>
 
     <?php if ($categoria): ?>
-    <nav aria-label="Ruta de navegación" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="<?= e(base_path()) ?>">Inicio</a></li>
-            <li class="breadcrumb-item active" aria-current="page"><?= e($categoria['nombre']) ?></li>
-        </ol>
-    </nav>
-    <h1 class="h3 text-center text-primary fw-bolder mb-4"><?= e($categoria['nombre']) ?></h1>
+    <h1 class="visually-hidden"><?= e($categoria['nombre']) ?></h1>
+    <?php include __DIR__ . '/_buscador-catalogo.php'; ?>
 
-    <div class="masonry-grid row row-cols-1 row-cols-md-5 g-4">
-        <?php if ($resultado && $resultado->num_rows > 0): ?>
-            <?php while ($fila = $resultado->fetch_assoc()): ?>
-                <div class="col">
-                    <a class="card product-card-link" href="<?= e(producto_path($fila['uri'], $fila['categoria_uri'])) ?>">
-                        <?php if (!empty($fila['foto'])): ?>
-                            <picture>
-                                <source srcset="<?= e(base_path('img/productos/' . $fila['foto'] . '.webp')) ?>" type="image/webp">
-                                <img src="<?= e(base_path('img/productos/' . $fila['foto'] . '.jpg')) ?>" class="card-img-top" width="200" alt="<?= e($fila['producto']) ?>">
-                            </picture>
-                        <?php else: ?>
-                            <picture>
-                                <source srcset="<?= e(base_path('img/Ejemplo.webp')) ?>" type="image/webp">
-                                <img src="<?= e(base_path('img/Ejemplo..jpg')) ?>" class="card-img-top" width="200" alt="<?= e($fila['producto']) ?>">
-                            </picture>
-                        <?php endif; ?>
-                        <div class="card-body">
-                            <span class="badge text-bg-dark mb-2"><?= e($fila['categoria']) ?></span>
-                            <h2 class="h5 card-title"><?= e($fila['producto']) ?></h2>
-                            <p class="card-text h4 text-primary fw-bolder mb-2">$ <?= e(moneda($fila['precio'])) ?></p>
-                            <p class="card-text text-secondary mb-0">Stock disponible: <?= e((string) $fila['stock']) ?></p>
-                        </div>
-                    </a>
-                </div>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <div class="col-12">
-                <div class="alert alert-info mb-0">
-                    No hay productos en esta categoría.
-                </div>
-            </div>
-        <?php endif; ?>
+    <div class="masonry-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4" id="productosCatalogo" aria-busy="false">
+        <?php include __DIR__ . '/_catalogo-productos.php'; ?>
     </div>
     <?php else: ?>
         <div class="text-center py-5">

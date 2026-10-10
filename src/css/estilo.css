@@ -2,6 +2,19 @@
   font-weight: 700;
 }
 
+.catalogo-buscador input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.masonry-grid > .catalogo-vacio {
+  width: 100%;
+}
+
+.masonry-grid[hidden] {
+  display: none;
+}
+
 .product-card-link {
   color: var(--bs-body-color);
   text-decoration: none;
@@ -29,6 +42,86 @@
 .product-detail-title,
 .product-description {
   overflow-wrap: anywhere;
+}
+
+.product-detail-layout {
+  display: grid;
+  grid-template-areas: "photo" "share" "content";
+  gap: 1rem;
+  align-items: start;
+}
+
+.product-detail-photo {
+  grid-area: photo;
+  min-width: 0;
+}
+
+.product-detail-content {
+  grid-area: content;
+  min-width: 0;
+}
+
+.product-share {
+  grid-area: share;
+  min-width: 0;
+}
+
+.product-share-button {
+  --share-color: var(--bs-secondary-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 50%;
+  color: var(--share-color);
+  background-color: var(--bs-body-bg);
+  font-size: 1.15rem;
+}
+
+.product-share-button:hover,
+.product-share-button:focus-visible {
+  color: #fff;
+  background-color: var(--share-color);
+  border-color: var(--share-color);
+}
+
+.product-share-button:focus-visible {
+  outline: 3px solid var(--bs-primary);
+  outline-offset: 3px;
+}
+
+.product-share-button[hidden] {
+  display: none;
+}
+
+.product-share-facebook { --share-color: #1877f2; }
+.product-share-x { --share-color: #212529; }
+.product-share-whatsapp { --share-color: #128c7e; }
+.product-share-telegram { --share-color: #0088cc; }
+
+@media (max-width: 575.98px) {
+  .product-share-label {
+    flex-basis: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .product-detail-layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas: ". share" "photo content";
+    column-gap: 1.5rem;
+    row-gap: 0.75rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .product-detail-layout {
+    column-gap: 3rem;
+  }
 }
 
 .related-product-card {

@@ -40,6 +40,9 @@ if ($producto) {
     $imagenJpg = $foto !== null ? 'img/productos/' . $foto . '.jpg' : 'img/Ejemplo..jpg';
     $imagenWebp = $foto !== null ? 'img/productos/' . $foto . '.webp' : 'img/Ejemplo.webp';
     $relacionados = productos_relacionados($db, (int) $producto['id'], (int) $producto['categoria_id']);
+    $categoriaCatalogo = (int) $producto['categoria_id'];
+    $nombreCategoriaCatalogo = $producto['categoria'];
+    $detalleCatalogo = 'detalleProducto';
 } else {
     http_response_code(404);
     $seo = [
@@ -59,30 +62,26 @@ if ($producto) {
     <link rel="stylesheet" href="<?= e(base_path('css/bootstrap.min.css')) ?>">
     <link rel="icon" type="image/svg+xml" href="<?= e(base_path('img/favicon.svg')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=11')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=19')) ?>">
 </head>
 
 <body>
     <?php include __DIR__ . '/cabecera.php'; ?>
 
     <?php if ($producto): ?>
-        <nav aria-label="Ruta de navegación" class="mb-4">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="<?= e(base_path()) ?>">Inicio</a></li>
-                <li class="breadcrumb-item"><a href="<?= e(categoria_path($producto['categoria_uri'])) ?>"><?= e($producto['categoria']) ?></a></li>
-                <li class="breadcrumb-item active" aria-current="page"><?= e($producto['producto']) ?></li>
-            </ol>
-        </nav>
+        <?php include __DIR__ . '/_buscador-catalogo.php'; ?>
+        <div class="masonry-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4" id="productosCatalogo" aria-busy="false" hidden></div>
 
-        <article class="row g-4 g-lg-5 align-items-start">
-            <div class="col-md-6">
-                <picture class="d-block bg-white rounded shadow-sm p-3">
+        <div id="detalleProducto" data-catalog-detail>
+        <article class="product-detail-layout">
+            <div class="product-detail-photo">
+                <picture class="d-block bg-white rounded shadow-sm overflow-hidden">
                     <source srcset="<?= e(base_path($imagenWebp)) ?>" type="image/webp">
                     <img src="<?= e(base_path($imagenJpg)) ?>" class="product-detail-image" alt="<?= e($producto['producto']) ?>" fetchpriority="high">
                 </picture>
             </div>
-            <div class="col-md-6">
-                <a class="badge text-bg-dark mb-3 text-decoration-none" href="<?= e(categoria_path($producto['categoria_uri'])) ?>"><?= e($producto['categoria']) ?></a>
+            <?php include __DIR__ . '/_compartir-producto.php'; ?>
+            <div class="product-detail-content">
                 <h1 class="product-detail-title h2 mb-3"><?= e($producto['producto']) ?></h1>
                 <p class="h2 text-primary fw-bolder mb-3">$ <?= e(moneda($producto['precio'])) ?></p>
                 <p class="mb-4 <?= $producto['stock'] !== null && (int) $producto['stock'] <= 0 ? 'text-danger' : 'text-secondary' ?>">
@@ -131,6 +130,7 @@ if ($producto) {
                 </div>
             </section>
         <?php endif; ?>
+        </div>
     <?php else: ?>
         <div class="text-center py-5">
             <h1 class="h2">Producto no encontrado</h1>
@@ -139,4 +139,7 @@ if ($producto) {
         </div>
     <?php endif; ?>
 
+    <?php if ($producto): ?>
+        <script src="<?= e(base_path('js/compartir-producto.js?v=1')) ?>" defer></script>
+    <?php endif; ?>
     <?php include __DIR__ . '/pie.php'; ?>
