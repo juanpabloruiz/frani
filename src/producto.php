@@ -58,11 +58,12 @@ if ($producto) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="<?= e(base_path('js/tema.js')) ?>"></script>
     <?php include __DIR__ . '/_seo.php'; ?>
     <link rel="stylesheet" href="<?= e(base_path('css/bootstrap.min.css')) ?>">
     <link rel="icon" type="image/svg+xml" href="<?= e(base_path('img/favicon.svg')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=22')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=23')) ?>">
 </head>
 
 <body>
@@ -83,8 +84,8 @@ if ($producto) {
             <?php include __DIR__ . '/_compartir-producto.php'; ?>
             <div class="product-detail-content">
                 <h1 class="product-detail-title h2 mb-3"><?= e($producto['producto']) ?></h1>
-                <p class="h2 text-primary fw-bolder mb-3">$ <?= e(moneda($producto['precio'])) ?></p>
-                <p class="mb-4 <?= $producto['stock'] !== null && (int) $producto['stock'] <= 0 ? 'text-danger' : 'text-secondary' ?>">
+                <p class="h2 catalogo-precio fw-bolder mb-3">$ <?= e(moneda($producto['precio'])) ?></p>
+                <p class="mb-4 <?= $producto['stock'] !== null && (int) $producto['stock'] <= 0 ? 'text-danger-emphasis' : 'text-body-secondary' ?>">
                     <?php if ($producto['stock'] === null): ?>
                         Consultar disponibilidad.
                     <?php elseif ((int) $producto['stock'] <= 0): ?>
@@ -122,7 +123,7 @@ if ($producto) {
                                 </picture>
                                 <div class="card-body">
                                     <h3 class="h6 card-title mb-2"><?= e($relacionado['producto']) ?></h3>
-                                    <p class="card-text text-primary fw-bold mb-0">$ <?= e(moneda($relacionado['precio'])) ?></p>
+                                    <p class="card-text catalogo-precio fw-bold mb-0">$ <?= e(moneda($relacionado['precio'])) ?></p>
                                 </div>
                             </a>
                         </div>
@@ -134,7 +135,7 @@ if ($producto) {
     <?php else: ?>
         <div class="text-center py-5">
             <h1 class="h2">Producto no encontrado</h1>
-            <p class="text-secondary">El producto que buscás no está disponible.</p>
+            <p class="text-body-secondary">El producto que buscás no está disponible.</p>
             <a class="btn btn-primary" href="<?= e(base_path()) ?>">Volver al catálogo</a>
         </div>
     <?php endif; ?>

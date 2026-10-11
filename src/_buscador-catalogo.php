@@ -14,5 +14,5 @@
             <i class="fa-solid fa-xmark" aria-hidden="true"></i>
         </button>
     </div>
-    <p class="small text-secondary mt-2 mb-0" data-search-status role="status" aria-live="polite" aria-atomic="true"></p>
+    <p class="small text-body-secondary mt-2 mb-0" data-search-status role="status" aria-live="polite" aria-atomic="true"></p>
 </div>

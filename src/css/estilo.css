@@ -37,6 +37,30 @@
   outline-offset: 3px;
 }
 
+.product-card-link .card-img-top {
+  background-color: #fff;
+}
+
+.catalogo-precio {
+  color: var(--bs-primary);
+}
+
+[data-bs-theme="dark"] .catalogo-precio {
+  color: var(--bs-primary-text-emphasis);
+}
+
+[data-bs-theme="dark"] .catalogo-paginacion .btn-outline-primary,
+[data-bs-theme="dark"] .product-detail-content .btn-outline-primary {
+  --bs-btn-color: var(--bs-primary-text-emphasis);
+  --bs-btn-border-color: var(--bs-primary-text-emphasis);
+  --bs-btn-hover-color: var(--bs-body-bg);
+  --bs-btn-hover-bg: var(--bs-primary-text-emphasis);
+  --bs-btn-hover-border-color: var(--bs-primary-text-emphasis);
+  --bs-btn-active-color: var(--bs-body-bg);
+  --bs-btn-active-bg: var(--bs-primary-text-emphasis);
+  --bs-btn-active-border-color: var(--bs-primary-text-emphasis);
+}
+
 .product-detail-image {
   display: block;
   width: 100%;
@@ -73,6 +97,7 @@
 
 .product-share-button {
   --share-color: var(--bs-secondary);
+  --share-foreground: #fff;
   --bs-btn-active-color: var(--share-color);
   --bs-btn-active-bg: var(--bs-body-bg);
   --bs-btn-active-border-color: var(--share-color);
@@ -85,7 +110,7 @@
   padding: 0;
   border: 1px solid var(--share-color);
   border-radius: 50%;
-  color: #fff;
+  color: var(--share-foreground);
   background-color: var(--share-color);
   font-size: 1.15rem;
 }
@@ -110,6 +135,11 @@
 .product-share-x { --share-color: #212529; }
 .product-share-whatsapp { --share-color: #128c7e; }
 .product-share-telegram { --share-color: #0088cc; }
+
+[data-bs-theme="dark"] .product-share-x {
+  --share-color: #f8f9fa;
+  --share-foreground: #212529;
+}
 
 @media (max-width: 575.98px) {
   .product-share-label {

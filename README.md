@@ -52,6 +52,8 @@ La portada y las categorías cargan los productos en tandas de 25 al acercarse a
 
 Los títulos H1 de portada y categorías usan `visually-hidden` de Bootstrap: forman parte del HTML y son accesibles para lectores de pantalla, sin ocupar espacio en la interfaz. El menú indica la sección activa. Las fichas conservan visible el nombre del producto. Las rutas de navegación se publican en los datos estructurados `BreadcrumbList`, sin mostrar breadcrumbs adicionales en la página.
 
+El catálogo público usa el mismo `js/tema.js` que el panel: sigue la preferencia clara u oscura del sistema y cambia automáticamente si esa preferencia se modifica con la página abierta. Se carga al comienzo del `head` para aplicar el tema antes de pintar la interfaz. Los fondos, las tarjetas, el buscador y los textos se adaptan; las fotos mantienen sus colores originales.
+
 Pruebas de alcance, palabras, acentos y respuestas del buscador:
 
 ```bash

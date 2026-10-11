@@ -14,7 +14,7 @@ $redesCompartir = [
 ?>
 <div class="product-share" data-product-share data-url="<?= e($urlCompartir) ?>" data-title="<?= e($tituloCompartir) ?>">
     <div class="d-flex flex-wrap align-items-center gap-2" role="group" aria-label="Compartir este producto">
-        <span class="product-share-label small text-secondary me-1">Compartir</span>
+        <span class="product-share-label small text-body-secondary me-1">Compartir</span>
         <?php foreach ($redesCompartir as $redCompartir): ?>
             <a class="btn product-share-button product-share-<?= e($redCompartir['clase']) ?>"
                 href="<?= e($redCompartir['url']) ?>" target="_blank" rel="noopener noreferrer"
@@ -31,7 +31,7 @@ $redesCompartir = [
             <i class="fa-solid fa-arrow-up-from-bracket" aria-hidden="true"></i>
         </button>
     </div>
-    <p class="small text-secondary mb-0 mt-2" data-share-status role="status" aria-live="polite" aria-atomic="true" hidden></p>
+    <p class="small text-body-secondary mb-0 mt-2" data-share-status role="status" aria-live="polite" aria-atomic="true" hidden></p>
     <div class="mt-2" data-share-fallback hidden>
         <label class="visually-hidden" for="enlaceProducto">Enlace del producto para copiar</label>
         <input class="form-control form-control-sm" id="enlaceProducto" type="text" value="<?= e($urlCompartir) ?>" readonly>

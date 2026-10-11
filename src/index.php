@@ -34,11 +34,12 @@ $seo = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="<?= e(base_path('js/tema.js')) ?>"></script>
     <?php include __DIR__ . '/_seo.php'; ?>
     <link rel="stylesheet" href="<?= e(base_path('css/bootstrap.min.css')) ?>">
     <link rel="icon" type="image/svg+xml" href="<?= e(base_path('img/favicon.svg')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=22')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=23')) ?>">
 </head>
 
 <body>
