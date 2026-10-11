@@ -1,6 +1,7 @@
 <?php $nombreCategoriaCatalogo = $nombreCategoriaCatalogo ?? $categoria['nombre'] ?? ''; ?>
 <div class="catalogo-buscador w-100 mb-4" role="search" aria-label="Buscar productos"
     data-catalog-search data-endpoint="<?= e(base_path('buscar-productos.php')) ?>"
+    <?php if (isset($loteCatalogo)): ?>data-pagination="paginacionCatalogo"<?php endif; ?>
     <?php if (isset($detalleCatalogo)): ?>data-detail="<?= e($detalleCatalogo) ?>"<?php endif; ?>
     <?php if ($categoriaCatalogo !== null): ?>data-category="<?= e((string) $categoriaCatalogo) ?>"<?php endif; ?>>
     <div class="input-group">

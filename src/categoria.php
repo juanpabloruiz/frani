@@ -9,6 +9,7 @@ $db = conexion();
 $categoria = null;
 $resultado = null;
 $uri = $_GET['uri'] ?? null;
+$paginaCatalogo = catalogo_numero_pagina();
 
 if (array_key_exists('uri', $_GET)) {
     if (is_string($uri) && strlen($uri) <= 200 && preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/D', $uri)) {
@@ -35,11 +36,11 @@ if ($categoria) {
     $rutaSolicitada = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
 
     if ($rutaSolicitada !== $rutaCanonica) {
-        header('Location: ' . $rutaCanonica, true, 301);
+        header('Location: ' . $rutaCanonica . ($paginaCatalogo > 1 ? '?pagina=' . $paginaCatalogo : ''), true, 301);
         exit;
     }
 
-    $urlCanonica = sitio_url(ltrim($rutaCanonica, '/'));
+    $urlCanonica = sitio_url(ltrim($rutaCanonica, '/')) . ($paginaCatalogo > 1 ? '?pagina=' . $paginaCatalogo : '');
     $descripcionMeta = 'Encontrá productos de ' . $categoria['nombre'] . ' en Frani. Consultá precios y disponibilidad.';
     $seo = [
         'titulo' => $categoria['nombre'] . ' | Frani',
@@ -60,7 +61,8 @@ if ($categoria) {
     ];
     $busquedaCatalogo = '';
     $categoriaCatalogo = (int) $categoria['id'];
-    $resultado = catalogo_productos($db, '', $categoriaCatalogo);
+    $loteCatalogo = catalogo_pagina($db, '', $categoriaCatalogo, ($paginaCatalogo - 1) * 25);
+    $resultado = $loteCatalogo['resultado'];
 } else {
     http_response_code(404);
     $seo = [
@@ -80,7 +82,7 @@ if ($categoria) {
     <link rel="stylesheet" href="<?= e(base_path('css/bootstrap.min.css')) ?>">
     <link rel="icon" type="image/svg+xml" href="<?= e(base_path('img/favicon.svg')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=19')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=22')) ?>">
 </head>
 
 <body>
@@ -93,6 +95,7 @@ if ($categoria) {
     <div class="masonry-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4" id="productosCatalogo" aria-busy="false">
         <?php include __DIR__ . '/_catalogo-productos.php'; ?>
     </div>
+    <?php include __DIR__ . '/_paginacion-catalogo.php'; ?>
     <?php else: ?>
         <div class="text-center py-5">
             <h1 class="h2">Categoría no encontrada</h1>

@@ -48,6 +48,8 @@ La migración se puede repetir. Conserva los descuentos anteriores en porcentaje
 
 La portada, cada categoría y las fichas de producto tienen un buscador al comienzo del contenido. Filtra al escribir por palabras del nombre, la descripción o la categoría, sin distinguir mayúsculas ni acentos. La portada busca en todos los productos, incluso los que no aparecen entre las últimas 25 novedades; cada categoría busca solo en sus propios productos. En las fichas busca dentro de la categoría del producto y muestra las mismas tarjetas del catálogo; al limpiar el campo se recupera la ficha original. En los listados, limpiar restaura el listado inicial. No requiere migraciones.
 
+La portada y las categorías cargan los productos en tandas de 25 al acercarse al final del listado. La portada recorre todo el catálogo por fecha y las categorías mantienen el orden por precio. Las búsquedas también cargan sus resultados progresivamente; cambiar o limpiar el término cancela la carga anterior. El botón “Ver más productos” permite cargar una tanda manualmente y reintentar si falla la conexión. Sin JavaScript, el mismo enlace abre la siguiente página (`?pagina=2`), con su propia URL canónica. El buscador de las fichas conserva su comportamiento original.
+
 Los títulos H1 de portada y categorías usan `visually-hidden` de Bootstrap: forman parte del HTML y son accesibles para lectores de pantalla, sin ocupar espacio en la interfaz. El menú indica la sección activa. Las fichas conservan visible el nombre del producto. Las rutas de navegación se publican en los datos estructurados `BreadcrumbList`, sin mostrar breadcrumbs adicionales en la página.
 
 Pruebas de alcance, palabras, acentos y respuestas del buscador:

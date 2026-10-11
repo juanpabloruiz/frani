@@ -29,6 +29,16 @@ if (array_key_exists('categoria', $_GET)) {
         error_busqueda(400, 'Categoría inválida.');
     }
 }
+$paginado = array_key_exists('offset', $_GET);
+$offset = 0;
+if ($paginado) {
+    $offset = is_string($_GET['offset'])
+        ? filter_var($_GET['offset'], FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'max_range' => 1000000]])
+        : false;
+    if ($offset === false) {
+        error_busqueda(400, 'Desplazamiento inválido.');
+    }
+}
 
 require_once __DIR__ . '/conexion.php';
 require_once __DIR__ . '/catalogo.php';
@@ -46,11 +56,24 @@ try {
         }
     }
 
-    $resultado = catalogo_productos($db, $busquedaCatalogo, $categoriaCatalogo);
+    if ($paginado) {
+        $pagina = catalogo_pagina($db, $busquedaCatalogo, $categoriaCatalogo, $offset);
+        $resultado = $pagina['resultado'];
+        $total = $pagina['total'];
+    } else {
+        $resultado = catalogo_productos($db, $busquedaCatalogo, $categoriaCatalogo);
+        $total = $resultado->num_rows;
+    }
     ob_start();
-    include __DIR__ . '/_catalogo-productos.php';
+    if (!$paginado || $offset === 0 || $resultado->num_rows > 0) {
+        include __DIR__ . '/_catalogo-productos.php';
+    }
     $html = ob_get_clean();
-    echo json_encode(['html' => $html, 'total' => $resultado->num_rows], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+    $respuesta = ['html' => $html, 'total' => $total];
+    if ($paginado) {
+        $respuesta['siguiente'] = $pagina['siguiente'];
+    }
+    echo json_encode($respuesta, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
 } catch (Throwable $error) {
     while (ob_get_level() > $nivelBuffer) {
         ob_end_clean();

@@ -15,6 +15,11 @@
   display: none;
 }
 
+.catalogo-paginacion[hidden],
+.catalogo-paginacion [hidden] {
+  display: none;
+}
+
 .product-card-link {
   color: var(--bs-body-color);
   text-decoration: none;
@@ -67,7 +72,10 @@
 }
 
 .product-share-button {
-  --share-color: var(--bs-secondary-color);
+  --share-color: var(--bs-secondary);
+  --bs-btn-active-color: var(--share-color);
+  --bs-btn-active-bg: var(--bs-body-bg);
+  --bs-btn-active-border-color: var(--share-color);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -75,17 +83,17 @@
   width: 44px;
   height: 44px;
   padding: 0;
-  border: 1px solid var(--bs-border-color);
+  border: 1px solid var(--share-color);
   border-radius: 50%;
-  color: var(--share-color);
-  background-color: var(--bs-body-bg);
+  color: #fff;
+  background-color: var(--share-color);
   font-size: 1.15rem;
 }
 
 .product-share-button:hover,
 .product-share-button:focus-visible {
-  color: #fff;
-  background-color: var(--share-color);
+  color: var(--share-color);
+  background-color: var(--bs-body-bg);
   border-color: var(--share-color);
 }
 

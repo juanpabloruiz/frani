@@ -45,6 +45,14 @@ function uris_busqueda(mysqli $db, string $busqueda = '', ?int $categoria = null
     return $uris;
 }
 
+function pagina_busqueda(mysqli $db, string $busqueda = '', ?int $categoria = null, int $offset = 0): array
+{
+    $pagina = catalogo_pagina($db, $busqueda, $categoria, $offset);
+    $uris = array_column($pagina['resultado']->fetch_all(MYSQLI_ASSOC), 'uri');
+    $pagina['resultado']->free();
+    return ['uris' => $uris, 'total' => $pagina['total'], 'siguiente' => $pagina['siguiente']];
+}
+
 function renderizar_busqueda(mysqli $db, string $busquedaCatalogo = '', ?int $categoriaCatalogo = null): string
 {
     $resultado = catalogo_productos($db, $busquedaCatalogo, $categoriaCatalogo);
@@ -103,6 +111,8 @@ try {
     $productosTemporales = true;
 
     verificar_busqueda_igual([], uris_busqueda($db), 'Inicio sin productos');
+    verificar_busqueda_igual(['uris' => [], 'total' => 0, 'siguiente' => null], pagina_busqueda($db),
+        'Primera página vacía no anuncia más resultados');
     verificar_busqueda(str_contains(renderizar_busqueda($db), 'No hay productos'), 'Mensaje del catálogo vacío');
     insertar_busqueda($db, 'Tesoro antiguo', 'tesoro-antiguo', 1, 'Fuera del inicio', 5);
     insertar_busqueda($db, 'Tesoro juguete', 'tesoro-juguete', 2);
@@ -129,10 +139,27 @@ try {
     $preciosOrdenados = $precios;
     sort($preciosOrdenados);
     verificar_busqueda_igual($preciosOrdenados, $precios, 'Todos los precios de categoría están ordenados');
+    $paginaInicio = pagina_busqueda($db);
+    verificar_busqueda_igual($inicio, $paginaInicio['uris'], 'Primera página mantiene las novedades');
+    verificar_busqueda_igual(29, $paginaInicio['total'], 'El total de portada incluye productos posteriores a los primeros 25');
+    verificar_busqueda_igual(25, $paginaInicio['siguiente'], 'La siguiente página empieza tras las filas consumidas');
+    verificar_busqueda_igual(['uris' => ['reciente-02', 'reciente-01', 'tesoro-juguete', 'tesoro-antiguo'],
+        'total' => 29, 'siguiente' => null], pagina_busqueda($db, '', null, 25),
+        'La última página global incluye productos antiguos sin repetir la primera');
+    verificar_busqueda_igual(['uris' => [], 'total' => 29, 'siguiente' => null], pagina_busqueda($db, '', null, 1000),
+        'Desplazamiento mayor al catálogo conserva total y termina');
+    $paginaGeneral = pagina_busqueda($db, '', 1);
+    verificar_busqueda_igual(array_slice(array_column($generales, 'uri'), 0, 25), $paginaGeneral['uris'],
+        'Categoría entrega el primer lote en orden de precio');
+    verificar_busqueda_igual(28, $paginaGeneral['total'], 'El total de categoría excluye las demás');
+    verificar_busqueda_igual(array_slice(array_column($generales, 'uri'), 25), pagina_busqueda($db, '', 1, 25)['uris'],
+        'Categoría entrega los productos restantes');
 
     insertar_busqueda($db, 'Lápiz Mágico', 'lapiz-magico', 1, 'Para decoración delicada');
     insertar_busqueda($db, 'Lápiz seco', 'lapiz-seco', 1);
     verificar_busqueda_igual(['lapiz-magico'], uris_busqueda($db, 'LAPIZ mágico'), 'Búsqueda ignora mayúsculas y acentos');
+    verificar_busqueda_igual(['uris' => ['lapiz-magico'], 'total' => 1, 'siguiente' => null],
+        pagina_busqueda($db, 'LAPIZ mágico', 1), 'La paginación comparte filtros de palabras, acentos y categoría');
     verificar_busqueda_igual(['lapiz-magico'], uris_busqueda($db, "  decoración\tGENERAL\nmagico  "),
         'Todas las palabras deben coincidir entre nombre, descripción y categoría');
     verificar_busqueda_igual(['lapiz-magico'], uris_busqueda($db, 'delicada'), 'La descripción es buscable');
@@ -170,6 +197,49 @@ try {
     verificar_busqueda(!str_contains(renderizar_busqueda($db, '<script>alert("busqueda")</script>'), '<script>alert'),
         'El mensaje vacío no permite inyectar HTML desde la búsqueda');
 
+    $db->query("INSERT INTO categorias VALUES (5, 'Lotes', 'lotes')");
+    $lotes = [];
+    for ($numero = 1; $numero <= 53; $numero++) {
+        $sufijo = sprintf('%02d', $numero);
+        $lotes[] = 'lote-' . $sufijo;
+        insertar_busqueda($db, 'Lote paginado ' . $sufijo, 'lote-' . $sufijo, $numero <= 51 ? 5 : 2,
+            null, 20, '2026-01-01 00:00:00');
+    }
+    $paginasGlobales = [];
+    $offsetPagina = 0;
+    do {
+        $pagina = pagina_busqueda($db, 'lote paginado', null, $offsetPagina);
+        verificar_busqueda_igual(53, $pagina['total'], 'Todas las páginas de búsqueda mantienen el total completo');
+        $paginasGlobales[] = $pagina['uris'];
+        $offsetPagina = $pagina['siguiente'];
+    } while ($offsetPagina !== null);
+    $lotesGlobales = array_merge(...$paginasGlobales);
+    verificar_busqueda_igual([25, 25, 3], array_map('count', $paginasGlobales), 'Búsqueda se divide en lotes de 25');
+    verificar_busqueda_igual(array_reverse($lotes), $lotesGlobales,
+        'Empates de fecha mantienen orden estable por ID sin omisiones ni duplicados');
+    verificar_busqueda_igual(53, count(array_unique($lotesGlobales)), 'Ninguna página repite productos');
+    $paginasCategoria = [];
+    $offsetPagina = 0;
+    do {
+        $pagina = pagina_busqueda($db, 'lote paginado', 5, $offsetPagina);
+        verificar_busqueda_igual(51, $pagina['total'], 'Búsqueda paginada respeta el alcance de categoría');
+        $paginasCategoria[] = $pagina['uris'];
+        $offsetPagina = $pagina['siguiente'];
+    } while ($offsetPagina !== null);
+    verificar_busqueda_igual([25, 25, 1], array_map('count', $paginasCategoria), 'Último lote de categoría termina con sus filas reales');
+    verificar_busqueda_igual(array_slice($lotes, 0, 51), array_merge(...$paginasCategoria),
+        'Empates de precio mantienen orden estable por ID y excluyen otras categorías');
+    verificar_busqueda_igual(51, pagina_busqueda($db, '', 5)['total'], 'Categoría vacía de búsqueda también se pagina');
+    verificar_busqueda_igual(['uris' => [], 'total' => 0, 'siguiente' => null], pagina_busqueda($db, 'lote ausente', 5),
+        'La búsqueda paginada sin coincidencias finaliza');
+    $rechazoOffsetNegativo = false;
+    try {
+        catalogo_pagina($db, '', null, -1);
+    } catch (InvalidArgumentException $error) {
+        $rechazoOffsetNegativo = true;
+    }
+    verificar_busqueda($rechazoOffsetNegativo, 'La función rechaza desplazamientos negativos');
+
     foreach ([
         '/buscar-productos.php?busqueda%5B%5D=lapiz',
         '/buscar-productos.php?busqueda=%FF',
@@ -177,6 +247,10 @@ try {
         '/buscar-productos.php?categoria%5B%5D=1',
         '/buscar-productos.php?categoria=0', '/buscar-productos.php?categoria=-1',
         '/buscar-productos.php?categoria=abc',
+        '/buscar-productos.php?offset%5B%5D=0', '/buscar-productos.php?offset=',
+        '/buscar-productos.php?offset=-1', '/buscar-productos.php?offset=abc',
+        '/buscar-productos.php?offset=1.5', '/buscar-productos.php?offset=1000001',
+        '/buscar-productos.php?offset=1e2',
     ] as $ruta) {
         $respuesta = pedir_busqueda($ruta);
         verificar_busqueda_igual(400, $respuesta['estado'], 'Rechazar parámetros inválidos: ' . $ruta);
@@ -193,15 +267,54 @@ try {
         verificar_busqueda(stripos($respuesta['cabeceras'], 'noindex') !== false, 'Endpoint no indexable');
         $datos = json_decode($respuesta['cuerpo'], true, 512, JSON_THROW_ON_ERROR);
         verificar_busqueda(is_string($datos['html'] ?? null) && is_int($datos['total'] ?? null), 'Respuesta incluye HTML y total');
+        verificar_busqueda(!array_key_exists('siguiente', $datos), 'La respuesta sin offset conserva su contrato original');
         verificar_busqueda(!str_contains($datos['html'], '<script>alert("consulta")'), 'La búsqueda HTTP no inyecta HTML');
     }
+    foreach ([0, 25, 1000000] as $offsetHttp) {
+        $respuesta = pedir_busqueda('/buscar-productos.php?offset=' . $offsetHttp);
+        verificar_busqueda_igual(200, $respuesta['estado'], 'Desplazamiento válido responde 200');
+        $datos = json_decode($respuesta['cuerpo'], true, 512, JSON_THROW_ON_ERROR);
+        verificar_busqueda(is_string($datos['html'] ?? null) && is_int($datos['total'] ?? null), 'Página incluye HTML y total entero');
+        verificar_busqueda(array_key_exists('siguiente', $datos) && ($datos['siguiente'] === null || is_int($datos['siguiente'])),
+            'Página incluye el siguiente desplazamiento o null');
+        if ($offsetHttp > $datos['total']) {
+            verificar_busqueda_igual('', $datos['html'], 'Página agotada no añade mensajes vacíos a los productos');
+            verificar_busqueda_igual(null, $datos['siguiente'], 'Página agotada finaliza el scroll');
+        }
+    }
+    $respuestaVacia = pedir_busqueda('/buscar-productos.php?offset=0&busqueda=zzzz-prueba-catalogo-sin-coincidencias-482987');
+    $paginaVacia = json_decode($respuestaVacia['cuerpo'], true, 512, JSON_THROW_ON_ERROR);
+    verificar_busqueda_igual(0, $paginaVacia['total'], 'Búsqueda paginada HTTP sin coincidencias tiene total cero');
+    verificar_busqueda_igual(null, $paginaVacia['siguiente'], 'Búsqueda paginada HTTP sin coincidencias finaliza');
+    verificar_busqueda(str_contains($paginaVacia['html'], 'No hay resultados'), 'Primera página vacía conserva el mensaje útil');
     verificar_busqueda_igual(200, pedir_busqueda('/')['estado'], 'Portada pública disponible');
     if ($categoriaReal) {
         verificar_busqueda_igual(200, pedir_busqueda(categoria_path($categoriaReal['uri']))['estado'], 'Categoría pública disponible');
         verificar_busqueda_igual(200, pedir_busqueda('/buscar-productos.php?categoria=' . $categoriaReal['id'])['estado'],
             'Búsqueda con categoría real disponible');
     }
-    fwrite(STDOUT, "OK: catálogo completo, alcance por categoría, orden, acentos, palabras, descripción, literales, HTML seguro y validación HTTP.\n");
+    $rutasPaginadas = [base_path()];
+    if ($categoriaReal) $rutasPaginadas[] = categoria_path($categoriaReal['uri']);
+    foreach ($rutasPaginadas as $rutaPaginada) {
+        $primeraHtml = pedir_busqueda($rutaPaginada);
+        $segundaHtml = pedir_busqueda($rutaPaginada . '?pagina=2');
+        verificar_busqueda_igual(200, $segundaHtml['estado'], 'Segunda página disponible sin JavaScript');
+        preg_match_all('/class="card(?: h-100)? product-card-link" href="([^"]+)"/', $primeraHtml['cuerpo'], $primeraCards);
+        preg_match_all('/class="card(?: h-100)? product-card-link" href="([^"]+)"/', $segundaHtml['cuerpo'], $segundaCards);
+        verificar_busqueda(count($primeraCards[1]) <= 25 && count($segundaCards[1]) <= 25, 'HTML limitado a una tanda por página');
+        verificar_busqueda_igual([], array_values(array_intersect($primeraCards[1], $segundaCards[1])),
+            'Segunda página HTML no repite tarjetas de la primera');
+        $canonicaPagina = sitio_url(ltrim($rutaPaginada, '/')) . '?pagina=2';
+        verificar_busqueda(str_contains($segundaHtml['cuerpo'], '<link rel="canonical" href="' . e($canonicaPagina) . '">'),
+            'Cada página de respaldo tiene su propia canónica');
+    }
+    if ($categoriaReal) {
+        $redireccionPagina = pedir_busqueda('/categoria.php?id=' . $categoriaReal['id'] . '&pagina=2');
+        verificar_busqueda_igual(301, $redireccionPagina['estado'], 'Alias de categoría redirige a su ruta pública');
+        verificar_busqueda(stripos($redireccionPagina['cabeceras'], 'Location: ' . categoria_path($categoriaReal['uri']) . '?pagina=2') !== false,
+            'La redirección conserva la página solicitada');
+    }
+    fwrite(STDOUT, "OK: catálogo completo, páginas de 25, totales, orden estable, categorías, búsqueda, acentos, literales, HTML seguro y validación HTTP.\n");
 } catch (Throwable $error) {
     fwrite(STDERR, 'ERROR: ' . $error->getMessage() . "\n");
     $codigoSalida = 1;

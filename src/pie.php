@@ -8,7 +8,7 @@
 
 <script src="<?= e(base_path('js/bootstrap.bundle.min.js')) ?>"></script>
 <script src="<?= e(base_path('js/masonry.pkgd.min.js')) ?>"></script>
-<script src="<?= e(base_path('js/catalogo.js?v=2')) ?>"></script>
+<script src="<?= e(base_path('js/catalogo.js?v=3')) ?>"></script>
 </body>
 
 </html>
