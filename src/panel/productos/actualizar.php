@@ -32,14 +32,12 @@ $stmtFoto->fetch();
 $stmtFoto->close();
 
 $fotoNueva = $fotoActual;
+$nuevaFoto = null;
+$directorio = __DIR__ . '/../../img/productos';
 
 if (!empty($_FILES['foto']['name'])) {
-    $directorio = __DIR__ . '/../../img/productos';
     $nuevaFoto = subir_foto($_FILES['foto'], $directorio);
     if ($nuevaFoto !== null) {
-        if ($fotoActual !== null) {
-            eliminar_fotos($fotoActual, $directorio);
-        }
         $fotoNueva = $nuevaFoto;
     }
 }
@@ -58,7 +56,14 @@ try {
     $db->commit();
 } catch (Throwable $error) {
     $db->rollback();
+    if ($nuevaFoto !== null) {
+        eliminar_fotos($nuevaFoto, $directorio);
+    }
     throw $error;
+}
+
+if ($nuevaFoto !== null && $fotoActual !== null) {
+    eliminar_fotos($fotoActual, $directorio);
 }
 
 respaldar_bd();

@@ -63,7 +63,7 @@ if ($producto) {
     <link rel="stylesheet" href="<?= e(base_path('css/bootstrap.min.css')) ?>">
     <link rel="icon" type="image/svg+xml" href="<?= e(base_path('img/favicon.svg')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=23')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=24')) ?>">
 </head>
 
 <body>
@@ -141,6 +141,6 @@ if ($producto) {
     <?php endif; ?>
 
     <?php if ($producto): ?>
-        <script src="<?= e(base_path('js/compartir-producto.js?v=1')) ?>" defer></script>
+        <script src="<?= e(base_path('js/compartir-producto.js?v=2')) ?>" defer></script>
     <?php endif; ?>
     <?php include __DIR__ . '/pie.php'; ?>

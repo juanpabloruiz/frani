@@ -42,6 +42,9 @@ try {
     $db->commit();
 } catch (Throwable $error) {
     $db->rollback();
+    if ($foto !== null) {
+        eliminar_fotos($foto, $directorio);
+    }
     throw $error;
 }
 

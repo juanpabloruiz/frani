@@ -41,12 +41,13 @@ if ($categoria) {
     }
 
     $urlCanonica = sitio_url(ltrim($rutaCanonica, '/')) . ($paginaCatalogo > 1 ? '?pagina=' . $paginaCatalogo : '');
-    $descripcionMeta = 'Encontrá productos de ' . $categoria['nombre'] . ' en Frani. Consultá precios y disponibilidad.';
+    $contenidoSeoCatalogo = seo_catalogo_contenido($categoria);
+    $descripcionMeta = $contenidoSeoCatalogo['descripcion'];
     $seo = [
-        'titulo' => $categoria['nombre'] . ' | Frani',
+        'titulo' => $contenidoSeoCatalogo['titulo'],
         'descripcion' => seo_texto($descripcionMeta, 160),
         'url' => $urlCanonica,
-        'imagen' => seo_imagen_social(),
+        'imagen' => seo_imagen_catalogo($categoria),
         'datos' => [
             '@context' => 'https://schema.org',
             '@graph' => [

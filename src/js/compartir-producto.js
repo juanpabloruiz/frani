@@ -54,4 +54,65 @@
             }
         });
     }
+
+    const abrirEstado = compartir.querySelector('[data-state-preview]');
+    const dialogoEstado = compartir.querySelector('[data-state-dialog]');
+    const compartirImagen = compartir.querySelector('[data-state-share]');
+    const estadoImagen = compartir.querySelector('[data-state-status]');
+    if (!abrirEstado || !dialogoEstado || typeof dialogoEstado.showModal !== 'function') return;
+
+    let archivoEstado = null;
+    let preparandoEstado = null;
+    const puedeCompartirArchivos = window.isSecureContext
+        && typeof navigator.share === 'function' && typeof navigator.canShare === 'function'
+        && typeof File === 'function';
+
+    const prepararImagen = async () => {
+        if (!puedeCompartirArchivos || archivoEstado || preparandoEstado) return;
+        estadoImagen.textContent = 'Preparando imagen para compartir…';
+        preparandoEstado = (async () => {
+            try {
+                const respuesta = await fetch(dialogoEstado.dataset.image, {credentials: 'omit'});
+                if (!respuesta.ok || !respuesta.headers.get('Content-Type')?.startsWith('image/jpeg')) {
+                    throw new Error('Imagen no disponible');
+                }
+                const imagen = await respuesta.blob();
+                if (imagen.size === 0) throw new Error('Imagen vacía');
+                const archivo = new File([imagen], dialogoEstado.dataset.filename, {type: 'image/jpeg'});
+                if (navigator.canShare({files: [archivo]})) {
+                    archivoEstado = archivo;
+                    compartirImagen.hidden = false;
+                    estadoImagen.textContent = 'Compartí esta imagen o guardala en tu galería para subirla a Mi estado.';
+                } else {
+                    estadoImagen.textContent = 'Guardá la imagen en tu galería y elegila desde Mi estado de WhatsApp.';
+                }
+            } catch {
+                estadoImagen.textContent = 'Podés descargar la imagen y subirla a Mi estado desde tu galería.';
+            } finally {
+                preparandoEstado = null;
+            }
+        })();
+        await preparandoEstado;
+    };
+
+    abrirEstado.addEventListener('click', (evento) => {
+        evento.preventDefault();
+        if (!dialogoEstado.open) dialogoEstado.showModal();
+        prepararImagen();
+    });
+
+    compartirImagen.addEventListener('click', async () => {
+        if (!archivoEstado) return;
+        compartirImagen.disabled = true;
+        try {
+            // Archivo listo antes del clic: conserva la activación del usuario en móviles.
+            await navigator.share({files: [archivoEstado]});
+        } catch (error) {
+            if (error.name !== 'AbortError') {
+                estadoImagen.textContent = 'Podés descargar la imagen y subirla a Mi estado desde tu galería.';
+            }
+        } finally {
+            compartirImagen.disabled = false;
+        }
+    });
 })();

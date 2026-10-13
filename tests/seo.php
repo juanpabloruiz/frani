@@ -84,6 +84,17 @@ try {
         verificar_seo(seo_producto($cambiado)['imagen']['url'] !== $seo['imagen']['url'], 'Renovar caché social al cambiar ' . $campo);
     }
 
+    $estadoProducto = seo_imagen_estado($producto);
+    parse_str((string) parse_url($estadoProducto['descarga'], PHP_URL_QUERY), $parametrosEstado);
+    verificar_seo(($parametrosEstado['producto'] ?? '') === '123' && ($parametrosEstado['descargar'] ?? '') === '1'
+        && $estadoProducto['ancho'] === 1080 && $estadoProducto['alto'] === 1920,
+        'El estado es una descarga vertical independiente del Open Graph');
+    foreach (['precio' => '1499.00', 'producto' => 'Otro nombre', 'descripcion' => 'Otra descripción', 'categoria' => 'Otra categoría'] as $campo => $valor) {
+        $cambiado = $producto;
+        $cambiado[$campo] = $valor;
+        verificar_seo(seo_imagen_estado($cambiado)['url'] !== $estadoProducto['url'], 'Renovar imagen del estado al cambiar ' . $campo);
+    }
+
     foreach ([4 => 'InStock', 0 => 'OutOfStock', -1 => 'OutOfStock'] as $stock => $disponibilidad) {
         $producto['stock'] = $stock;
         $actual = seo_producto($producto);
@@ -132,6 +143,23 @@ try {
     verificar_seo(str_contains($html404, 'noindex, follow') && !str_contains($html404, 'og:')
         && !str_contains($html404, 'canonical') && !str_contains($html404, 'ld+json'), '404 sin canónica ni datos de producto');
 
+    $imagenInicio = seo_imagen_catalogo();
+    parse_str((string) parse_url($imagenInicio['url'], PHP_URL_QUERY), $parametrosInicio);
+    verificar_seo(str_ends_with((string) parse_url($imagenInicio['url'], PHP_URL_PATH), '/imagen-catalogo.php')
+        && !isset($parametrosInicio['categoria']) && !isset($parametrosInicio['producto']), 'La portada usa una tarjeta de marca independiente');
+    $categoriaPrueba = ['id' => 42, 'nombre' => 'Librería & útiles', 'uri' => 'libreria-y-utiles'];
+    $imagenCategoria = seo_imagen_catalogo($categoriaPrueba);
+    parse_str((string) parse_url($imagenCategoria['url'], PHP_URL_QUERY), $parametrosCategoria);
+    verificar_seo(($parametrosCategoria['categoria'] ?? '') === '42' && !isset($parametrosCategoria['producto']),
+        'La categoría tiene su propia imagen y no una tarjeta de producto');
+    verificar_seo($imagenCategoria['url'] !== $imagenInicio['url'] && str_contains($imagenCategoria['alt'], 'Librería & útiles')
+        && !str_contains($imagenCategoria['alt'], 'frani.ar'),
+        'La descripción alternativa refleja el logo y la descripción, sin un dominio incrustado');
+    $categoriaRenombrada = $categoriaPrueba;
+    $categoriaRenombrada['nombre'] = 'Papelería';
+    verificar_seo(seo_imagen_catalogo($categoriaRenombrada)['url'] !== $imagenCategoria['url'],
+        'Renovar caché cuando cambia el nombre y la descripción de la categoría');
+
     $db = conexion();
     $real = $db->query(
         'SELECT p.id, p.producto, p.uri, p.foto, p.descripcion, p.precio, p.stock,
@@ -159,6 +187,20 @@ try {
             verificar_seo($imagen['estado'] === 200 && $dimensiones[0] === 1200 && $dimensiones[1] === 630
                 && $dimensiones[2] === IMAGETYPE_JPEG, 'Foto social pública para ' . $agente);
         }
+        $estadoReal = seo_imagen_estado($real);
+        $rutaEstado = parse_url($estadoReal['descarga'], PHP_URL_PATH) . '?' . parse_url($estadoReal['descarga'], PHP_URL_QUERY);
+        verificar_seo(!str_contains($respuesta['html'], 'data-state-preview')
+            && !str_contains($respuesta['html'], 'data-state-download')
+            && !str_contains($respuesta['html'], 'data-state-dialog')
+            && !str_contains($respuesta['html'], 'imagen-estado.php')
+            && str_contains($respuesta['html'], 'Compartir enlace'), 'La ficha pública conserva enlaces sin controles de estado del administrador');
+        $descargaEstado = pedir_seo($rutaEstado);
+        $dimensionesEstado = getimagesizefromstring($descargaEstado['html']);
+        verificar_seo($descargaEstado['estado'] === 200 && $dimensionesEstado !== false
+            && $dimensionesEstado[0] === 1080 && $dimensionesEstado[1] === 1920
+            && $dimensionesEstado[2] === IMAGETYPE_JPEG
+            && stripos($descargaEstado['cabeceras'], 'Content-Disposition: attachment;') !== false,
+            'La descarga de estado sirve un JPEG 9:16 con encabezado de archivo');
         $antigua = pedir_seo('/productos/' . $real['uri']);
         verificar_seo($antigua['estado'] === 301 && stripos($antigua['cabeceras'], 'Location: ' . $ruta) !== false,
             'Redirección del enlace anterior');
@@ -169,6 +211,36 @@ try {
     $inicio = pedir_seo('/');
     verificar_seo($inicio['estado'] === 200 && str_contains($inicio['html'], '<h1 ')
         && datos_seo($inicio['html'])['@graph'][1]['@type'] === 'WebSite', 'Inicio con H1 y datos de sitio');
+    $metasInicio = metas_seo($inicio['html']);
+    verificar_seo($metasInicio['og:title'] === 'Frani' && $metasInicio['twitter:title'] === 'Frani',
+        'La portada comparte el título Frani sin Catálogo de productos');
+    verificar_seo($metasInicio['og:description'] === seo_catalogo_contenido()['descripcion']
+        && $metasInicio['twitter:description'] === $metasInicio['og:description'],
+        'La descripción sigue disponible para el área de texto nativa de las redes');
+    $rutasCatalogo = ['/'];
+    if ($real) {
+        $rutasCatalogo[] = categoria_path($real['categoria_uri']);
+    }
+    foreach ($rutasCatalogo as $rutaCatalogo) {
+        foreach (['facebookexternalhit/1.1', 'Twitterbot/1.0', 'LinkedInBot/1.0', 'WhatsApp', 'TelegramBot'] as $agente) {
+            $respuesta = pedir_seo($rutaCatalogo, $agente);
+            verificar_seo($respuesta['estado'] === 200, 'Catálogo accesible para ' . $agente);
+            $metasCatalogo = metas_seo($respuesta['html']);
+            verificar_seo($metasCatalogo['og:image'] === $metasCatalogo['twitter:image']
+                && str_contains($metasCatalogo['og:image'], '/imagen-catalogo.php?'), 'Tarjeta de marca compartida por Open Graph y X');
+            verificar_seo(!isset($metasCatalogo['product:price:amount']) && $metasCatalogo['og:description'] !== '',
+                'Los listados tienen descripción del sitio o categoría sin precio de producto');
+            $imagenRuta = parse_url($metasCatalogo['og:image'], PHP_URL_PATH) . '?' . parse_url($metasCatalogo['og:image'], PHP_URL_QUERY);
+            $imagen = pedir_seo($imagenRuta, $agente);
+            $dimensiones = getimagesizefromstring($imagen['html']);
+            verificar_seo($imagen['estado'] === 200 && $dimensiones !== false && $dimensiones[0] === 1200
+                && $dimensiones[1] === 630 && $dimensiones[2] === IMAGETYPE_JPEG, 'Tarjeta JPEG pública para ' . $agente);
+        }
+        $paginada = pedir_seo($rutaCatalogo . '?pagina=2');
+        verificar_seo($paginada['estado'] === 200
+            && metas_seo($paginada['html'])['og:url'] === sitio_url(ltrim($rutaCatalogo, '/')) . '?pagina=2',
+            'La tarjeta de marca conserva la canónica de la paginación');
+    }
     foreach (['/categoria.php?uri=seo-prueba-inexistente', '/producto.php?uri=seo-prueba-inexistente'] as $ruta) {
         $respuesta = pedir_seo($ruta);
         verificar_seo($respuesta['estado'] === 404 && metas_seo($respuesta['html'])['robots'] === 'noindex, follow', '404 real y noindex');

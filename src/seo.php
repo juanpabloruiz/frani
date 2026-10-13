@@ -90,6 +90,88 @@ function seo_json(array $datos): string
         | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR);
 }
 
+/** Textos nativos y descripción de la imagen para las vistas previas del catálogo. */
+function seo_catalogo_contenido(?array $categoria = null): array
+{
+    if ($categoria === null) {
+        return [
+            'titulo' => 'Frani',
+            'descripcion' => 'Descubrí juguetes, librería, productos para mascotas y sublimación en Frani. Explorá el catálogo y consultá precios y disponibilidad.',
+        ];
+    }
+
+    $nombre = seo_texto((string) $categoria['nombre']);
+    return [
+        'titulo' => $nombre . ' | Frani',
+        'descripcion' => seo_texto('Explorá la categoría ' . $nombre . ' de Frani. Consultá precios y disponibilidad.', 160),
+    ];
+}
+
+/** Exclusiva de la portada y las categorías; no modifica las tarjetas de productos. */
+function seo_imagen_catalogo(?array $categoria = null): array
+{
+    $contenido = seo_catalogo_contenido($categoria);
+    $logo = __DIR__ . '/img/social/frani-logo.png';
+    $version = substr(hash('sha256', implode(':', [
+        (string) @filemtime($logo),
+        (string) @filesize($logo),
+        (string) @filemtime(__DIR__ . '/imagen-catalogo.php'),
+        (string) @filemtime(__DIR__ . '/fonts/Lato-Regular.ttf'),
+        (string) @filemtime(__DIR__ . '/fonts/Lato-Bold.ttf'),
+        getenv('APP_DOMAIN') ?: 'frani.ar',
+        $categoria === null ? 'inicio' : (string) $categoria['id'],
+        seo_json($contenido),
+    ])), 0, 16);
+    $parametros = ['v' => $version];
+    if ($categoria !== null) {
+        $parametros['categoria'] = (string) $categoria['id'];
+    }
+
+    return [
+        'url' => sitio_url('imagen-catalogo.php') . '?' . http_build_query($parametros, '', '&', PHP_QUERY_RFC3986),
+        'ancho' => 1200,
+        'alto' => 630,
+        'tipo' => 'image/jpeg',
+        'alt' => seo_texto('Logotipo Frani. ' . $contenido['descripcion'], 420),
+    ];
+}
+
+/** Imagen vertical descargable; las vistas previas del enlace siguen siendo horizontales. */
+function seo_imagen_estado(array $producto): array
+{
+    $foto = seo_foto_producto($producto['foto'] ?? null);
+    $archivo = $foto !== null ? __DIR__ . '/img/productos/' . $foto . '.jpg' : __DIR__ . '/img/social/frani-logo.png';
+    $logo = __DIR__ . '/img/social/frani-logo.png';
+    $version = substr(hash('sha256', implode(':', [
+        $foto ?? 'logo',
+        (string) @filemtime($archivo),
+        (string) @filesize($archivo),
+        (string) @filemtime($logo),
+        (string) @filesize($logo),
+        (string) @filemtime(__DIR__ . '/imagen-estado.php'),
+        (string) @filemtime(__DIR__ . '/fonts/Lato-Regular.ttf'),
+        (string) @filemtime(__DIR__ . '/fonts/Lato-Bold.ttf'),
+        getenv('APP_DOMAIN') ?: 'frani.ar',
+        seo_json([
+            'id' => (string) $producto['id'],
+            'nombre' => $producto['producto'],
+            'descripcion' => $producto['descripcion'] ?? '',
+            'categoria' => $producto['categoria'],
+            'precio' => number_format((float) $producto['precio'], 2, '.', ''),
+        ]),
+    ])), 0, 16);
+    $parametros = ['v' => $version, 'producto' => (string) $producto['id']];
+    $url = sitio_url('imagen-estado.php') . '?' . http_build_query($parametros, '', '&', PHP_QUERY_RFC3986);
+
+    return [
+        'url' => $url,
+        'descarga' => $url . '&descargar=1',
+        'ancho' => 1080,
+        'alto' => 1920,
+        'tipo' => 'image/jpeg',
+    ];
+}
+
 function seo_producto(array $producto): array
 {
     $nombre = seo_texto($producto['producto']);

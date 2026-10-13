@@ -1,0 +1,85 @@
+.foto-producto-preview {
+    min-height: 120px;
+    background: var(--bs-tertiary-bg);
+}
+
+.foto-producto-preview img {
+    max-width: 100%;
+    max-height: 280px;
+    object-fit: contain;
+    background: #fff;
+    border-radius: var(--bs-border-radius-sm);
+}
+
+.foto-editor-superficie {
+    height: clamp(220px, 48vh, 440px);
+    overflow: hidden;
+    background: var(--bs-tertiary-bg);
+}
+
+.foto-editor-superficie > img {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto;
+}
+
+.foto-editor-superficie:focus-visible {
+    outline: 3px solid var(--bs-primary);
+    outline-offset: 3px;
+}
+
+.foto-editor-proporcion {
+    min-width: 160px;
+}
+
+[data-bs-theme="dark"] [data-foto-producto] .btn-outline-primary {
+    --bs-btn-color: var(--bs-primary-text-emphasis);
+    --bs-btn-border-color: var(--bs-primary-text-emphasis);
+    --bs-btn-hover-color: var(--bs-body-bg);
+    --bs-btn-hover-bg: var(--bs-primary-text-emphasis);
+    --bs-btn-hover-border-color: var(--bs-primary-text-emphasis);
+    --bs-btn-active-color: var(--bs-body-bg);
+    --bs-btn-active-bg: var(--bs-primary-text-emphasis);
+    --bs-btn-active-border-color: var(--bs-primary-text-emphasis);
+}
+
+[data-bs-theme="dark"] #editorFoto .btn-outline-secondary,
+[data-bs-theme="dark"] [data-foto-producto] .btn-outline-secondary {
+    --bs-btn-color: var(--bs-secondary-color);
+    --bs-btn-border-color: var(--bs-secondary-color);
+    --bs-btn-hover-color: var(--bs-body-bg);
+    --bs-btn-hover-bg: var(--bs-secondary-color);
+    --bs-btn-hover-border-color: var(--bs-secondary-color);
+    --bs-btn-active-color: var(--bs-body-bg);
+    --bs-btn-active-bg: var(--bs-secondary-color);
+    --bs-btn-active-border-color: var(--bs-secondary-color);
+}
+
+/* Bigger drag handles are easier to grab on touchscreens. */
+#editorFoto .cropper-point {
+    width: 10px;
+    height: 10px;
+}
+
+#editorFoto .cropper-point.point-se {
+    width: 16px;
+    height: 16px;
+    opacity: 1;
+}
+
+#editorFoto [hidden],
+[data-foto-producto] [hidden] {
+    display: none !important;
+}
+
+@media (max-width: 575.98px) {
+    #editorFoto .modal-footer {
+        flex-wrap: wrap;
+    }
+
+    #fotoUsarCompleta {
+        flex-basis: 100%;
+        margin-right: 0 !important;
+    }
+}

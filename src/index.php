@@ -11,11 +11,12 @@ $paginaCatalogo = catalogo_numero_pagina();
 $loteCatalogo = catalogo_pagina($db, '', null, ($paginaCatalogo - 1) * 25);
 $resultado = $loteCatalogo['resultado'];
 $urlCatalogo = sitio_url() . ($paginaCatalogo > 1 ? '?pagina=' . $paginaCatalogo : '');
+$contenidoSeoCatalogo = seo_catalogo_contenido();
 $seo = [
-    'titulo' => 'Frani | Catálogo de productos y precios',
-    'descripcion' => 'Explorá el catálogo de Frani. Encontrá productos, fotos y precios en pesos argentinos. Consultá disponibilidad.',
+    'titulo' => $contenidoSeoCatalogo['titulo'],
+    'descripcion' => $contenidoSeoCatalogo['descripcion'],
     'url' => $urlCatalogo,
-    'imagen' => seo_imagen_social(),
+    'imagen' => seo_imagen_catalogo(),
     'datos' => [
         '@context' => 'https://schema.org',
         '@graph' => [

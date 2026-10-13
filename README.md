@@ -46,6 +46,14 @@ La migración se puede repetir. Conserva los descuentos anteriores en porcentaje
 
 ## Páginas de productos y URLs amigables
 
+Al seleccionar una foto en el panel de productos se abre un editor de recorte con proporción libre, cuadrada, horizontal o vertical, zoom y giro. “Recortar foto” también permite editar la foto ya guardada. “Aplicar recorte” actualiza la vista previa; la imagen se guarda al guardar o actualizar el producto. Cancelar conserva la selección anterior y “Deshacer cambios de foto” recupera la foto guardada. Se puede usar la imagen completa. El editor usa Cropper.js 1.6.2 y FontAwesome locales, se adapta al tema del sistema y admite mouse, teclado y gestos táctiles. Los recortes se envían por el mismo campo `foto` como JPEG con fondo blanco y hasta 800 × 800 px, conservando la proporción; el servidor genera JPG y WebP como antes. No requiere migraciones.
+
+Prueba de guardado de recortes y validación de archivos, con imágenes y directorios temporales:
+
+```bash
+docker compose exec -T web php /var/www/backup/tests/foto_producto.php
+```
+
 La portada, cada categoría y las fichas de producto tienen un buscador al comienzo del contenido. Filtra al escribir por palabras del nombre, la descripción o la categoría, sin distinguir mayúsculas ni acentos. La portada busca en todos los productos, incluso los que no aparecen entre las últimas 25 novedades; cada categoría busca solo en sus propios productos. En las fichas busca dentro de la categoría del producto y muestra las mismas tarjetas del catálogo; al limpiar el campo se recupera la ficha original. En los listados, limpiar restaura el listado inicial. No requiere migraciones.
 
 La portada y las categorías cargan los productos en tandas de 25 al acercarse al final del listado. La portada recorre todo el catálogo por fecha y las categorías mantienen el orden por precio. Las búsquedas también cargan sus resultados progresivamente; cambiar o limpiar el término cancela la carga anterior. El botón “Ver más productos” permite cargar una tanda manualmente y reintentar si falla la conexión. Sin JavaScript, el mismo enlace abre la siguiente página (`?pagina=2`), con su propia URL canónica. El buscador de las fichas conserva su comportamiento original.
@@ -88,7 +96,11 @@ docker compose exec -T web php /var/www/backup/tests/categorias_uri.php
 
 ## SEO y vistas previas al compartir
 
+Los controles para crear, compartir y descargar la plantilla vertical sólo se muestran al iniciar sesión con `pabloruiz1980@gmail.com`. El correo se comprueba en el usuario que la sesión identifica en la base. Para visitantes y otras cuentas, esos controles y la vista previa se omiten del HTML. Los botones para compartir el enlace permanecen públicos; el endpoint de la imagen vertical conserva su acceso público.
+
 Las fichas incluyen botones con los iconos de FontAwesome locales para compartir en Facebook, X, WhatsApp y Telegram. Comparten la URL canónica pública del producto, sin parámetros de seguimiento. “Copiar enlace” permite pegarlo en Instagram u otras aplicaciones; si el navegador no permite usar el portapapeles, muestra el enlace seleccionado para copiarlo manualmente. “Más opciones para compartir” abre el menú del dispositivo cuando el navegador admite Web Share (los destinos dependen de las aplicaciones instaladas). Los enlaces a redes sociales funcionan sin JavaScript y solo se abren cuando el usuario los pulsa.
+
+“Imagen para estado de WhatsApp” abre la vista previa de una tarjeta JPEG vertical de 1080 × 1920 (9:16), con la foto completa ampliada, un fondo desenfocado y sólo la marca, el nombre y el precio en letras grandes. No incluye descripción, categoría ni dominio pequeño. “Compartir imagen” entrega exclusivamente el archivo al menú del dispositivo cuando el navegador permite compartir archivos; el usuario elige el destino. El archivo se prepara al abrir la vista previa, antes del clic para compartir. La descarga permanece disponible para guardar la imagen en la galería y seleccionarla desde Mi estado de WhatsApp. “Compartir enlace” identifica por separado los botones que envían la URL y generan la tarjeta horizontal. El endpoint `/imagen-estado.php?producto={id}` consulta los datos en la base, valida las rutas públicas y admite GET/HEAD y caché con ETag. `descargar=1` entrega el archivo como adjunto. Su URL cambia al actualizar la foto, el precio, los textos o la plantilla. Las rutas de vista previa y descarga pertenecen al mismo origen, incluso en `www` o localhost. Se reserva margen superior e inferior para los controles del estado. Las vistas previas Open Graph y X conservan su formato horizontal.
 
 La portada, las categorías y las fichas sirven los metadatos directamente en el HTML, sin depender de JavaScript. `src/seo.php` prepara la información y `src/_seo.php` genera la descripción, la URL canónica, Open Graph para Facebook y las tarjetas de X.
 
@@ -96,7 +108,11 @@ Cada producto publica su título, descripción y foto. La descripción social co
 
 `/imagen-social.php?producto={id}` genera un JPEG de 1200 × 630 con la foto completa y un bloque legible de título, descripción breve y precio actual en ARS. El texto forma parte de la imagen para seguir visible cuando una red omita la descripción de su tarjeta. Los datos se consultan en la base; el visitante no puede reemplazar el precio desde la URL. Las URLs incluyen una versión para renovar la caché cuando cambian la foto, el título, la descripción, la categoría, el precio o el generador. Las tarjetas de X usan `summary_large_image`. La tipografía Lato se distribuye con su licencia OFL en `src/fonts/`.
 
-El modo `/imagen-social.php?foto={nombre}` conserva la vista de foto sola; la portada y las categorías usan el logo. El endpoint es público, no requiere iniciar sesión, admite GET/HEAD y valida la ruta del archivo. Un ID de producto inválido o inexistente responde 404 y los errores de consulta responden 503 sin caché.
+El modo `/imagen-social.php?foto={nombre}` conserva la vista de foto sola. El endpoint es público, no requiere iniciar sesión, admite GET/HEAD y valida la ruta del archivo. Un ID de producto inválido o inexistente responde 404 y los errores de consulta responden 503 sin caché.
+
+La portada y las categorías tienen una tarjeta de marca independiente en `/imagen-catalogo.php`, de 1200 × 630 píxeles, con el logo recortado a sus contornos, ampliado y centrado, y la descripción a 24 puntos debajo. No incluye el título «Catálogo de productos» ni un dominio al pie. El logo ocupa hasta 900 píxeles de ancho para conservarlo completo y dejar espacio legible a dos líneas de descripción en el formato horizontal. El título y la descripción también se envían como metadatos Open Graph y X para el área de texto nativa de la aplicación receptora. La portada usa el título «Frani»; las categorías conservan su nombre. Estas usan `?categoria={id}` y se validan contra la base. La imagen de producto y su endpoint se conservan. `seo_catalogo_contenido()` prepara los textos y `seo_imagen_catalogo()` renueva la versión cuando cambian el logo, los metadatos o el generador. La canónica de la paginación se conserva.
+
+El logo enviado en SVG se conserva en `src/img/social/frani-logo.svg`, con conversiones a PNG, JPG y WebP generadas a mayor resolución y sin el margen blanco original. Las vistas previas Open Graph y X apuntan a JPEG público, para compartir en Facebook, X, LinkedIn, WhatsApp, Telegram y otras aplicaciones que leen esos metadatos. La composición mantiene centrado el logo; los formatos que usan miniaturas cuadradas pueden recortar sus extremos. No modifica el logo visible del encabezado. Los textos visibles y la caché de cada tarjeta dependen de la aplicación receptora.
 
 Para Google, cada ficha incluye datos estructurados `Product`, `Offer` y `BreadcrumbList`, con el mismo precio y disponibilidad visibles en la página. Un stock nulo omite la disponibilidad; un stock positivo indica disponible y cero o negativo indica agotado. Solo se declara una imagen de producto si existe una foto real. La portada incluye `WebSite` y `Organization`, y las categorías incluyen `CollectionPage` y su ruta de navegación. Los resultados enriquecidos dependen de Google.
 
@@ -122,6 +138,10 @@ Pruebas de metadatos, precio, disponibilidad, escaping, imágenes y acceso de lo
 ```bash
 docker compose exec -T web php /var/www/backup/tests/seo.php
 docker compose exec -T web php /var/www/backup/tests/imagen_social.php
+docker compose exec -T web php /var/www/backup/tests/imagen_catalogo.php
+docker compose exec -T web php /var/www/backup/tests/imagen_estado.php
+node tests/compartir_producto.js
+docker compose exec -T web php /var/www/backup/tests/compartir_producto.php
 # Comprobar también el dominio público, si sirve este mismo catálogo:
 docker compose exec -T -e SEO_TEST_BASE_URL=https://frani.ar web php /var/www/backup/tests/seo.php
 ```
