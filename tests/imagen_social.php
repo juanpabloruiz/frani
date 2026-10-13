@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 // Ejecutar: docker compose exec -T web php /var/www/backup/tests/imagen_social.php
 // Usa imágenes y un servidor PHP temporales; no modifica datos de la aplicación.
+// Opcional: --preview=/ruta/absoluta.jpg guarda la tarjeta del fixture sin foto.
 if (PHP_SAPI !== 'cli') {
     http_response_code(404);
     exit;
@@ -75,10 +76,18 @@ $temporal = sys_get_temp_dir() . '/frani-imagen-social-' . bin2hex(random_bytes(
 $servidor = null;
 $canales = [];
 $salida = 0;
+$rutaPreview = null;
+foreach (array_slice($argv, 1) as $argumento) {
+    if (str_starts_with($argumento, '--preview=')) {
+        $rutaPreview = substr($argumento, strlen('--preview='));
+    }
+}
 try {
     mkdir($temporal . '/img/productos', 0700, true);
     copy(__DIR__ . '/../src/imagen-social.php', $temporal . '/imagen-social.php');
     copy(__DIR__ . '/../src/seo.php', $temporal . '/seo.php');
+    comprobar_imagen(copy(__DIR__ . '/../src/img/Ejemplo..jpg', $temporal . '/img/Ejemplo..jpg'),
+        'Debe copiar el mismo reemplazo de foto que usa la portada');
     mkdir($temporal . '/fonts', 0700);
     foreach (['Lato-Regular.ttf', 'Lato-Bold.ttf'] as $fuente) {
         comprobar_imagen(copy(__DIR__ . '/../src/fonts/' . $fuente, $temporal . '/fonts/' . $fuente), 'Debe copiar la fuente de la tarjeta');
@@ -130,6 +139,9 @@ PHP);
         3 => ['id' => 3, 'producto' => 'Cuaderno', 'descripcion' => null, 'foto' => null,
             'precio' => '0.00', 'categoria' => 'Papelería', 'categoria_uri' => 'papeleria'],
     ];
+    foreach ([4 => 'inexistente', 5 => 'roto', 6 => '../fuera', 7 => 'enlace'] as $id => $fotoInvalida) {
+        $productos[$id] = array_merge($productos[3], ['id' => $id, 'foto' => $fotoInvalida]);
+    }
     file_put_contents($temporal . '/productos.json', json_encode($productos, JSON_UNESCAPED_UNICODE));
 
     $logo = imagecreatetruecolor(120, 60);
@@ -228,6 +240,34 @@ PHP);
         comprobar_pixel($imagen, 1180, 315, [241, 246, 249], 'El texto debe respetar el margen derecho');
         imagedestroy($imagen);
     }
+    $sinFoto = pedir_imagen($url . '?producto=3');
+    $imagen = comprobar_jpeg($sinFoto);
+    comprobar_pixel($imagen, 100, 100, [243, 243, 243], 'Sin foto debe mostrar el fondo neutro del reemplazo de portada');
+    $pixelesIlustracion = 0;
+    for ($y = 39; $y < 591; $y++) {
+        for ($x = 24; $x < 576; $x++) {
+            $color = imagecolorsforindex($imagen, imagecolorat($imagen, $x, $y));
+            if ($color['red'] + $color['green'] + $color['blue'] < 450) {
+                $pixelesIlustracion++;
+            }
+        }
+    }
+    comprobar_imagen($pixelesIlustracion > 1000, 'La ilustración de portada debe estar visible en el lugar de la foto');
+    imagedestroy($imagen);
+    foreach ([4, 5, 6, 7] as $idSinFotoValida) {
+        $sinFotoValida = pedir_imagen($url . '?producto=' . $idSinFotoValida);
+        comprobar_imagen($sinFotoValida['estado'] === 200 && $sinFotoValida['cuerpo'] === $sinFoto['cuerpo'],
+            'Una foto ausente, corrupta o inválida debe usar el mismo reemplazo de portada');
+    }
+    if ($rutaPreview !== null) {
+        comprobar_imagen(file_put_contents($rutaPreview, $sinFoto['cuerpo']) === strlen($sinFoto['cuerpo']),
+            'Debe guardar la vista previa solicitada del fixture');
+    }
+    unlink($temporal . '/img/Ejemplo..jpg');
+    $imagen = comprobar_jpeg(pedir_imagen($url . '?producto=3'));
+    comprobar_pixel($imagen, 300, 315, [255, 255, 255], 'Sin reemplazo disponible debe responder un área de foto blanca válida');
+    comprobar_texto_imagen($imagen, 485, 535, 'El precio debe seguir visible aunque falte el reemplazo de foto');
+    imagedestroy($imagen);
     $inexistente = pedir_imagen($url . '?producto=404');
     comprobar_imagen($inexistente['estado'] === 404 && ($inexistente['cache-control'] ?? '') === 'no-store', 'Un producto inexistente debe responder 404 sin caché');
     $dbCaida = pedir_imagen($url . '?producto=98');
@@ -237,7 +277,7 @@ PHP);
     $imagen = comprobar_jpeg(pedir_imagen($url . '?foto=ausente'));
     comprobar_pixel($imagen, 600, 315, [255, 255, 255], 'Sin logo disponible debe responder un lienzo blanco válido');
     imagedestroy($imagen);
-    fwrite(STDOUT, "OK: JPEG 1200×630, foto completa, tarjeta con datos actuales, texto largo, fallback, IDs, HEAD y caché pública sin sesión.\n");
+    fwrite(STDOUT, "OK: JPEG 1200×630, foto completa, tarjeta con datos actuales, texto largo, reemplazo de portada sin foto, fallback legado, IDs, HEAD y caché pública sin sesión.\n");
 } catch (Throwable $error) {
     fwrite(STDERR, 'ERROR: ' . $error->getMessage() . "\n");
     $salida = 1;

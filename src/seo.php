@@ -46,9 +46,10 @@ function seo_foto_producto(?string $foto): ?string
 function seo_imagen_social(?string $foto = null, string $alt = 'Frani', ?array $producto = null): array
 {
     $foto = seo_foto_producto($foto);
-    $archivo = $foto !== null ? __DIR__ . '/img/productos/' . $foto . '.jpg' : __DIR__ . '/img/logo.png';
+    $archivo = $foto !== null ? __DIR__ . '/img/productos/' . $foto . '.jpg'
+        : ($producto !== null ? __DIR__ . '/img/Ejemplo..jpg' : __DIR__ . '/img/logo.png');
     $version = substr(hash('sha256', implode(':', [
-        $foto ?? 'logo',
+        $foto ?? ($producto !== null ? 'ejemplo-catalogo' : 'logo'),
         (string) @filemtime($archivo),
         (string) @filesize($archivo),
         (string) @filemtime(__DIR__ . '/imagen-social.php'),

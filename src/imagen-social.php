@@ -168,7 +168,11 @@ if (is_string($foto) && strlen($foto) <= 255 && preg_match('/^[-A-Za-z0-9_]+$/D'
 }
 $origen = imagen_social_abrir($archivo, IMAGETYPE_JPEG);
 if ($origen === null) {
-    $origen = imagen_social_abrir(imagen_social_archivo(__DIR__ . '/img', 'logo.png'), IMAGETYPE_PNG);
+    // La tarjeta de producto usa el mismo reemplazo que el catálogo público.
+    // El modo legado sin producto conserva el logo de Frani.
+    $origen = $producto !== null
+        ? imagen_social_abrir(imagen_social_archivo(__DIR__ . '/img', 'Ejemplo..jpg'), IMAGETYPE_JPEG)
+        : imagen_social_abrir(imagen_social_archivo(__DIR__ . '/img', 'logo.png'), IMAGETYPE_PNG);
 }
 
 $ancho = 1200;
