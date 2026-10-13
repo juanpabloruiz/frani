@@ -29,6 +29,22 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - .:/var/www/backup:rw
 
+  facebook-worker:
+    image: frani:latest
+    pull_policy: never
+    profiles: [facebook]
+    restart: unless-stopped
+    env_file:
+      - .env
+    command: ["php", "/var/www/html/facebook-worker.php", "--loop"]
+    volumes:
+      - ./src:/var/www/html:ro
+    networks:
+      - proxy
+    depends_on:
+      db:
+        condition: service_healthy
+
   db:
     image: mariadb:11.4
     container_name: frani-db

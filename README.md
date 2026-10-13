@@ -145,3 +145,57 @@ docker compose exec -T web php /var/www/backup/tests/compartir_producto.php
 # Comprobar también el dominio público, si sirve este mismo catálogo:
 docker compose exec -T -e SEO_TEST_BASE_URL=https://frani.ar web php /var/www/backup/tests/seo.php
 ```
+
+## Publicación automática en la página de Facebook
+
+Las altas y ediciones desde **Productos** pueden crear publicaciones nuevas en una página propia de Facebook, con nombre, precio en ARS, descripción y enlace a la ficha. También se incluyen los cambios manuales de stock. Guardar sin cambios públicos o modificar solamente el costo no genera una publicación. Una edición publica otra novedad; no modifica publicaciones anteriores. Facebook puede conservar en caché la vista previa del enlace, por eso el mensaje incluye el precio guardado explícitamente.
+
+El envío se realiza en un proceso separado: guardar un producto agrega el evento dentro de su misma transacción, sin esperar a Facebook. No se importa el catálogo anterior. Las ventas, los ajustes masivos de porcentajes, el panel de pruebas y los cambios SQL directos no generan eventos.
+
+1. Preparar la tabla en una instalación existente (se puede repetir):
+
+```bash
+docker compose exec -T web php /var/www/backup/migrations/20261013_facebook_publicaciones.php
+```
+
+2. Completar en `.env` el ID de la **página** y su token de **Página**. `FACEBOOK_APP_ID` sigue siendo el metadato público de la aplicación; no reemplaza estas credenciales. Mantener `FACEBOOK_AUTO_PUBLISH=false` durante la configuración:
+
+```dotenv
+FACEBOOK_AUTO_PUBLISH=false
+FACEBOOK_PAGE_ID=555387371639380
+FACEBOOK_PAGE_ACCESS_TOKEN=REEMPLAZAR_POR_EL_TOKEN_DE_PAGINA
+FACEBOOK_GRAPH_VERSION=v26.0
+```
+
+El token se conserva únicamente en `.env`, excluido de Git. El token de usuario se amplía a larga duración y se utiliza para obtener el de Página con `/me/accounts`; el de Página resultante puede indicar caducidad «Nunca». El token debe estar autorizado para publicar en esa página con `pages_manage_posts` y `pages_read_engagement`. Guías de Meta: [tokens de larga duración](https://developers.facebook.com/documentation/facebook-login/guides/access-tokens/get-long-lived) y [publicaciones](https://developers.facebook.com/documentation/pages-api/posts).
+
+3. Aplicar el entorno al servicio web y comprobar la conexión. La comprobación solo lee el nombre e ID de la página; el primer guardado real comprueba también el permiso de publicación:
+
+```bash
+docker compose up -d --no-deps web
+docker compose exec -T web php /var/www/html/facebook-worker.php --validar
+```
+
+4. Una vez validado, cambiar `FACEBOOK_AUTO_PUBLISH=true` y levantar web y worker:
+
+```bash
+docker compose --profile facebook up -d --no-deps web facebook-worker
+```
+
+El worker consulta la cola cada 15 segundos. Para pausar nuevos eventos y envíos, volver a `FACEBOOK_AUTO_PUBLISH=false` y recrear ambos servicios; los pendientes se conservan. El perfil `facebook` permite dejar la integración desactivada en otras instalaciones. Fuera de Docker, usar PHP CLI con el mismo entorno y supervisar `php src/facebook-worker.php --loop`; ejecutar la migración con `php migrations/20261013_facebook_publicaciones.php`.
+
+Consultar estado o registros sin mostrar el token:
+
+```bash
+docker compose exec -T web php /var/www/html/facebook-worker.php --estado
+docker compose logs --tail=50 facebook-worker
+```
+
+Los rechazos transitorios confirmados se reintentan hasta cinco veces con esperas crecientes, conservando el orden de los cambios de un mismo producto. Los rechazos por token/permisos quedan `fallido`; luego de corregir el acceso pueden volver a encolarse con `--reintentar=ID`. Un timeout, una respuesta sin ID o un proceso interrumpido durante el envío quedan `incierto`: deben revisarse en la página antes de cualquier nueva publicación, ya que Meta puede haber recibido el primer envío. Nunca se reenvían automáticamente los eventos inciertos ni los publicados. Los productos eliminados antes del envío se omiten, conservando el registro del evento.
+
+Pruebas con transporte simulado, tablas temporales y sin publicar contenido real:
+
+```bash
+docker compose exec -T web php /var/www/backup/tests/facebook_api.php
+docker compose exec -T web php /var/www/backup/tests/facebook_publicaciones.php
+```

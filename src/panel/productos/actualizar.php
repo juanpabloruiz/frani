@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../conexion.php';
+require_once __DIR__ . '/../../facebook.php';
 requerir_login();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -24,26 +25,21 @@ $db = conexion();
 $descripcionDB = $descripcion !== '' ? $descripcion : null;
 
 $fotoActual = null;
-$stmtFoto = $db->prepare("SELECT foto FROM productos WHERE id = ?");
-$stmtFoto->bind_param('i', $id);
-$stmtFoto->execute();
-$stmtFoto->bind_result($fotoActual);
-$stmtFoto->fetch();
-$stmtFoto->close();
-
-$fotoNueva = $fotoActual;
 $nuevaFoto = null;
 $directorio = __DIR__ . '/../../img/productos';
 
 if (!empty($_FILES['foto']['name'])) {
     $nuevaFoto = subir_foto($_FILES['foto'], $directorio);
-    if ($nuevaFoto !== null) {
-        $fotoNueva = $nuevaFoto;
-    }
 }
 
 $db->begin_transaction();
 try {
+    $antes = facebook_producto_leer($db, $id, true);
+    if ($antes === null) {
+        throw new RuntimeException('El producto ya no existe.');
+    }
+    $fotoActual = $antes['foto'];
+    $fotoNueva = $nuevaFoto ?? $fotoActual;
     $stmt = $db->prepare(
         "UPDATE productos
         SET producto = ?, foto = ?, descripcion = ?, costo = ?, precio = ?, stock = ?, id_categoria = ?
@@ -53,6 +49,7 @@ try {
     $stmt->execute();
     $stmt->close();
     asignar_uri_producto($db, $id);
+    facebook_encolar_producto($db, $id, 'edicion', $antes);
     $db->commit();
 } catch (Throwable $error) {
     $db->rollback();

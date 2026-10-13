@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../conexion.php';
+require_once __DIR__ . '/../../facebook.php';
 requerir_login();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -39,6 +40,7 @@ try {
     $idNuevo = $stmt->insert_id;
     $stmt->close();
     asignar_uri_producto($db, (int) $idNuevo);
+    facebook_encolar_producto($db, (int) $idNuevo, 'alta');
     $db->commit();
 } catch (Throwable $error) {
     $db->rollback();

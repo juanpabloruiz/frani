@@ -35,6 +35,7 @@ $seo = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="facebook-domain-verification" content="frv161zdzvo9e78f3jdhfib2s9df02" />
     <script src="<?= e(base_path('js/tema.js')) ?>"></script>
     <?php include __DIR__ . '/_seo.php'; ?>
     <link rel="stylesheet" href="<?= e(base_path('css/bootstrap.min.css')) ?>">
