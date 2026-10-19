@@ -35,7 +35,8 @@ while ($f = $consultaTotales->fetch_assoc()) {
 <body class="sb-app">
     <?php require __DIR__ . '/../menu.php'; ?>
     <div class="sb-contenido sb-workspace">
-        <div class="sb-cabecera"><h1>Ventas</h1><div class="sb-cabecera-acciones"><a href="<?= e(base_path('panel/facturas/nueva')) ?>" class="btn btn-primary">Nueva venta</a></div></div>
+        <h1 class="visually-hidden">Ventas</h1>
+        <div class="sb-cabecera"><a href="<?= e(base_path('panel/facturas/nueva')) ?>" class="btn btn-primary">Nueva venta</a></div>
         <div class="sb-buscador"><div class="input-group"><span class="input-group-text"><i class="fa-solid fa-search"></i></span><input type="search" id="buscadorFacturas" class="form-control" placeholder="Buscar..." aria-label="Buscar ventas"></div></div>
         <div class="sb-lista" id="listaFacturas" data-search-input="buscadorFacturas">
 <?php $diaActual = ''; $dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']; ?>

@@ -16,8 +16,8 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
     <?php require __DIR__ . '/../menu.php'; ?>
 
     <div class="sb-contenido">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 mb-0">Nueva venta</h1>
+        <h1 class="visually-hidden">Nueva venta</h1>
+        <div class="d-flex align-items-center mb-4">
             <a href="<?= e(base_path('panel/facturas')) ?>" class="btn btn-outline-secondary">Volver</a>
         </div>
 
@@ -146,6 +146,7 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
     </div>
 
     <script src="<?= e(base_path('js/bootstrap.bundle.min.js')) ?>"></script>
+    <script src="<?= e(base_path('js/selector-producto.js')) ?>"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const itemsCards = document.getElementById("itemsCards");
@@ -280,6 +281,7 @@ $categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC"
                     body.append(acciones);
                     row.append(body);
                     itemsCards.appendChild(row);
+                    activarBuscadorProducto(select);
 
 
                     itemIndex++;
