@@ -75,7 +75,7 @@ $token = CSRF_token();
                             </div>
 
                             <div class="row g-3 mb-3">
-                                <div class="col-6">
+                                <div class="col-12">
                                     <label class="form-label">Costo</label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>
@@ -83,7 +83,7 @@ $token = CSRF_token();
                                             value="<?= e(numero_limpio($producto['costo'])) ?>">
                                     </div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-12">
                                     <label class="form-label">Precio</label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>
