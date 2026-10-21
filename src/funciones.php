@@ -323,17 +323,25 @@ function respaldar_bd(): void
         $destino = '/var/www/backup/respaldo.sql';
     }
 
+    $temporal = tempnam(dirname($destino), '.respaldo-');
+    if ($temporal === false) {
+        throw new RuntimeException('No se pudo preparar el respaldo.');
+    }
     $cmd = sprintf(
-        'mysqldump --single-transaction --routines -h %s -P %d -u %s -p%s %s > %s',
+        'MYSQL_PWD=%s mysqldump --single-transaction --routines --events --no-tablespaces --set-gtid-purged=OFF --column-statistics=0 --skip-masking-policies -h %s -P %d -u %s %s > %s',
+        escapeshellarg($pass),
         escapeshellarg($host),
         $port,
         escapeshellarg($user),
-        escapeshellarg($pass),
         escapeshellarg($name),
-        escapeshellarg($destino)
+        escapeshellarg($temporal)
     );
+    exec($cmd, $salida, $estado);
+    if ($estado !== 0 || !rename($temporal, $destino)) {
+        @unlink($temporal);
+        throw new RuntimeException('No se pudo generar el respaldo de MySQL.');
+    }
 
-    @exec($cmd);
 }
 
 function moneda($valor): string

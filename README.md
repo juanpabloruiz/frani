@@ -4,8 +4,7 @@ Aplicación PHP con MySQLi OO para gestión de productos, dockerizada con:
 
 - `php:8.5.12-fpm-trixie`
 - `nginx`
-- `mariadb`
-- `phpmyadmin`
+- `MySQL 26.10.0`
 
 ## Estructura
 
@@ -32,14 +31,14 @@ docker compose up --build
 3. Abrir:
 
 - App: `http://localhost:${NGINX_PORT}`
-- phpMyAdmin: `http://localhost:${PHPMYADMIN_PORT}`
+- TablePlus: MySQL en `127.0.0.1:3307` (credenciales en `.env`)
 
 ## Actualización de descuentos
 
 Antes de actualizar una instalación existente, agregar el campo de descuento en pesos:
 
 ```bash
-docker compose exec -T db sh -c 'mariadb -uroot -p"$MARIADB_ROOT_PASSWORD" "$MARIADB_DATABASE"' < migrations/20261006_descuento_importe.sql
+docker compose exec -T db sh -c 'mysql -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE"' < migrations/20261006_descuento_importe.sql
 ```
 
 La migración se puede repetir. Conserva los descuentos anteriores en porcentaje; al editar esas ventas se muestra su importe equivalente. Las ventas nuevas guardan el descuento en pesos, con centavos.
@@ -199,3 +198,20 @@ Pruebas con transporte simulado, tablas temporales y sin publicar contenido real
 docker compose exec -T web php /var/www/backup/tests/facebook_api.php
 docker compose exec -T web php /var/www/backup/tests/facebook_publicaciones.php
 ```
+
+## Conexión desde TablePlus
+
+Usar una conexión MySQL: host `127.0.0.1`, puerto `3307` (configurable con
+`MYSQL_PORT`), base `frani` y las credenciales `DB_USER` / `DB_PASSWORD` de `.env`.
+El puerto solo escucha en la Mac. Dentro de Docker se utiliza `frani-db:3306`.
+
+MySQL usa el volumen externo `frani_mysql_data`, ya creado durante la migración.
+En una instalación nueva, crearlo primero con `docker volume create frani_mysql_data`.
+No montar volúmenes de MariaDB en MySQL.
+Los clientes `mysql` y `mysqldump` de la imagen son de la misma versión que el servidor.
+El servicio `sincro` conserva las copias hacia MEGA con ese cliente.
+
+## phpMyAdmin
+
+Disponible en `http://localhost:8081`, conectado a MySQL con el usuario de la aplicación.
+La imagen oficial 5.2.3 está fijada por digest y solo publica el puerto en localhost.

@@ -11,9 +11,16 @@ MEGA="/mega"
 mkdir -p "$MEGA/productos"
 
 dump() {
-    mariadb-dump --single-transaction --routines \
-        -h"$DB_HOST" -P"${DB_PORT:-3306}" -u"$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" \
-        > "$MEGA/respaldo.sql"
+    local temporal="$MEGA/respaldo.sql.tmp"
+    if MYSQL_PWD="$DB_PASSWORD" mysqldump --single-transaction --routines --events \
+        --no-tablespaces --set-gtid-purged=OFF --column-statistics=0 --skip-masking-policies \
+        -h"$DB_HOST" -P"${DB_PORT:-3306}" -u"$DB_USER" "$DB_NAME" > "$temporal"; then
+        mv "$temporal" "$MEGA/respaldo.sql"
+    else
+        rm -f "$temporal"
+        echo "Error al generar respaldo MySQL" >&2
+        return 1
+    fi
 }
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] sincro: dump inicial"
