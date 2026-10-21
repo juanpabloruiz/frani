@@ -2,7 +2,7 @@
 
 Aplicación PHP con MySQLi OO para gestión de productos, dockerizada con:
 
-- `php:8.4-fpm`
+- `php:8.5.12-fpm-trixie`
 - `nginx`
 - `mariadb`
 - `phpmyadmin`

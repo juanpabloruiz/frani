@@ -136,7 +136,7 @@ $logoAncho = max(1, (int) round(imagesx($logo) * $escala));
 $logoAlto = max(1, (int) round(imagesy($logo) * $escala));
 imagecopyresampled($lienzo, $logo, (int) floor((1200 - $logoAncho) / 2), 16,
     0, 0, $logoAncho, $logoAlto, imagesx($logo), imagesy($logo));
-imagedestroy($logo);
+unset($logo);
 
 // La descripción coincide con los metadatos; no se añade título ni pie de URL.
 $descripcion = imagen_catalogo_lineas(seo_texto((string) $contenido['descripcion']), 24, $regular, 1080, 2);
@@ -148,7 +148,7 @@ foreach ($descripcion as $indice => $linea) {
 ob_start();
 imagejpeg($lienzo, null, 90);
 $jpeg = (string) ob_get_clean();
-imagedestroy($lienzo);
+unset($lienzo);
 $etag = '"' . hash('sha256', $jpeg) . '"';
 header('Content-Type: image/jpeg');
 header('Cache-Control: public, max-age=86400');

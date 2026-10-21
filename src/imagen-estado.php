@@ -136,7 +136,7 @@ function imagen_estado_fondo(GdImage $lienzo, GdImage $imagen): void
     }
     imagefilter($fondo, IMG_FILTER_BRIGHTNESS, -25);
     imagecopyresampled($lienzo, $fondo, 0, 0, 0, 0, 1080, 1920, 216, 384);
-    imagedestroy($fondo);
+    unset($fondo);
 }
 
 $idSolicitado = $_GET['producto'] ?? null;
@@ -207,10 +207,10 @@ imagefilledrectangle($lienzo, 60, 120, 330, 199, $oscuro);
 imagettftext($lienzo, 44, 0, 99, 180, $blanco, $negrita, 'Frani');
 imagefilledrectangle($lienzo, 0, 1450, 1079, 1919, $oscuro);
 if ($origen !== null) {
-    imagedestroy($origen);
+    unset($origen);
 }
 if ($logo !== null) {
-    imagedestroy($logo);
+    unset($logo);
 }
 
 $nombre = seo_texto((string) $producto['producto'], 300);
@@ -229,7 +229,7 @@ imagettftext($lienzo, $tamanoPrecio, 0, 60, 1725, $blanco, $negrita, $precio);
 ob_start();
 imagejpeg($lienzo, null, 92);
 $jpeg = (string) ob_get_clean();
-imagedestroy($lienzo);
+unset($lienzo);
 
 $etag = '"' . hash('sha256', $jpeg) . '"';
 header('Content-Type: image/jpeg');

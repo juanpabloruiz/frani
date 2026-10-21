@@ -293,8 +293,8 @@ function subir_foto(array $archivo, string $directorio): ?string
     imagejpeg($redimensionada, $directorio . '/' . $nombreBase . '.jpg', 85);
     imagewebp($redimensionada, $directorio . '/' . $nombreBase . '.webp', 85);
 
-    imagedestroy($imagen);
-    imagedestroy($redimensionada);
+    unset($imagen);
+    unset($redimensionada);
 
     return $nombreBase;
 }

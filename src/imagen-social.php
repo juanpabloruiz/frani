@@ -242,12 +242,12 @@ if ($origen !== null) {
         imagesx($origen),
         imagesy($origen)
     );
-    imagedestroy($origen);
+    unset($origen);
 }
 ob_start();
 imagejpeg($lienzo, null, 90);
 $jpeg = (string) ob_get_clean();
-imagedestroy($lienzo);
+unset($lienzo);
 
 $etag = '"' . hash('sha256', $jpeg) . '"';
 header('Content-Type: image/jpeg');
