@@ -1,4 +1,4 @@
-FROM php:8.4-fpm
+FROM php:8.4.27-fpm-trixie@sha256:a514e2475cc3899e93a62d76f0366cc34b3d668adafd56589bd9aba7309a9bf8
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \

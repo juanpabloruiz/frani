@@ -68,7 +68,7 @@ services:
       start_period: 20s
 
   phpmyadmin:
-    image: phpmyadmin:5
+    image: phpmyadmin:5@sha256:32849b6265c3e9f62d03636a056da7da33b16fb3aa3f8b477d1f3974be7c1aa3
     container_name: frani-phpmyadmin
     restart: unless-stopped
     environment:
