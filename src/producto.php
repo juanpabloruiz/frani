@@ -63,7 +63,7 @@ if ($producto) {
     <link rel="stylesheet" href="<?= e(base_path('css/bootstrap.min.css')) ?>">
     <link rel="icon" type="image/svg+xml" href="<?= e(base_path('img/favicon.svg')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=25')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=26')) ?>">
 </head>
 
 <body>
@@ -76,7 +76,7 @@ if ($producto) {
         <div id="detalleProducto" data-catalog-detail>
         <article class="product-detail-layout">
             <div class="product-detail-photo">
-                <picture class="d-block bg-white rounded shadow-sm overflow-hidden">
+                <picture class="d-block rounded shadow-sm overflow-hidden">
                     <source srcset="<?= e(base_path($imagenWebp)) ?>" type="image/webp">
                     <img src="<?= e(base_path($imagenJpg)) ?>" class="product-detail-image" alt="<?= e($producto['producto']) ?>" fetchpriority="high">
                 </picture>

@@ -7,5 +7,5 @@
 <link rel="icon" type="image/svg+xml" href="<?= e(base_path('img/favicon.svg')) ?>">
 <link rel="stylesheet" href="<?= e(base_path('fontawesome/css/all.min.css')) ?>">
 <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=4')) ?>">
-<link rel="stylesheet" href="<?= e(base_path('css/admin-sidebar.css?v=20')) ?>">
+<link rel="stylesheet" href="<?= e(base_path('css/admin-sidebar.css?v=21')) ?>">
 <script src="<?= e(base_path('js/panel-cards.js')) ?>" defer></script>
