@@ -87,7 +87,7 @@ try {
     $logo = imagecreatetruecolor(400, 220);
     imagefill($logo, 0, 0, imagecolorallocate($logo, 20, 100, 170));
     imagepng($logo, $temporal . '/img/social/frani-logo.png');
-    imagedestroy($logo);
+    unset($logo);
     // Cuadrantes distintos permiten comprobar foto completa y proporción.
     $foto = imagecreatetruecolor(600, 600);
     imagefilledrectangle($foto, 0, 0, 299, 299, imagecolorallocate($foto, 200, 20, 20));
@@ -95,7 +95,7 @@ try {
     imagefilledrectangle($foto, 0, 300, 299, 599, imagecolorallocate($foto, 20, 20, 200));
     imagefilledrectangle($foto, 300, 300, 599, 599, imagecolorallocate($foto, 210, 180, 20));
     imagejpeg($foto, $temporal . '/img/productos/fixture.jpg', 100);
-    imagedestroy($foto);
+    unset($foto);
     file_put_contents($temporal . '/conexion.php', <<<'PHP'
 <?php
 require_once __DIR__ . '/funciones.php';
@@ -180,7 +180,7 @@ PHP);
     $colorFondo = imagecolorsforindex($imagen, imagecolorat($imagen, 20, 30));
     comprobar_estado(min($colorFondo['red'], $colorFondo['green'], $colorFondo['blue']) < 200,
         'El fondo debe derivar de la foto, evitando un gran bloque blanco');
-    imagedestroy($imagen);
+    unset($imagen);
     comprobar_estado(pedir_estado($url . '?producto=1&foto=otra&precio=1&titulo=FALSO&descripcion=FALSA')['cuerpo'] === $principal['cuerpo'],
         'Debe ignorar contenido inventado vía query');
     $descarga = pedir_estado($url . '?producto=1&descargar=1');
@@ -199,16 +199,16 @@ PHP);
     pixel_estado($larga, 30, 1600, [20, 32, 40], 'Texto largo debe respetar margen izquierdo');
     pixel_estado($larga, 1050, 1600, [20, 32, 40], 'Texto largo debe respetar margen derecho');
     pixel_estado($larga, 200, 1765, [20, 32, 40], 'No debe añadir descripción o dominio pequeños debajo del precio');
-    imagedestroy($larga);
+    unset($larga);
     foreach ([3, 9, 10] as $idSinFoto) {
         $sinFoto = comprobar_jpeg_estado(pedir_estado($url . '?producto=' . $idSinFoto));
         pixel_estado($sinFoto, 540, 750, [20, 100, 170], 'Foto ausente/insegura debe usar logo local');
-        imagedestroy($sinFoto);
+        unset($sinFoto);
     }
     $enorme = comprobar_jpeg_estado(pedir_estado($url . '?producto=12'));
     tinta_estado($enorme, 1680, 1735, 'Incluso un precio extremo debe tener texto legible en lugar de reducirse a un punto');
     pixel_estado($enorme, 1050, 1710, [20, 32, 40], 'El precio extremo debe respetar el margen derecho');
-    imagedestroy($enorme);
+    unset($enorme);
     foreach ([4, 5, 6, 7, 11, 404] as $idNoPublico) {
         $respuesta = pedir_estado($url . '?producto=' . $idNoPublico);
         comprobar_estado($respuesta['estado'] === 404 && ($respuesta['cache-control'] ?? '') === 'no-store', 'Producto no publicado debe responder 404 sin caché');

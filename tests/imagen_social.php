@@ -147,12 +147,12 @@ PHP);
     $logo = imagecreatetruecolor(120, 60);
     imagefill($logo, 0, 0, imagecolorallocate($logo, 0, 180, 0));
     imagepng($logo, $temporal . '/img/logo.png');
-    imagedestroy($logo);
+    unset($logo);
     $producto = imagecreatetruecolor(100, 200);
     imagefilledrectangle($producto, 0, 0, 99, 99, imagecolorallocate($producto, 230, 0, 0));
     imagefilledrectangle($producto, 0, 100, 99, 199, imagecolorallocate($producto, 0, 0, 230));
     imagejpeg($producto, $temporal . '/img/productos/prueba.jpg', 100);
-    imagedestroy($producto);
+    unset($producto);
     file_put_contents($temporal . '/img/productos/roto.jpg', 'contenido que no es una imagen');
     copy($temporal . '/img/productos/prueba.jpg', $temporal . '/fuera.jpg');
     symlink($temporal . '/fuera.jpg', $temporal . '/img/productos/enlace.jpg');
@@ -179,12 +179,12 @@ PHP);
     comprobar_pixel($imagen, 100, 300, [255, 255, 255], 'El margen lateral debe ser blanco');
     comprobar_pixel($imagen, 600, 15, [230, 0, 0], 'Debe conservar la parte superior del producto');
     comprobar_pixel($imagen, 600, 615, [0, 0, 230], 'Debe conservar la parte inferior del producto');
-    imagedestroy($imagen);
+    unset($imagen);
 
     $fallback = pedir_imagen($url);
     $imagen = comprobar_jpeg($fallback);
     comprobar_pixel($imagen, 600, 315, [0, 180, 0], 'Sin foto debe mostrar el logo');
-    imagedestroy($imagen);
+    unset($imagen);
     foreach (['inexistente', '../fuera', 'prueba.jpg', "prueba\n", str_repeat('a', 256), 'enlace', 'roto'] as $foto) {
         $invalida = pedir_imagen($url . '?foto=' . rawurlencode($foto));
         comprobar_imagen($invalida['cuerpo'] === $fallback['cuerpo'], 'La foto inválida debe usar el logo: ' . json_encode($foto));
@@ -219,7 +219,7 @@ PHP);
     comprobar_texto_imagen($imagen, 145, 285, 'Debe mostrar el título');
     comprobar_texto_imagen($imagen, 300, 400, 'Debe mostrar la descripción');
     comprobar_texto_imagen($imagen, 485, 535, 'Debe mostrar el precio');
-    imagedestroy($imagen);
+    unset($imagen);
     $datosFalsos = pedir_imagen($url . '?producto=1&foto=roto&titulo=FALSO&precio=9999&descripcion=FALSA');
     comprobar_imagen($datosFalsos['cuerpo'] === $tarjeta['cuerpo'], 'Los valores de la tarjeta solo deben provenir de DB');
     $headProducto = pedir_imagen($url . '?producto=1', 'HEAD');
@@ -238,7 +238,7 @@ PHP);
         comprobar_texto_imagen($imagen, 300, 400, 'La descripción o su alternativa debe seguir siendo visible');
         comprobar_texto_imagen($imagen, 485, 535, 'El precio debe seguir siendo visible sin solaparse');
         comprobar_pixel($imagen, 1180, 315, [241, 246, 249], 'El texto debe respetar el margen derecho');
-        imagedestroy($imagen);
+        unset($imagen);
     }
     $sinFoto = pedir_imagen($url . '?producto=3');
     $imagen = comprobar_jpeg($sinFoto);
@@ -253,7 +253,7 @@ PHP);
         }
     }
     comprobar_imagen($pixelesIlustracion > 1000, 'La ilustración de portada debe estar visible en el lugar de la foto');
-    imagedestroy($imagen);
+    unset($imagen);
     foreach ([4, 5, 6, 7] as $idSinFotoValida) {
         $sinFotoValida = pedir_imagen($url . '?producto=' . $idSinFotoValida);
         comprobar_imagen($sinFotoValida['estado'] === 200 && $sinFotoValida['cuerpo'] === $sinFoto['cuerpo'],
@@ -267,7 +267,7 @@ PHP);
     $imagen = comprobar_jpeg(pedir_imagen($url . '?producto=3'));
     comprobar_pixel($imagen, 300, 315, [255, 255, 255], 'Sin reemplazo disponible debe responder un área de foto blanca válida');
     comprobar_texto_imagen($imagen, 485, 535, 'El precio debe seguir visible aunque falte el reemplazo de foto');
-    imagedestroy($imagen);
+    unset($imagen);
     $inexistente = pedir_imagen($url . '?producto=404');
     comprobar_imagen($inexistente['estado'] === 404 && ($inexistente['cache-control'] ?? '') === 'no-store', 'Un producto inexistente debe responder 404 sin caché');
     $dbCaida = pedir_imagen($url . '?producto=98');
@@ -276,7 +276,7 @@ PHP);
     unlink($temporal . '/img/logo.png');
     $imagen = comprobar_jpeg(pedir_imagen($url . '?foto=ausente'));
     comprobar_pixel($imagen, 600, 315, [255, 255, 255], 'Sin logo disponible debe responder un lienzo blanco válido');
-    imagedestroy($imagen);
+    unset($imagen);
     fwrite(STDOUT, "OK: JPEG 1200×630, foto completa, tarjeta con datos actuales, texto largo, reemplazo de portada sin foto, fallback legado, IDs, HEAD y caché pública sin sesión.\n");
 } catch (Throwable $error) {
     fwrite(STDERR, 'ERROR: ' . $error->getMessage() . "\n");

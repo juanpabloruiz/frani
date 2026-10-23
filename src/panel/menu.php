@@ -20,7 +20,6 @@ $itemsMenu = [
     ['icon' => 'fa-users',     'texto' => 'Clientes',    'ruta' => 'panel/clientes'],
     ['icon' => 'fa-paw',       'texto' => 'Mascotas',    'ruta' => 'panel/mascotas'],
     ['icon' => 'fa-percent',   'texto' => 'Porcentajes', 'ruta' => 'panel/porcentajes'],
-    ['icon' => 'fa-flask',     'texto' => 'Test',        'ruta' => 'panel/test'],
 ];
 
 $itemsPie = [

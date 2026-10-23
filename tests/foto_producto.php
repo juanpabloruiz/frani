@@ -27,8 +27,8 @@ function crear_recorte_producto(string $ruta, int $ancho, int $alto): void
     $recorte = imagecrop($original, ['x' => 100, 'y' => 120, 'width' => $ancho, 'height' => $alto]);
     comprobar_foto($recorte !== false, 'Debe crear el recorte sintético');
     comprobar_foto(imagejpeg($recorte, $ruta, 95), 'Debe exportar el recorte como JPEG');
-    imagedestroy($recorte);
-    imagedestroy($original);
+    unset($recorte);
+    unset($original);
 }
 
 function archivo_foto_producto(string $ruta, int $error = UPLOAD_ERR_OK): array
@@ -58,7 +58,7 @@ function comprobar_salida_producto(string $ruta, int $ancho, int $alto, int $tip
                 'La variante debe mantener el contenido del recorte sin márgenes añadidos');
         }
     }
-    imagedestroy($imagen);
+    unset($imagen);
 }
 
 $temporal = sys_get_temp_dir() . '/frani-foto-producto-' . bin2hex(random_bytes(8));

@@ -98,7 +98,7 @@ try {
     imagefilledrectangle($logo, 0, 0, 882, 967, imagecolorallocate($logo, 0, 0, 0));
     imagefilledrectangle($logo, 883, 0, 1765, 967, imagecolorallocate($logo, 100, 100, 100));
     imagepng($logo, $temporal . '/img/social/frani-logo.png');
-    imagedestroy($logo);
+    unset($logo);
     file_put_contents($temporal . '/conexion.php', <<<'PHP'
 <?php
 require_once __DIR__ . '/funciones.php';
@@ -180,7 +180,7 @@ PHP);
     comprobar_blanco_catalogo($imagen, 60, 612, 1140, 629, 'Debe quitar el pie de dominio y evitar una tercera línea de descripción');
     comprobar_texto_catalogo($imagen, 518, 560, 'Debe mostrar la descripción grande debajo del logo');
     comprobar_texto_catalogo($imagen, 570, 606, 'La descripción completa de inicio debe ocupar dos líneas visibles');
-    imagedestroy($imagen);
+    unset($imagen);
     comprobar_catalogo(pedir_catalogo($url . '?titulo=FALSO&descripcion=FALSA&foto=otra&producto=1')['cuerpo'] === $inicio['cuerpo'],
         'La tarjeta de inicio debe ignorar contenido proporcionado por el visitante');
 
@@ -195,7 +195,7 @@ PHP);
     comprobar_catalogo($categoria['cuerpo'] !== $inicio['cuerpo'], 'La categoría debe mostrar su descripción correspondiente');
     comprobar_texto_catalogo($imagen, 518, 606, 'La categoría debe mostrar su descripción ampliada');
     comprobar_blanco_catalogo($imagen, 60, 612, 1140, 629, 'La categoría no debe añadir un pie de dominio');
-    imagedestroy($imagen);
+    unset($imagen);
     comprobar_catalogo(pedir_catalogo($url . '?categoria=1&titulo=FALSO&descripcion=FALSA&precio=100')['cuerpo'] === $categoria['cuerpo'],
         'La imagen debe ignorar título, descripción y precio proporcionados por el visitante');
     foreach ([2, 8] as $idValido) {
@@ -206,7 +206,7 @@ PHP);
         comprobar_blanco_catalogo($imagen, 60, 612, 1140, 629, 'Una descripción larga debe limitarse a dos líneas');
         comprobar_pixel_catalogo($imagen, 30, 590, [255, 255, 255], 'La descripción debe conservar su margen izquierdo');
         comprobar_pixel_catalogo($imagen, 1170, 590, [255, 255, 255], 'La descripción debe conservar su margen derecho');
-        imagedestroy($imagen);
+        unset($imagen);
     }
     foreach ([3, 4, 5, 6, 7, 9, 404] as $idNoPublico) {
         $respuesta = pedir_catalogo($url . '?categoria=' . $idNoPublico);
