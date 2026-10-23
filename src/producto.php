@@ -7,6 +7,10 @@ $db = conexion();
 $uri = $_GET['uri'] ?? '';
 $categoriaRuta = $_GET['categoria'] ?? null;
 $producto = null;
+$descripcion = '';
+$imagenJpg = 'img/Ejemplo..jpg';
+$imagenWebp = 'img/Ejemplo.webp';
+$relacionados = [];
 $categoriaRutaValida = !array_key_exists('categoria', $_GET)
     || (is_string($categoriaRuta) && strlen($categoriaRuta) <= 200 && preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/D', $categoriaRuta));
 
