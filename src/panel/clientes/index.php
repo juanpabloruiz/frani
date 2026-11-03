@@ -35,6 +35,7 @@ $consulta = $db->query(
 
 <head>
     <?php $tituloPagina = 'Clientes'; require __DIR__ . '/../_head.php'; ?>
+    <link rel="stylesheet" href="<?= e(base_path('css/editor-foto.css?v=1')) ?>">
 </head>
 
 <body class="sb-app">
@@ -65,12 +66,16 @@ $consulta = $db->query(
                                     value="<?= e($cliente['telefono'] ?? '') ?>" placeholder="Teléfono (opcional)">
                             </div>
 
-                            <div class="mb-3">
-                                <label class="form-label">Foto del cliente</label>
+                            <div class="mb-3" data-foto-cliente>
+                                <label for="fotoInput" class="form-label">Foto del cliente</label>
                                 <input type="file" name="foto" id="fotoInput" class="form-control" accept=".jpg,.jpeg,.png,.webp">
                                 <?php if ($editando && !empty($cliente['foto'])): ?>
                                     <small class="text-muted">Dejar vacío para mantener la foto actual.</small>
                                 <?php endif; ?>
+                                <div class="foto-producto-preview border rounded p-2 text-center mt-3">
+                                    <img data-foto-preview src="<?= !empty($cliente['foto']) ? e(base_path('img/clientes/' . $cliente['foto'] . '.jpg')) : '' ?>" alt="Vista previa de la foto del cliente" <?= empty($cliente['foto']) ? 'hidden' : '' ?>>
+                                    <p data-foto-placeholder class="text-body-secondary mb-0 py-4" <?= !empty($cliente['foto']) ? 'hidden' : '' ?>>Sin imagen</p>
+                                </div>
                             </div>
 
                             <div class="d-grid">
@@ -128,6 +133,7 @@ $consulta = $db->query(
     </main>
 
     <script src="<?= e(base_path('js/bootstrap.bundle.min.js')) ?>"></script>
+    <script src="<?= e(base_path('js/foto-cliente.js?v=1')) ?>"></script>
 
 </body>
 
