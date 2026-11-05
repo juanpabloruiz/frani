@@ -2,6 +2,15 @@
   font-weight: 700;
 }
 
+.catalogo-buscador [data-search-status]:not(:empty) {
+  margin-top: 0.5rem;
+}
+
+.catalogo-buscador .form-control:focus {
+  border-color: var(--bs-border-color);
+  box-shadow: none;
+}
+
 .catalogo-buscador input::-webkit-search-cancel-button {
   -webkit-appearance: none;
   appearance: none;

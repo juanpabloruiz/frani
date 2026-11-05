@@ -128,6 +128,7 @@
                     estadoCarga.textContent = 'No se pudieron cargar más productos. Podés reintentar.';
                     mas.textContent = 'Reintentar carga';
                 } else {
+                    estado.classList.remove('visually-hidden');
                     estado.textContent = 'No se pudo buscar. Intentá nuevamente.';
                 }
             } finally {
@@ -152,6 +153,7 @@
             clearTimeout(temporizador);
             solicitud?.abort();
             const actual = ++revision;
+            estado.classList.add('visually-hidden');
             const termino = input.value.trim();
             cargando = false;
             pendiente = true;

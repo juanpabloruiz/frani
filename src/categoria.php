@@ -84,15 +84,18 @@ if ($categoria) {
     <link rel="stylesheet" href="<?= e(base_path('css/bootstrap.min.css')) ?>">
     <link rel="icon" type="image/svg+xml" href="<?= e(base_path('img/favicon.svg')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=23')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=29')) ?>">
 </head>
 
 <body>
     <?php include __DIR__ . '/cabecera.php'; ?>
+    <?php if ($categoria): ?>
+        <?php include __DIR__ . '/_buscador-catalogo.php'; ?>
+    <?php endif; ?>
+    <main class="container my-4">
 
     <?php if ($categoria): ?>
     <h1 class="visually-hidden"><?= e($categoria['nombre']) ?></h1>
-    <?php include __DIR__ . '/_buscador-catalogo.php'; ?>
 
     <div class="masonry-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4" id="productosCatalogo" aria-busy="false">
         <?php include __DIR__ . '/_catalogo-productos.php'; ?>

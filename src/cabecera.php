@@ -13,7 +13,7 @@ $categoriaSeleccionada = (int) ($categoria['id'] ?? $producto['categoria_id'] ??
     </a>
 </header>
 
-<nav class="navbar sticky-top navbar-expand-lg bg-dark" data-bs-theme="dark">
+<nav class="navbar sticky-top navbar-expand-lg bg-body-secondary" data-bs-theme="light">
     <div class="container">
         <a class="navbar-brand d-lg-none" href="<?= e(base_path()) ?>">Frani</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -22,21 +22,21 @@ $categoriaSeleccionada = (int) ($categoria['id'] ?? $producto['categoria_id'] ??
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mx-auto fs-5 mb-2 mb-lg-0">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link px-3 <?= $paginaActual === 'index.php' ? 'active' : '' ?>" <?= $paginaActual === 'index.php' ? 'aria-current="page"' : '' ?> href="<?= e(base_path()) ?>">Inicio</a>
+                    <a class="nav-link px-3 small <?= $paginaActual === 'index.php' ? 'active' : '' ?>" <?= $paginaActual === 'index.php' ? 'aria-current="page"' : '' ?> href="<?= e(base_path()) ?>">Inicio</a>
                 </li>
                 <?php if ($categoriasMenu && $categoriasMenu->num_rows > 0): ?>
                     <?php while ($catMenu = $categoriasMenu->fetch_assoc()): ?>
                         <li class="nav-item">
-                            <a class="nav-link px-3 <?= (int) $catMenu['id'] === $categoriaSeleccionada ? 'active' : '' ?>" <?= (int) $catMenu['id'] === $categoriaSeleccionada ? 'aria-current="page"' : '' ?> href="<?= e(categoria_path($catMenu['uri'])) ?>"><?= e($catMenu['nombre']) ?></a>
+                            <a class="nav-link px-3 small <?= (int) $catMenu['id'] === $categoriaSeleccionada ? 'active' : '' ?>" <?= (int) $catMenu['id'] === $categoriaSeleccionada ? 'aria-current="page"' : '' ?> href="<?= e(categoria_path($catMenu['uri'])) ?>"><?= e($catMenu['nombre']) ?></a>
                         </li>
                     <?php endwhile; ?>
                 <?php endif; ?>
             </ul>
             <ul class="navbar-nav mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link px-2 text-white-50 small" href="<?= e(base_path('panel')) ?>">
+                    <a class="nav-link px-2 small" href="<?= e(base_path('panel')) ?>">
                         <i class="fa-solid fa-user me-1"></i><?= $usuarioMenu ? e($usuarioMenu['nombre']) : 'Iniciar sesión' ?>
                     </a>
                 </li>
@@ -44,4 +44,3 @@ $categoriaSeleccionada = (int) ($categoria['id'] ?? $producto['categoria_id'] ??
         </div>
     </div>
 </nav>
-<main class="container my-4">
