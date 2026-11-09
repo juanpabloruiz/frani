@@ -4,7 +4,7 @@ Aplicación PHP con MySQLi OO para gestión de productos, dockerizada con:
 
 - `php:8.5.12-fpm-trixie`
 - `nginx`
-- `MySQL 26.10.0`
+- `MariaDB 11.4`
 
 ## Estructura
 
@@ -31,14 +31,14 @@ docker compose up --build
 3. Abrir:
 
 - App: `http://localhost:${NGINX_PORT}`
-- TablePlus: MySQL en `127.0.0.1:3307` (credenciales en `.env`)
+- TablePlus: MariaDB en `127.0.0.1:3307` (credenciales en `.env`)
 
 ## Actualización de descuentos
 
 Antes de actualizar una instalación existente, agregar el campo de descuento en pesos:
 
 ```bash
-docker compose exec -T db sh -c 'mysql -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE"' < migrations/20261006_descuento_importe.sql
+docker compose exec -T db sh -c 'mariadb -uroot -p"$MARIADB_ROOT_PASSWORD" "$MARIADB_DATABASE"' < migrations/20261006_descuento_importe.sql
 ```
 
 La migración se puede repetir. Conserva los descuentos anteriores en porcentaje; al editar esas ventas se muestra su importe equivalente. Las ventas nuevas guardan el descuento en pesos, con centavos.
@@ -201,17 +201,43 @@ docker compose exec -T web php /var/www/backup/tests/facebook_publicaciones.php
 
 ## Conexión desde TablePlus
 
-Usar una conexión MySQL: host `127.0.0.1`, puerto `3307` (configurable con
-`MYSQL_PORT`), base `frani` y las credenciales `DB_USER` / `DB_PASSWORD` de `.env`.
-El puerto solo escucha en la Mac. Dentro de Docker se utiliza `frani-db:3306`.
+Usar una conexión MariaDB: host `127.0.0.1`, puerto `3307` (configurable con
+`MARIADB_PORT`), base `frani` y las credenciales `DB_USER` / `DB_PASSWORD` de `.env`.
+El puerto solo escucha en localhost. Dentro de Docker se utiliza `frani-db:3306`.
 
-MySQL usa el volumen externo `frani_mysql_data`, ya creado durante la migración.
-En una instalación nueva, crearlo primero con `docker volume create frani_mysql_data`.
-No montar volúmenes de MariaDB en MySQL.
-Los clientes `mysql` y `mysqldump` de la imagen son de la misma versión que el servidor.
+MariaDB usa el volumen `frani_mariadb_data`, creado automáticamente por Compose.
+No montar un volumen de MySQL en MariaDB ni al revés: los formatos de datos no son compatibles.
+Los clientes `mariadb` y `mariadb-dump` incluidos en la imagen son compatibles con el servidor.
 El servicio `sincro` conserva las copias hacia MEGA con ese cliente.
+
+## Volver de MySQL a MariaDB
+
+Si venías de la configuración con MySQL y necesitás conservar los datos, volcá la
+base antes de cambiar las imágenes:
+
+```bash
+docker compose exec -T db sh -c 'MYSQL_PWD="$MYSQL_ROOT_PASSWORD" mysqldump --single-transaction --routines --events --no-tablespaces --set-gtid-purged=OFF -uroot "$MYSQL_DATABASE"' > respaldo-mysql.sql
+```
+
+Luego bajá el stack, actualizá `Dockerfile`, `compose.yaml` y `.env` (este cambio),
+y levantá solo la base nueva:
+
+```bash
+docker compose down
+docker compose up -d db
+```
+
+Cuando MariaDB esté healthy, importá el volcado:
+
+```bash
+docker compose exec -T db sh -c 'mariadb -uroot -p"$MARIADB_ROOT_PASSWORD" "$MARIADB_DATABASE"' < respaldo-mysql.sql
+```
+
+El volumen anterior `frani_mysql_data` no se borra: conservalo hasta comprobar la
+migración. Si el volcado trae `utf8mb4_0900_ai_ci`, reemplazalo por
+`utf8mb4_unicode_520_ci` antes de importar, porque MariaDB no soporta esa colación.
 
 ## phpMyAdmin
 
-Disponible en `http://localhost:8081`, conectado a MySQL con el usuario de la aplicación.
+Disponible en `http://localhost:8081`, conectado a MariaDB con el usuario de la aplicación.
 La imagen oficial 5.2.3 está fijada por digest y solo publica el puerto en localhost.

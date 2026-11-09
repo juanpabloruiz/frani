@@ -328,7 +328,7 @@ function respaldar_bd(): void
         throw new RuntimeException('No se pudo preparar el respaldo.');
     }
     $cmd = sprintf(
-        'MYSQL_PWD=%s mysqldump --single-transaction --routines --events --no-tablespaces --set-gtid-purged=OFF --column-statistics=0 --skip-masking-policies -h %s -P %d -u %s %s > %s',
+        'MYSQL_PWD=%s mariadb-dump --single-transaction --routines --events -h %s -P %d -u %s %s > %s',
         escapeshellarg($pass),
         escapeshellarg($host),
         $port,
@@ -339,7 +339,7 @@ function respaldar_bd(): void
     exec($cmd, $salida, $estado);
     if ($estado !== 0 || !rename($temporal, $destino)) {
         @unlink($temporal);
-        throw new RuntimeException('No se pudo generar el respaldo de MySQL.');
+        throw new RuntimeException('No se pudo generar el respaldo de MariaDB.');
     }
 
 }

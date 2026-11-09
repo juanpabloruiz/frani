@@ -12,13 +12,12 @@ mkdir -p "$MEGA/productos"
 
 dump() {
     local temporal="$MEGA/respaldo.sql.tmp"
-    if MYSQL_PWD="$DB_PASSWORD" mysqldump --single-transaction --routines --events \
-        --no-tablespaces --set-gtid-purged=OFF --column-statistics=0 --skip-masking-policies \
+    if MYSQL_PWD="$DB_PASSWORD" mariadb-dump --single-transaction --routines --events \
         -h"$DB_HOST" -P"${DB_PORT:-3306}" -u"$DB_USER" "$DB_NAME" > "$temporal"; then
         mv "$temporal" "$MEGA/respaldo.sql"
     else
         rm -f "$temporal"
-        echo "Error al generar respaldo MySQL" >&2
+        echo "Error al generar respaldo MariaDB" >&2
         return 1
     fi
 }
