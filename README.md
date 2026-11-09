@@ -28,6 +28,15 @@ cp .env.example .env
 docker compose up --build
 ```
 
+PHP-FPM corre como `www-data`, pero la imagen lo compila con el `PUID`/`PGID`
+del usuario dueño de esta carpeta (1000 por defecto), para que pueda escribir
+las fotos de productos y `respaldo.sql` en los volúmenes montados. Si `id -u`
+o `id -g` no devuelven 1000, ajustar `PUID`/`PGID` en `.env` y reconstruir:
+
+```bash
+docker compose up -d --build
+```
+
 3. Abrir:
 
 - App: `http://localhost:${NGINX_PORT}`
