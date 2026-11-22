@@ -1,6 +1,7 @@
 .env
 .DS_Store
 respaldo.sql
+backups/*.sql
 respaldo_mega*.log
 config.user.inc.php
 AGENTS.md
