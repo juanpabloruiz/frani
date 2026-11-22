@@ -1,17 +1,11 @@
 <?php while ($fila = $resultado->fetch_assoc()): ?>
+    <?php $fotosTarjeta = foto_tarjeta($fila['foto']); ?>
     <div class="col">
-        <a class="card<?= $categoriaCatalogo === null ? ' h-100' : '' ?> product-card-link" href="<?= e(producto_path($fila['uri'], $fila['categoria_uri'])) ?>">
-            <?php if (!empty($fila['foto'])): ?>
-                <picture>
-                    <source srcset="<?= e(base_path('img/productos/' . $fila['foto'] . '.webp')) ?>" type="image/webp">
-                    <img src="<?= e(base_path('img/productos/' . $fila['foto'] . '.jpg')) ?>" class="card-img-top" width="200" alt="<?= e($fila['producto']) ?>">
-                </picture>
-            <?php else: ?>
-                <picture>
-                    <source srcset="<?= e(base_path('img/Ejemplo.webp')) ?>" type="image/webp">
-                    <img src="<?= e(base_path('img/Ejemplo..jpg')) ?>" class="card-img-top" width="200" alt="<?= e($fila['producto']) ?>">
-                </picture>
-            <?php endif; ?>
+        <a class="card h-100 product-card-link" href="<?= e(producto_path($fila['uri'], $fila['categoria_uri'])) ?>">
+            <picture>
+                <source srcset="<?= e($fotosTarjeta['webp']) ?>" type="image/webp">
+                <img src="<?= e($fotosTarjeta['jpg']) ?>" class="card-img-top" width="600" height="800" alt="<?= e($fila['producto']) ?>">
+            </picture>
             <div class="card-body">
                 <span class="badge text-bg-dark mb-2"><?= e($fila['categoria']) ?></span>
                 <h2 class="h5 card-title"><?= e($fila['producto']) ?></h2>

@@ -29,6 +29,15 @@ if (array_key_exists('categoria', $_GET)) {
         error_busqueda(400, 'Categoría inválida.');
     }
 }
+$porPagina = 25;
+if (array_key_exists('por_pagina', $_GET)) {
+    $porPagina = is_string($_GET['por_pagina'])
+        ? filter_var($_GET['por_pagina'], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 100]])
+        : false;
+    if ($porPagina === false) {
+        error_busqueda(400, 'Tamaño de página inválido.');
+    }
+}
 $paginado = array_key_exists('offset', $_GET);
 $offset = 0;
 if ($paginado) {
@@ -57,7 +66,7 @@ try {
     }
 
     if ($paginado) {
-        $pagina = catalogo_pagina($db, $busquedaCatalogo, $categoriaCatalogo, $offset);
+        $pagina = catalogo_pagina($db, $busquedaCatalogo, $categoriaCatalogo, $offset, $porPagina);
         $resultado = $pagina['resultado'];
         $total = $pagina['total'];
     } else {
@@ -72,6 +81,9 @@ try {
     $respuesta = ['html' => $html, 'total' => $total];
     if ($paginado) {
         $respuesta['siguiente'] = $pagina['siguiente'];
+        $respuesta['paginacion'] = catalogo_paginacion_html(
+            (int) ceil(($offset + 1) / $porPagina), $total, $porPagina
+        );
     }
     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
 } catch (Throwable $error) {

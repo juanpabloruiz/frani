@@ -32,7 +32,7 @@ $consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nom
 <head>
     <?php $tituloPagina = 'Editar Producto'; require __DIR__ . '/../_head.php'; ?>
     <link rel="stylesheet" href="<?= e(base_path('vendor/cropperjs/cropper.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('css/editor-foto.css?v=1')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('css/editor-foto.css?v=2')) ?>">
 </head>
 
 <body class="sb-app">

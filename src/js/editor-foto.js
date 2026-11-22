@@ -23,6 +23,7 @@
     const controls = modalElement.querySelectorAll('[data-editor-control]');
     const savedSource = preview.getAttribute('src') || '';
     const maxBytes = 5 * 1024 * 1024;
+    const ratioPorDefecto = '0.75';
     const supported = typeof window.Cropper === 'function'
         && typeof window.bootstrap?.Modal === 'function'
         && typeof window.DataTransfer === 'function';
@@ -32,7 +33,7 @@
     // the full photo until the product is saved.
     const initialState = () => ({
         source: savedSource, sourceFile: null, file: null,
-        preview: savedSource, data: null, ratio: 'libre'
+        preview: savedSource, data: null, ratio: ratioPorDefecto
     });
     let committed = initialState();
     let pending = null;
@@ -114,7 +115,7 @@
         }
         showError('');
         const source = URL.createObjectURL(file);
-        const state = { source, sourceFile: file, file, preview: source, data: null, ratio: 'libre' };
+        const state = { source, sourceFile: file, file, preview: source, data: null, ratio: ratioPorDefecto };
         if (supported) {
             // The input must contain only a confirmed photo, even if the form
             // is submitted by keyboard while the editor is open.
@@ -203,8 +204,8 @@
                 case 'alejar': cropper.zoom(-0.1); break;
                 case 'girar': cropper.rotate(90); break;
                 case 'restablecer':
-                    proportion.value = 'libre';
-                    cropper.setAspectRatio(NaN);
+                    proportion.value = ratioPorDefecto;
+                    cropper.setAspectRatio(Number(ratioPorDefecto));
                     cropper.reset();
                     break;
             }

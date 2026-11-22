@@ -16,11 +16,11 @@
   appearance: none;
 }
 
-.masonry-grid > .catalogo-vacio {
+.catalogo-grid > .catalogo-vacio {
   width: 100%;
 }
 
-.masonry-grid[hidden] {
+.catalogo-grid[hidden] {
   display: none;
 }
 
@@ -47,6 +47,11 @@
 }
 
 .product-card-link .card-img-top {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  height: auto;
+  object-fit: cover;
   background-color: #fff;
 }
 

@@ -39,6 +39,62 @@ function catalogo_consulta(string $busqueda, ?int $categoriaId): array
         'tiene_palabras' => (bool) $palabras];
 }
 
+/** Botones de paginación reutilizables: HTML servidor y respuesta de búsqueda. */
+function catalogo_paginacion_html(int $pagina, int $total, int $porPagina): string
+{
+    $paginas = max(1, (int) ceil($total / max(1, $porPagina)));
+    $pagina = min(max(1, $pagina), $paginas);
+
+    $html = '<ul class="pagination pagination-sm flex-wrap justify-content-center mb-0">';
+    if ($pagina <= 1) {
+        $html .= '<li class="page-item disabled"><span class="page-link" aria-label="Página anterior">&#8249;</span></li>';
+    } else {
+        $anterior = $pagina - 1;
+        $html .= '<li class="page-item"><a class="page-link" href="?pagina=' . $anterior
+            . '" data-pagina="' . $anterior . '" aria-controls="productosCatalogo"'
+            . ' aria-label="Página anterior">&#8249;</a></li>';
+    }
+
+    $inicio = max(1, $pagina - 2);
+    $fin = min($paginas, $inicio + 4);
+    $inicio = max(1, $fin - 4);
+
+    if ($inicio > 1) {
+        $html .= '<li class="page-item"><a class="page-link" href="?pagina=1" data-pagina="1"'
+            . ' aria-controls="productosCatalogo">1</a></li>';
+        if ($inicio > 2) {
+            $html .= '<li class="page-item disabled"><span class="page-link">&hellip;</span></li>';
+        }
+    }
+    for ($numero = $inicio; $numero <= $fin; $numero++) {
+        if ($numero === $pagina) {
+            $html .= '<li class="page-item active"><span class="page-link" aria-current="page">'
+                . $numero . '</span></li>';
+        } else {
+            $html .= '<li class="page-item"><a class="page-link" href="?pagina=' . $numero
+                . '" data-pagina="' . $numero . '" aria-controls="productosCatalogo">' . $numero . '</a></li>';
+        }
+    }
+    if ($fin < $paginas) {
+        if ($fin < $paginas - 1) {
+            $html .= '<li class="page-item disabled"><span class="page-link">&hellip;</span></li>';
+        }
+        $html .= '<li class="page-item"><a class="page-link" href="?pagina=' . $paginas
+            . '" data-pagina="' . $paginas . '" aria-controls="productosCatalogo">' . $paginas . '</a></li>';
+    }
+
+    if ($pagina >= $paginas) {
+        $html .= '<li class="page-item disabled"><span class="page-link" aria-label="Página siguiente">&#8250;</span></li>';
+    } else {
+        $siguiente = $pagina + 1;
+        $html .= '<li class="page-item"><a class="page-link" href="?pagina=' . $siguiente
+            . '" data-pagina="' . $siguiente . '" aria-controls="productosCatalogo"'
+            . ' aria-label="Página siguiente">&#8250;</a></li>';
+    }
+    $html .= '</ul>';
+    return $html;
+}
+
 function catalogo_seleccion(): string
 {
     return 'SELECT p.producto, p.uri, p.foto, p.precio, p.stock,
@@ -62,10 +118,13 @@ function catalogo_productos(mysqli $db, string $busqueda = '', ?int $categoriaId
 }
 
 /** @return array{resultado: mysqli_result, total: int, siguiente: ?int} */
-function catalogo_pagina(mysqli $db, string $busqueda = '', ?int $categoriaId = null, int $offset = 0): array
+function catalogo_pagina(mysqli $db, string $busqueda = '', ?int $categoriaId = null, int $offset = 0, int $porPagina = 25): array
 {
     if ($offset < 0) {
         throw new InvalidArgumentException('El desplazamiento del catálogo debe ser positivo o cero.');
+    }
+    if ($porPagina < 1 || $porPagina > 100) {
+        throw new InvalidArgumentException('El tamaño de página del catálogo debe estar entre 1 y 100.');
     }
 
     $consulta = catalogo_consulta($busqueda, $categoriaId);
@@ -74,8 +133,8 @@ function catalogo_pagina(mysqli $db, string $busqueda = '', ?int $categoriaId = 
     $total = (int) $stmtTotal->get_result()->fetch_assoc()['total'];
     $stmtTotal->close();
 
-    $stmt = $db->prepare(catalogo_seleccion() . $consulta['sql'] . $consulta['orden'] . ' LIMIT 25 OFFSET ?');
-    $stmt->execute([...$consulta['parametros'], $offset]);
+    $stmt = $db->prepare(catalogo_seleccion() . $consulta['sql'] . $consulta['orden'] . ' LIMIT ? OFFSET ?');
+    $stmt->execute([...$consulta['parametros'], $porPagina, $offset]);
     $resultado = $stmt->get_result();
     $stmt->close();
 

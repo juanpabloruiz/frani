@@ -2,6 +2,7 @@
 <div class="container-fluid bg-black px-0 py-3">
     <div class="catalogo-buscador container" role="search" aria-label="Buscar productos"
         data-catalog-search data-endpoint="<?= e(base_path('buscar-productos.php')) ?>"
+        data-page-size="<?= e((string) ($porPaginaCatalogo ?? 25)) ?>"
         <?php if (isset($loteCatalogo)): ?>data-pagination="paginacionCatalogo"<?php endif; ?>
         <?php if (isset($detalleCatalogo)): ?>data-detail="<?= e($detalleCatalogo) ?>"<?php endif; ?>
         <?php if ($categoriaCatalogo !== null): ?>data-category="<?= e((string) $categoriaCatalogo) ?>"<?php endif; ?>>

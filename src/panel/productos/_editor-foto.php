@@ -14,10 +14,10 @@
                     <div class="flex-grow-1 foto-editor-proporcion">
                         <label for="fotoProporcion" class="form-label small mb-1">Proporción</label>
                         <select id="fotoProporcion" class="form-select form-select-sm" data-editor-control disabled>
+                            <option value="0.75" selected>Vertical (3:4)</option>
                             <option value="libre">Libre</option>
                             <option value="1">Cuadrada (1:1)</option>
                             <option value="1.3333333333333333">Horizontal (4:3)</option>
-                            <option value="0.75">Vertical (3:4)</option>
                         </select>
                     </div>
                     <div class="btn-group" role="group" aria-label="Zoom">
@@ -41,4 +41,4 @@
     </div>
 </div>
 <script src="<?= e(base_path('vendor/cropperjs/cropper.min.js')) ?>"></script>
-<script src="<?= e(base_path('js/editor-foto.js?v=1')) ?>"></script>
+<script src="<?= e(base_path('js/editor-foto.js?v=2')) ?>"></script>

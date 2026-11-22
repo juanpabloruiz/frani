@@ -7,8 +7,7 @@
 </footer>
 
 <script src="<?= e(base_path('js/bootstrap.bundle.min.js')) ?>"></script>
-<script src="<?= e(base_path('js/masonry.pkgd.min.js')) ?>"></script>
-<script src="<?= e(base_path('js/catalogo.js?v=4')) ?>"></script>
+<script src="<?= e(base_path('js/catalogo.js?v=6')) ?>"></script>
 </body>
 
 </html>

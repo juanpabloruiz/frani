@@ -67,7 +67,7 @@ if ($producto) {
     <link rel="stylesheet" href="<?= e(base_path('css/bootstrap.min.css')) ?>">
     <link rel="icon" type="image/svg+xml" href="<?= e(base_path('img/favicon.svg')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=29')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=30')) ?>">
 </head>
 
 <body>
@@ -78,7 +78,7 @@ if ($producto) {
     <main class="container my-4">
 
     <?php if ($producto): ?>
-        <div class="masonry-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4" id="productosCatalogo" aria-busy="false" hidden></div>
+        <div class="catalogo-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4" id="productosCatalogo" aria-busy="false" hidden></div>
 
         <div id="detalleProducto" data-catalog-detail>
         <article class="product-detail-layout">

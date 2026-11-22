@@ -62,7 +62,8 @@ if ($categoria) {
     ];
     $busquedaCatalogo = '';
     $categoriaCatalogo = (int) $categoria['id'];
-    $loteCatalogo = catalogo_pagina($db, '', $categoriaCatalogo, ($paginaCatalogo - 1) * 25);
+    $porPaginaCatalogo = 10;
+    $loteCatalogo = catalogo_pagina($db, '', $categoriaCatalogo, ($paginaCatalogo - 1) * $porPaginaCatalogo, $porPaginaCatalogo);
     $resultado = $loteCatalogo['resultado'];
 } else {
     http_response_code(404);
@@ -84,7 +85,7 @@ if ($categoria) {
     <link rel="stylesheet" href="<?= e(base_path('css/bootstrap.min.css')) ?>">
     <link rel="icon" type="image/svg+xml" href="<?= e(base_path('img/favicon.svg')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=29')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=30')) ?>">
 </head>
 
 <body>
@@ -97,7 +98,7 @@ if ($categoria) {
     <?php if ($categoria): ?>
     <h1 class="visually-hidden"><?= e($categoria['nombre']) ?></h1>
 
-    <div class="masonry-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4" id="productosCatalogo" aria-busy="false">
+    <div class="catalogo-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4" id="productosCatalogo" aria-busy="false">
         <?php include __DIR__ . '/_catalogo-productos.php'; ?>
     </div>
     <?php include __DIR__ . '/_paginacion-catalogo.php'; ?>

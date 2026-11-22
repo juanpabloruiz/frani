@@ -299,6 +299,131 @@ function subir_foto(array $archivo, string $directorio): ?string
     return $nombreBase;
 }
 
+/**
+ * Recorta una imagen desde el centro con proporción 3:4 y guarda las dos
+ * variantes (JPG y WebP) de 600x800 px. El resultado se escribe primero en
+ * archivos temporales para que una petición nunca sirva una miniatura a medias.
+ */
+function generar_recorte_3x4(string $origen, string $destinoBase): bool
+{
+    if (!is_file($origen)) {
+        return false;
+    }
+    $info = @getimagesize($origen);
+    if ($info === false || empty($info['mime'])) {
+        return false;
+    }
+
+    $imagen = match ($info['mime']) {
+        'image/jpeg' => @imagecreatefromjpeg($origen),
+        'image/png'  => @imagecreatefrompng($origen),
+        'image/webp' => @imagecreatefromwebp($origen),
+        default      => false,
+    };
+    if ($imagen === false) {
+        return false;
+    }
+
+    $ancho = imagesx($imagen);
+    $alto = imagesy($imagen);
+    $relacion = 600 / 800;
+
+    $anchoRecorte = $ancho;
+    $altoRecorte = (int) round($ancho / $relacion);
+    if ($altoRecorte > $alto) {
+        $altoRecorte = $alto;
+        $anchoRecorte = (int) round($alto * $relacion);
+    }
+    if ($anchoRecorte < 1 || $altoRecorte < 1) {
+        unset($imagen);
+        return false;
+    }
+
+    $x = (int) round(($ancho - $anchoRecorte) / 2);
+    $y = (int) round(($alto - $altoRecorte) / 2);
+
+    $salida = imagecreatetruecolor(600, 800);
+    if ($salida === false) {
+        unset($imagen);
+        return false;
+    }
+    $blanco = imagecolorallocate($salida, 255, 255, 255);
+    imagefilledrectangle($salida, 0, 0, 600, 800, $blanco);
+    imagecopyresampled($salida, $imagen, 0, 0, $x, $y, 600, 800, $anchoRecorte, $altoRecorte);
+
+    $directorio = dirname($destinoBase);
+    if (!is_dir($directorio)) {
+        @mkdir($directorio, 0755, true);
+    }
+    $temporalJpg = @tempnam($directorio, '.recorte-');
+    $temporalWebp = @tempnam($directorio, '.recorte-');
+    if ($temporalJpg === false || $temporalWebp === false) {
+        unset($salida, $imagen);
+        return false;
+    }
+
+    $okJpg = imagejpeg($salida, $temporalJpg, 85);
+    $okWebp = function_exists('imagewebp') && imagewebp($salida, $temporalWebp, 85);
+    $ok = $okJpg && $okWebp
+        && @chmod($temporalJpg, 0644) && @chmod($temporalWebp, 0644)
+        && rename($temporalJpg, $destinoBase . '.jpg')
+        && rename($temporalWebp, $destinoBase . '.webp');
+
+    if (!$ok) {
+        @unlink($temporalJpg);
+        @unlink($temporalWebp);
+    }
+    unset($salida, $imagen);
+    return $ok;
+}
+
+/**
+ * Devuelve las URLs JPG y WebP de la miniatura 3:4 de una foto de producto.
+ * La genera la primera vez que se necesita (o si la original cambió), así que
+ * funciona tanto con las fotos ya cargadas como con las nuevas. Si no puede,
+ * cae a la imagen genérica.
+ *
+ * @return array{jpg: string, webp: string}
+ */
+function foto_tarjeta(?string $foto): array
+{
+    $directorio = __DIR__ . '/img/miniaturas';
+    $prefijoUrl = 'img/miniaturas/';
+
+    if ($foto !== null && $foto !== '') {
+        $nombre = basename($foto);
+        if (preg_match('/\A[A-Za-z0-9_-]+\.?\z/', $nombre) === 1) {
+            $origen = __DIR__ . '/img/productos/' . $nombre . '.jpg';
+            $destino = $directorio . '/' . $nombre . '-3x4';
+            if (is_file($origen) && (!is_file($destino . '.jpg') || !is_file($destino . '.webp')
+                || filemtime($origen) > filemtime($destino . '.jpg'))) {
+                generar_recorte_3x4($origen, $destino);
+            }
+            if (is_file($destino . '.jpg') && is_file($destino . '.webp')) {
+                return [
+                    'jpg' => base_path($prefijoUrl . $nombre . '-3x4.jpg'),
+                    'webp' => base_path($prefijoUrl . $nombre . '-3x4.webp'),
+                ];
+            }
+        }
+    }
+
+    $origen = __DIR__ . '/img/Ejemplo..jpg';
+    $destino = $directorio . '/Ejemplo-3x4';
+    if (is_file($origen) && (!is_file($destino . '.jpg') || !is_file($destino . '.webp')
+        || filemtime($origen) > filemtime($destino . '.jpg'))) {
+        generar_recorte_3x4($origen, $destino);
+    }
+    if (is_file($destino . '.jpg') && is_file($destino . '.webp')) {
+        return [
+            'jpg' => base_path($prefijoUrl . 'Ejemplo-3x4.jpg'),
+            'webp' => base_path($prefijoUrl . 'Ejemplo-3x4.webp'),
+        ];
+    }
+
+    return ['jpg' => base_path('img/Ejemplo..jpg'), 'webp' => base_path('img/Ejemplo.webp')];
+}
+
 function eliminar_fotos(string $nombreBase, string $directorio): void
 {
     $extensiones = ['jpg', 'webp'];
