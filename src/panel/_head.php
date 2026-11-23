@@ -8,4 +8,4 @@
 <link rel="stylesheet" href="<?= e(base_path('fontawesome/css/all.min.css')) ?>">
 <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=4')) ?>">
 <link rel="stylesheet" href="<?= e(base_path('css/admin-sidebar.css?v=21')) ?>">
-<script src="<?= e(base_path('js/panel-cards.js')) ?>" defer></script>
+<script src="<?= e(base_path('js/panel-cards.js?v=2')) ?>" defer></script>

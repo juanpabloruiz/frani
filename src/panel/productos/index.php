@@ -26,12 +26,13 @@ if ($idEditar > 0) {
     }
 }
 
-$consultaCategorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC");
+$categorias = $db->query("SELECT id, nombre FROM categorias ORDER BY nombre ASC")->fetch_all(MYSQLI_ASSOC);
 
 $consulta = $db->query(
     "SELECT
         p.id, p.producto, p.descripcion, p.costo, p.precio,
-        p.stock, p.agregado, p.modificado, p.foto, c.nombre AS categoria
+        p.stock, p.agregado, p.modificado, p.foto, p.id_categoria,
+        c.nombre AS categoria
     FROM productos p
     INNER JOIN categorias c ON c.id = p.id_categoria
     ORDER BY p.producto ASC"
@@ -104,12 +105,12 @@ $token = CSRF_token();
                                 <div class="input-group">
                                     <select name="id_categoria" id="selectCategoria" class="form-select" required>
                                         <option value="">Seleccionar</option>
-                                        <?php while ($fila = $consultaCategorias->fetch_assoc()): ?>
-                                            <?php $selected = (int) ($producto['id_categoria'] ?? 0) === (int) $fila['id']; ?>
-                                            <option value="<?= e((string) $fila['id']) ?>" <?= $selected ? 'selected' : '' ?>>
-                                                <?= e($fila['nombre']) ?>
+                                        <?php foreach ($categorias as $categoria): ?>
+                                            <?php $selected = (int) ($producto['id_categoria'] ?? 0) === (int) $categoria['id']; ?>
+                                            <option value="<?= e((string) $categoria['id']) ?>" <?= $selected ? 'selected' : '' ?>>
+                                                <?= e($categoria['nombre']) ?>
                                             </option>
-                                        <?php endwhile; ?>
+                                        <?php endforeach; ?>
                                     </select>
                                     <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
                                         data-bs-target="#modalCategoria" title="Nueva categoria">
@@ -148,12 +149,24 @@ $token = CSRF_token();
                         <span class="input-group-text"><i class="fa-solid fa-search"></i></span>
                         <input type="text" id="buscadorProductos" class="form-control" placeholder="Buscar producto..." aria-label="Buscar producto">
                     </div>
+                    <div class="sb-filtro mt-2 d-flex align-items-center gap-2">
+                        <label for="filtroCategoriaProductos" class="small text-body-secondary mb-0">
+                            <i class="fa-solid fa-filter me-1" aria-hidden="true"></i>Categoría
+                        </label>
+                        <select id="filtroCategoriaProductos" class="form-select form-select-sm w-auto" aria-label="Filtrar productos por categoría">
+                            <option value="">Todas</option>
+                            <?php foreach ($categorias as $categoria): ?>
+                                <option value="<?= e((string) $categoria['id']) ?>"><?= e($categoria['nombre']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="row g-3 sb-lista" id="listaProductos" data-search-input="buscadorProductos">
+                <div class="row g-3 sb-lista" id="listaProductos" data-search-input="buscadorProductos"
+                    data-filter-input="filtroCategoriaProductos">
                     <?php while ($fila = $consulta->fetch_assoc()): ?>
                         <?php $activo = $editando && (int) $fila['id'] === (int) $producto['id']; ?>
-                        <div class="col-12 col-lg-6 col-xxl-4" data-card-item>
+                        <div class="col-12 col-lg-6 col-xxl-4" data-card-item data-categoria="<?= e((string) $fila['id_categoria']) ?>">
                             <div class="card sb-card h-100<?= $activo ? ' activo' : '' ?>"
                                 id="producto-<?= e((string) $fila['id']) ?>"
                                 tabindex="0" role="link" aria-label="Editar <?= e($fila['producto']) ?>"
@@ -259,10 +272,11 @@ $token = CSRF_token();
                 .then(r => r.json())
                 .then(datos => {
                     if (!datos.ok) return;
-                    ['selectCategoria'].forEach(id => {
-                        const select = document.getElementById(id);
-                        if (select) select.add(new Option(datos.nombre, datos.id, true, true));
-                    });
+                    const selectCategoria = document.getElementById('selectCategoria');
+                    if (selectCategoria) selectCategoria.add(new Option(datos.nombre, datos.id, true, true));
+
+                    const filtro = document.getElementById('filtroCategoriaProductos');
+                    if (filtro) filtro.add(new Option(datos.nombre, datos.id));
                     document.getElementById('nombreCategoria').value = '';
                     bootstrap.Modal.getInstance(document.getElementById('modalCategoria')).hide();
                 });
