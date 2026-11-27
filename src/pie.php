@@ -1,5 +1,5 @@
 </main>
-<footer class="container-fluid bg-dark text-white text-center py-5">
+<footer class="container-fluid bg-primary text-white text-center py-5">
     <p class="mb-0">
         Derechos reservados Frani - <?= date('Y') ?><br>
         Corrientes - Argentina
@@ -7,7 +7,7 @@
 </footer>
 
 <script src="<?= e(base_path('js/bootstrap.bundle.min.js')) ?>"></script>
-<script src="<?= e(base_path('js/catalogo.js?v=6')) ?>"></script>
+<script src="<?= e(base_path('js/catalogo.js?v=8')) ?>"></script>
 </body>
 
 </html>

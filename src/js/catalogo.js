@@ -1,4 +1,18 @@
 (() => {
+    const controlesConHover = 'a[href], button, input:not([type="hidden"])';
+    const actualizarSombraHover = (evento) => {
+        if (evento.pointerType !== 'mouse') return;
+        const control = evento.target;
+        if (!control.matches?.(controlesConHover)) return;
+
+        const mostrarSombra = evento.type === 'pointerenter'
+            && !control.matches(':disabled, .disabled, [aria-disabled="true"]');
+        control.classList.toggle('shadow-sm', mostrarSombra);
+    };
+
+    document.addEventListener('pointerenter', actualizarSombraHover, true);
+    document.addEventListener('pointerleave', actualizarSombraHover, true);
+
     document.querySelectorAll('[data-catalog-search]').forEach(buscador => {
         const input = buscador.querySelector('input');
         const limpiar = buscador.querySelector('[data-search-clear]');

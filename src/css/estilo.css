@@ -2,6 +2,14 @@
   font-weight: 700;
 }
 
+.catalogo-publico :where(a, button, input).shadow-sm:hover {
+  --bs-box-shadow-sm: 0 0.125rem 0.25rem rgba(var(--bs-black-rgb), 0.45);
+}
+
+.catalogo-publico :where(.nav-link, .btn, .btn-close, .page-link).shadow-sm:focus-visible {
+  outline: var(--bs-focus-ring-width) solid var(--bs-focus-ring-color);
+}
+
 .catalogo-buscador [data-search-status]:not(:empty) {
   margin-top: 0.5rem;
 }
@@ -38,7 +46,6 @@
 
 .product-card-link:hover {
   color: var(--bs-body-color);
-  box-shadow: 0 6px 20px rgba(80, 80, 80, 0.22);
 }
 
 .product-card-link:focus-visible {

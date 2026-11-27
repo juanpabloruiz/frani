@@ -1,5 +1,5 @@
 <?php $nombreCategoriaCatalogo = $nombreCategoriaCatalogo ?? $categoria['nombre'] ?? ''; ?>
-<div class="container-fluid bg-black px-0 py-3">
+<div class="container-fluid bg-primary px-0 py-3">
     <div class="catalogo-buscador container" role="search" aria-label="Buscar productos"
         data-catalog-search data-endpoint="<?= e(base_path('buscar-productos.php')) ?>"
         data-page-size="<?= e((string) ($porPaginaCatalogo ?? 25)) ?>"
@@ -16,6 +16,6 @@
                 <i class="fa-solid fa-xmark" aria-hidden="true"></i>
             </button>
         </div>
-        <p class="visually-hidden small text-light mb-0" data-search-status role="status" aria-live="polite" aria-atomic="true"></p>
+        <p class="visually-hidden small text-white mb-0" data-search-status role="status" aria-live="polite" aria-atomic="true"></p>
     </div>
 </div>

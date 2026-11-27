@@ -42,10 +42,10 @@ $seo = [
     <link rel="stylesheet" href="<?= e(base_path('css/bootstrap.min.css')) ?>">
     <link rel="icon" type="image/svg+xml" href="<?= e(base_path('img/favicon.svg')) ?>">
     <link rel="stylesheet" href="<?= e(base_path('fontawesome/css/all.min.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=30')) ?>">
+    <link rel="stylesheet" href="<?= e(base_path('css/estilo.css?v=32')) ?>">
 </head>
 
-<body>
+<body class="catalogo-publico">
     <?php include __DIR__ . '/cabecera.php'; ?>
     <?php include __DIR__ . '/_buscador-catalogo.php'; ?>
     <main class="container my-4">
